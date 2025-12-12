@@ -1,0 +1,12 @@
+m=_b,_tp:248 WARNING!
+m=_b,_tp:248 Using this console may allow attackers to impersonate you and steal your information using an attack called Self-XSS.Do not enter or paste code that you do not understand.
+read.js:2530 READ - Host validation failed: Object
+content.js:2524 Host is not supported
+content.js:2526 Host is not valid or supported
+content.js:2526 Host is not in insights whitelist
+content.js:6 TCLens: Content script running...
+content.js:8 TCLens: Sending text to API... Terms of Service
+Skip to main content
+
+Effective M
+localhost:3000/api/extension/detect:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
