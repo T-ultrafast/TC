@@ -56,6 +56,19 @@ const config: Config = {
                 md: "calc(var(--radius) - 2px)",
                 sm: "calc(var(--radius) - 4px)",
             },
+            fontFamily: {
+                sans: ["var(--font-inter)"],
+                outfit: ["var(--font-outfit)"],
+            },
+            keyframes: {
+                gradient: {
+                    "0%, 100%": { backgroundPosition: "0% 50%" },
+                    "50%": { backgroundPosition: "100% 50%" },
+                },
+            },
+            animation: {
+                gradient: "gradient 6s ease infinite",
+            },
         },
     },
     plugins: [],

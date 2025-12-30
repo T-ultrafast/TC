@@ -1,40 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import OpenAI from 'openai';
-import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
+import { GoogleGenAI } from '@google/genai';
 
-// Initialize OpenAI lazily or with a check
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY || 'dummy-key-for-build',
-});
+export const runtime = 'nodejs';
 
-// Helper to extract text from PDF buffer
-async function extractTextFromPDF(buffer: Buffer): Promise<string> {
-    try {
-        // Convert Buffer to Uint8Array for pdfjs
-        const data = new Uint8Array(buffer);
-
-        // Load the document
-        const loadingTask = getDocument({ data });
-        const pdfDocument = await loadingTask.promise;
-
-        let fullText = '';
-
-        // Iterate through pages
-        for (let i = 1; i <= pdfDocument.numPages; i++) {
-            const page = await pdfDocument.getPage(i);
-            const textContent = await page.getTextContent();
-            const pageText = textContent.items
-                .map((item: any) => item.str)
-                .join(' ');
-            fullText += pageText + '\n';
-        }
-
-        return fullText;
-    } catch (error) {
-        console.error('Error extracting PDF text:', error);
-        throw new Error('Failed to extract text from PDF');
-    }
-}
+// Initialize Gemini
+const apiKey = process.env.GEMINI_API_KEY;
 
 // System prompt for the AI
 const SYSTEM_PROMPT = `
@@ -66,7 +36,7 @@ Also provide:
 - A list of "Critical Alerts" for unfair or dangerous clauses.
 - A brief overall summary of the document.
 
-Return the response in strictly valid JSON format with the following structure:
+Return the response in strictly valid JSON format matching this schema:
 {
   "summary": "string",
   "riskScore": number,
@@ -76,7 +46,7 @@ Return the response in strictly valid JSON format with the following structure:
       "summary": "string",
       "riskLevel": "Low" | "Medium" | "High" | "Critical",
       "explanation": "string",
-      "textSnippet": "string" // The approximate original text
+      "textSnippet": "string"
     }
   ],
   "criticalAlerts": [
@@ -88,8 +58,48 @@ Return the response in strictly valid JSON format with the following structure:
 }
 `;
 
+const responseSchema = {
+    type: "OBJECT",
+    properties: {
+        summary: { type: "STRING" },
+        riskScore: { type: "NUMBER" },
+        clauses: {
+            type: "ARRAY",
+            items: {
+                type: "OBJECT",
+                properties: {
+                    type: { type: "STRING" },
+                    summary: { type: "STRING" },
+                    riskLevel: { type: "STRING", enum: ["Low", "Medium", "High", "Critical"] },
+                    explanation: { type: "STRING" },
+                    textSnippet: { type: "STRING" }
+                }
+            }
+        },
+        criticalAlerts: {
+            type: "ARRAY",
+            items: {
+                type: "OBJECT",
+                properties: {
+                    title: { type: "STRING" },
+                    description: { type: "STRING" }
+                }
+            }
+        }
+    },
+    required: ["summary", "riskScore", "clauses", "criticalAlerts"]
+};
+
 export async function POST(req: NextRequest) {
     try {
+        if (!apiKey) {
+            console.error("GEMINI_API_KEY is missing");
+            return NextResponse.json(
+                { error: 'Server configuration error: Missing API Key' },
+                { status: 500 }
+            );
+        }
+
         const formData = await req.formData();
         const file = formData.get('file') as File | null;
         const textInput = formData.get('text') as string | null;
@@ -108,7 +118,23 @@ export async function POST(req: NextRequest) {
             if (file.type === 'application/pdf') {
                 const arrayBuffer = await file.arrayBuffer();
                 const buffer = Buffer.from(arrayBuffer);
-                textToAnalyze = await extractTextFromPDF(buffer);
+
+                // @ts-ignore
+                const pdfModule = await import('pdf-parse');
+                const pdf = pdfModule.default || pdfModule;
+
+                const data = await pdf(buffer);
+                textToAnalyze = data.text;
+            } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') { // DOCX
+                const arrayBuffer = await file.arrayBuffer();
+                const buffer = Buffer.from(arrayBuffer);
+
+                // @ts-ignore
+                const mammothModule = await import('mammoth');
+                const mammoth = mammothModule.default || mammothModule;
+
+                const result = await mammoth.extractRawText({ buffer: buffer });
+                textToAnalyze = result.value;
             } else if (file.type === 'text/plain') {
                 textToAnalyze = await file.text();
             } else {
@@ -121,37 +147,75 @@ export async function POST(req: NextRequest) {
             textToAnalyze = textInput;
         }
 
-        if (!textToAnalyze.trim()) {
+        if (!textToAnalyze || !textToAnalyze.trim()) {
             return NextResponse.json(
                 { error: 'Could not extract text from document.' },
                 { status: 400 }
             );
         }
 
-        // Call OpenAI
-        const completion = await openai.chat.completions.create({
-            model: "gpt-4o",
-            messages: [
-                { role: "system", content: SYSTEM_PROMPT },
-                { role: "user", content: `Here is the legal document text:\n\n${textToAnalyze.substring(0, 50000)}` } // Truncate if too long, though gpt-4o has large context
-            ],
-            response_format: { type: "json_object" },
-        });
+        // --- PRICING & QUOTA CHECK ---
+        const wordCount = textToAnalyze.trim().split(/\s+/).length;
+        const currentUsage = parseInt(req.headers.get('x-usage') || '0', 10);
+        const isLoggedIn = req.headers.get('x-is-logged-in') === 'true';
+        const limit = isLoggedIn ? 10000 : 5000;
 
-        const content = completion.choices[0].message.content;
-
-        if (!content) {
-            throw new Error('No response from AI');
+        if (currentUsage + wordCount > limit) {
+            return NextResponse.json(
+                { error: 'Word limit reached. Please upgrade your plan.' },
+                { status: 403 }
+            );
         }
 
-        const analysisResult = JSON.parse(content);
+        // Call Gemini
+        const client = new GoogleGenAI({ apiKey });
 
-        return NextResponse.json(analysisResult);
+        try {
+            const result = await client.models.generateContent({
+                model: "gemini-2.0-flash",
+                contents: [{ role: 'user', parts: [{ text: `DOCUMENT TEXT:\n${textToAnalyze.substring(0, 100000)}` }] }],
+                config: {
+                    systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+                    responseMimeType: "application/json",
+                    // @ts-ignore
+                    responseSchema: responseSchema,
+                }
+            });
+
+            const responseContent = result.text;
+
+
+            if (!responseContent) {
+                throw new Error('No content in Gemini response');
+            }
+
+            let analysisResult;
+            try {
+                analysisResult = JSON.parse(responseContent);
+                // Add word count to response for tracking
+                analysisResult.wordCount = wordCount;
+            } catch (e) {
+                console.error("JSON parse error", e);
+                return NextResponse.json({ error: "Failed to parse AI response" }, { status: 500 });
+            }
+
+            return NextResponse.json(analysisResult);
+
+        } catch (apiError: any) {
+            console.error("Gemini API Error:", apiError);
+            if (apiError.status === 429 || (apiError.message && apiError.message.includes('429'))) {
+                return NextResponse.json(
+                    { error: 'AI Service is busy (Rate Limit). Please try again in a minute.' },
+                    { status: 429 }
+                );
+            }
+            throw apiError;
+        }
 
     } catch (error) {
         console.error('Analysis error:', error);
         return NextResponse.json(
-            { error: 'Failed to analyze document' },
+            { error: 'Failed to analyze document', details: error instanceof Error ? error.message : String(error) },
             { status: 500 }
         );
     }

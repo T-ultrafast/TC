@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     description: "AI-powered legal document analysis and lawyer marketplace.",
 };
 
+import { Navbar } from "@/components/Navbar";
+
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -18,7 +20,8 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={cn(inter.variable, outfit.variable, "min-h-screen bg-background font-sans antialiased")}>
+            <body className={cn(inter.variable, outfit.variable, "min-h-screen bg-white font-sans antialiased")}>
+                {/* Navbar is handled conditionally or only on landing pages */}
                 {children}
             </body>
         </html>
