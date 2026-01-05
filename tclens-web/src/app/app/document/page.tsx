@@ -14,27 +14,40 @@ import {
     Check,
     Download,
     Scale,
-    Search
+    Search,
+    Type as TypeIcon
 } from "lucide-react";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { Document, Paragraph, TextRun, HeadingLevel, Packer, AlignmentType } from 'docx';
+import { saveAs } from 'file-saver';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { auth } from "@/lib/auth";
-import { getUsage, trackUsage, LIMITS, getRemainingQuota } from "@/lib/usage";
+import { getUsage, trackUsage, LIMITS } from "@/lib/usage";
 
 type AnalysisResult = {
+    languageDetection: {
+        primary: string;
+        secondary?: string[];
+    };
     summary: string;
     riskScore: number;
+    confidence: number;
     clauses: Array<{
         type: string;
         summary: string;
         riskLevel: "Low" | "Medium" | "High" | "Critical";
         explanation: string;
+        originalExcerpt?: string;
+        translatedExcerpt?: string;
     }>;
-    criticalAlerts: Array<{
+    redFlags: Array<{
         title: string;
         description: string;
     }>;
+    nextSteps: string[];
     wordCount: number;
 };
 
@@ -91,18 +104,35 @@ export default function DocumentPage() {
                 }
             });
 
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.error || "Analysis failed");
+            const contentType = response.headers.get("content-type");
+            let data;
+
+            if (contentType && contentType.includes("application/json")) {
+                data = await response.json();
+            } else {
+                const rawText = await response.text();
+                throw new Error(rawText.substring(0, 100) || "Server error occurred");
+            }
+
+            if (!response.ok || data.ok === false) {
+                // Return a more descriptive error incorporating details if present
+                const errorMessage = data.error || "Analysis failed";
+                const errorDetails = data.details ? `: ${data.details}` : "";
+                throw new Error(`${errorMessage}${errorDetails}`);
+            }
+
+            const analysisData = data.data;
 
             // Track usage
-            if (data.wordCount) {
-                trackUsage(data.wordCount, isLoggedIn);
+            if (analysisData.wordCount) {
+                trackUsage(analysisData.wordCount, isLoggedIn);
                 setUsage(getUsage(isLoggedIn));
             }
 
-            setResult(data);
+            setResult(analysisData);
         } catch (err: any) {
-            setError(err.message);
+            console.error("Analysis Error:", err);
+            setError(err.message || "Failed to analyze document");
         } finally {
             setLoading(false);
         }
@@ -111,6 +141,7 @@ export default function DocumentPage() {
     const handleGenerate = async () => {
         setGenLoading(true);
         setGenResult("");
+        setError(null);
         try {
             const response = await fetch("/api/generate-document", {
                 method: "POST",
@@ -119,11 +150,64 @@ export default function DocumentPage() {
             });
             const data = await response.json();
             if (!response.ok) throw new Error(data.error || "Generation failed");
-            setGenResult(data.content);
+
+            // Sanitizer: Remove code fences if present
+            let cleanContent = data.content;
+            if (cleanContent.startsWith("```")) {
+                const lines = cleanContent.split("\n");
+                if (lines[0].startsWith("```")) lines.shift();
+                if (lines[lines.length - 1].startsWith("```")) lines.pop();
+                cleanContent = lines.join("\n").trim();
+            }
+            setGenResult(cleanContent);
         } catch (err: any) {
             setError(err.message);
         } finally {
             setGenLoading(false);
+        }
+    };
+
+    const handleDownloadDocx = async () => {
+        if (!genResult) return;
+
+        try {
+            const sections = genResult.split('\n\n');
+            const doc = new Document({
+                sections: [
+                    {
+                        properties: {},
+                        children: [
+                            new Paragraph({
+                                text: genType,
+                                heading: HeadingLevel.HEADING_1,
+                                alignment: AlignmentType.CENTER,
+                                spacing: { after: 400 },
+                            }),
+                            ...sections.map(section => {
+                                // Check if it looks like a heading (e.g., "1. SCOPE OF SERVICES")
+                                const isHeading = /^\d+\.?\s+[A-Z\s,]+$/.test(section.trim());
+                                return new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: section.trim(),
+                                            bold: isHeading,
+                                            size: 24, // 12pt
+                                        }),
+                                    ],
+                                    spacing: { before: 200, after: 200 },
+                                    heading: isHeading ? HeadingLevel.HEADING_2 : undefined,
+                                });
+                            }),
+                        ],
+                    },
+                ],
+            });
+
+            const blob = await Packer.toBlob(doc);
+            saveAs(blob, `${genType.replace(/\s+/g, '_')}_Draft.docx`);
+        } catch (err) {
+            console.error("DOCX Export Error:", err);
+            setError("Failed to generate DOCX file.");
         }
     };
 
@@ -181,7 +265,6 @@ export default function DocumentPage() {
                     </div>
                 </div>
             </div>
-
 
             {tab === "analyze" ? (
                 <div className="grid lg:grid-cols-12 gap-8">
@@ -274,7 +357,7 @@ export default function DocumentPage() {
                     {/* Right: Results Display */}
                     <div className="lg:col-span-7">
                         {result ? (
-                            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-700">
+                            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-700 pb-20">
                                 {/* Score & Summary Card */}
                                 <div className="bg-white rounded-[2rem] border border-slate-200 p-8 shadow-sm relative overflow-hidden">
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full -mr-16 -mt-16 blur-3xl opacity-50" />
@@ -301,19 +384,47 @@ export default function DocumentPage() {
                                             </div>
                                         </div>
                                         <div className="space-y-2">
-                                            <h3 className="text-xl font-bold text-legal-navy font-outfit">Analysis Summary</h3>
+                                            <div className="flex items-center gap-3">
+                                                <h3 className="text-xl font-bold text-legal-navy font-outfit">Analysis Summary</h3>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="px-2 py-0.5 bg-slate-100 rounded-md text-[10px] font-black text-slate-500 uppercase tracking-tight">
+                                                        {result.languageDetection.primary}
+                                                    </span>
+                                                    <span className="text-[10px] font-bold text-slate-400">
+                                                        Confidence: {result.confidence}%
+                                                    </span>
+                                                </div>
+                                            </div>
                                             <p className="text-slate-600 leading-relaxed text-sm">{result.summary}</p>
                                         </div>
                                     </div>
                                 </div>
 
+                                {/* Red Flags */}
+                                {result.redFlags && result.redFlags.length > 0 && (
+                                    <div className="space-y-4">
+                                        <h3 className="text-lg font-bold text-red-600 px-2 flex items-center gap-2">
+                                            <AlertTriangle className="w-5 h-5" />
+                                            Red Flags
+                                        </h3>
+                                        <div className="grid gap-4">
+                                            {(result.redFlags ?? []).map((flag, i) => (
+                                                <div key={i} className="bg-red-50/50 border border-red-100 rounded-2xl p-5">
+                                                    <h4 className="font-bold text-red-900 text-sm mb-1">{flag.title}</h4>
+                                                    <p className="text-sm text-red-800/80">{flag.description}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
                                 {/* Clauses List */}
                                 <div className="space-y-4">
                                     <h3 className="text-lg font-bold text-legal-navy px-2">Identified Clauses</h3>
-                                    {result.clauses.map((clause, i) => (
+                                    {(result.clauses ?? []).map((clause, i) => (
                                         <div key={i} className="bg-white rounded-2xl border border-slate-200 p-5 group hover:border-legal-navy/20 transition-all shadow-sm">
                                             <div className="flex items-start justify-between gap-4">
-                                                <div className="space-y-1">
+                                                <div className="space-y-2 w-full">
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-sm font-bold text-legal-navy font-outfit">{clause.type}</span>
                                                         <span className={cn(
@@ -326,12 +437,47 @@ export default function DocumentPage() {
                                                         </span>
                                                     </div>
                                                     <p className="text-sm text-slate-600 leading-relaxed font-medium">{clause.summary}</p>
-                                                    <p className="text-xs text-slate-400 mt-2">{clause.explanation}</p>
+                                                    <p className="text-xs text-slate-400">{clause.explanation}</p>
+
+                                                    {clause.originalExcerpt && (
+                                                        <div className="mt-4 grid md:grid-cols-2 gap-4">
+                                                            <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                                                                <span className="text-[10px] font-black uppercase text-slate-400 block mb-1">Original</span>
+                                                                <p className="text-xs text-slate-500 italic line-clamp-3">"{clause.originalExcerpt}"</p>
+                                                            </div>
+                                                            {clause.translatedExcerpt && (
+                                                                <div className="p-3 bg-emerald-50/30 rounded-xl border border-emerald-100/50">
+                                                                    <span className="text-[10px] font-black uppercase text-emerald-500 block mb-1">English Translation</span>
+                                                                    <p className="text-xs text-slate-500 italic line-clamp-3">"{clause.translatedExcerpt}"</p>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
+
+                                {/* Next Steps */}
+                                {result.nextSteps && result.nextSteps.length > 0 && (
+                                    <div className="space-y-4">
+                                        <h3 className="text-lg font-bold text-legal-navy px-2">Recommended Next Steps</h3>
+                                        <div className="bg-legal-navy rounded-[2rem] p-8 text-white shadow-xl shadow-legal-navy/10 relative overflow-hidden">
+                                            <Zap className="absolute top-0 right-0 w-32 h-32 text-emerald-500/10 -mr-8 -mt-8" />
+                                            <ul className="space-y-4 relative z-10">
+                                                {(result.nextSteps ?? []).map((step, i) => (
+                                                    <li key={i} className="flex gap-3 items-start">
+                                                        <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
+                                                            <Check className="w-3.5 h-3.5 text-legal-navy" />
+                                                        </div>
+                                                        <p className="text-sm font-medium text-slate-200">{step}</p>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <div className="h-full min-h-[500px] flex flex-col items-center justify-center text-center p-12 bg-white rounded-[2rem] border border-dashed border-slate-200">
@@ -347,7 +493,7 @@ export default function DocumentPage() {
                     </div>
                 </div>
             ) : (
-                <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
                     <div className="bg-white rounded-[2rem] border border-slate-200 p-8 shadow-sm">
                         <div className="grid md:grid-cols-2 gap-8">
                             <div className="space-y-4">
@@ -409,12 +555,13 @@ export default function DocumentPage() {
                                         onClick={() => copyToClipboard(genResult)}
                                         className="h-10 px-4 rounded-xl font-bold flex items-center gap-2 border-slate-200"
                                     >
-                                        {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                                        {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Plus className="w-4 h-4" />}
                                         {copied ? "Copied" : "Copy"}
                                     </Button>
                                     <Button
                                         variant="outline"
                                         size="sm"
+                                        onClick={handleDownloadDocx}
                                         className="h-10 px-4 rounded-xl font-bold flex items-center gap-2 border-slate-200"
                                     >
                                         <Download className="w-4 h-4" />
@@ -422,8 +569,10 @@ export default function DocumentPage() {
                                     </Button>
                                 </div>
                             </div>
-                            <div className="bg-white rounded-[2rem] border border-slate-200 p-8 shadow-sm font-serif text-slate-800 leading-relaxed whitespace-pre-wrap text-sm max-h-[600px] overflow-y-auto custom-scrollbar">
-                                {genResult}
+                            <div className="bg-white rounded-[2rem] border border-slate-200 p-8 shadow-sm font-serif text-slate-800 leading-relaxed text-sm max-h-[600px] overflow-y-auto custom-scrollbar prose prose-slate max-w-none">
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    {genResult}
+                                </ReactMarkdown>
                             </div>
                             <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex items-start gap-3">
                                 <Scale className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />

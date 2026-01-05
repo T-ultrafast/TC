@@ -3,30 +3,55 @@ import { GoogleGenAI } from "@google/genai";
 
 export const runtime = "nodejs";
 
-const apiKey = process.env.GEMINI_API_KEY;
-
 export async function POST(req: NextRequest) {
-    try {
-        if (!apiKey) return NextResponse.json({ error: "Missing API Key" }, { status: 500 });
+    const apiKey = process.env.GEMINI_API_KEY;
 
-        const { type } = await req.json();
+    try {
+        if (!apiKey) {
+            console.error("GEMINI_API_KEY is not defined in environment variables");
+            return NextResponse.json({ error: "Configuration Error: Missing API Key" }, { status: 500 });
+        }
+
+        const body = await req.json().catch(() => ({}));
+        const { type } = body;
+
+        if (!type) {
+            return NextResponse.json({ error: "Missing document type" }, { status: 400 });
+        }
 
         const client = new GoogleGenAI({ apiKey });
-        const model = client.models.get("gemini-1.5-flash");
 
         const prompt = `
         Draft a professional, legally structured ${type}. 
-        Use standard legal terminology, include placeholders [IN BRACKETS] for specific names, dates, and terms.
-        Ensure it includes standard protective clauses for an individual user/contractor.
-        Format it as a clean text document with headers.
+        
+        STRICT FORMATTING RULES:
+        1. DO NOT use Markdown symbols like #, **, *, or - for headers or lists.
+        2. DO NOT wrap the output in code fences (e.g., \`\`\`text or \`\`\`).
+        3. Use professional legal numbering for sections (e.g., "1. SCOPE OF SERVICES", "1.1 Deliverables").
+        4. Use double line breaks between sections.
+        5. Include placeholders [IN BRACKETS] for specific names, dates, and terms.
+        6. Ensure it includes standard protective clauses for an individual user/contractor.
+        
+        The output should be a clean, plain-text document ready for a professional legal agreement.
         `;
 
-        const result = await model.generateContent(prompt);
-        const content = result.response.text();
+        const result = await client.models.generateContent({
+            model: "gemini-2.0-flash",
+            contents: [{ role: 'user', parts: [{ text: prompt }] }]
+        });
+
+        const content = result.text;
+
+        if (!content) {
+            throw new Error("Gemini returned an empty response");
+        }
 
         return NextResponse.json({ content });
     } catch (error: any) {
         console.error("Doc gen error:", error);
-        return NextResponse.json({ error: "Failed to generate document" }, { status: 500 });
+        return NextResponse.json({
+            error: "Failed to generate document",
+            details: error instanceof Error ? error.message : String(error)
+        }, { status: 500 });
     }
 }

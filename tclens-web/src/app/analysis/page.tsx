@@ -14,10 +14,16 @@ interface Clause {
 }
 
 interface AnalysisResult {
+    languageDetection: {
+        primary: string;
+        secondary?: string[];
+    };
     summary: string;
     riskScore: number;
+    confidence: number;
     clauses: Clause[];
-    criticalAlerts: { title: string; description: string }[];
+    redFlags?: { title: string; description: string }[];
+    criticalAlerts?: { title: string; description: string }[];
 }
 
 export default function AnalysisPage() {
@@ -94,8 +100,8 @@ export default function AnalysisPage() {
                             Critical Alerts
                         </h2>
                         <div className="space-y-3">
-                            {result.criticalAlerts.length > 0 ? (
-                                result.criticalAlerts.map((alert, idx) => (
+                            {((result.redFlags ?? result.criticalAlerts) || []).length > 0 ? (
+                                ((result.redFlags ?? result.criticalAlerts) || []).map((alert, idx) => (
                                     <div key={idx} className="p-3 bg-red-50 border-l-4 border-red-500 rounded-r-md">
                                         <p className="text-xs font-bold text-red-700 uppercase mb-1">{alert.title}</p>
                                         <p className="text-sm text-slate-800">{alert.description}</p>
@@ -115,7 +121,7 @@ export default function AnalysisPage() {
                 <div>
                     <h2 className="text-2xl font-bold text-legal-navy mb-6 font-outfit">Detailed Clause Analysis</h2>
                     <div className="space-y-4">
-                        {result.clauses.map((clause, idx) => (
+                        {(result.clauses ?? []).map((clause, idx) => (
                             <div key={idx} className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden transition-all hover:shadow-md">
                                 <div
                                     className="p-6 cursor-pointer flex items-start justify-between gap-4"

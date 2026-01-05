@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 type Message = {
     role: "user" | "assistant";
@@ -98,12 +100,22 @@ export default function AILawyerPage() {
                             {msg.role === "user" ? <User className="w-5 h-5 text-white" /> : <Bot className="w-5 h-5 text-emerald-500" />}
                         </div>
                         <div className={cn(
-                            "p-4 rounded-[1.5rem] text-sm leading-relaxed",
+                            "p-4 rounded-[1.5rem] text-sm leading-relaxed whitespace-pre-wrap",
                             msg.role === "user"
                                 ? "bg-legal-navy text-white rounded-tr-none"
                                 : "bg-white border border-slate-200 text-slate-800 rounded-tl-none shadow-sm"
                         )}>
-                            {msg.content}
+                            {msg.role === "assistant" ? (
+                                <div className="markdown-content">
+                                    <ReactMarkdown
+                                        remarkPlugins={[remarkGfm]}
+                                    >
+                                        {msg.content}
+                                    </ReactMarkdown>
+                                </div>
+                            ) : (
+                                msg.content
+                            )}
                         </div>
                     </div>
                 ))}

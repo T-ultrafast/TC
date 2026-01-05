@@ -58,6 +58,10 @@ export default function UploadPage() {
                 setError("Please paste some text to analyze.");
                 return;
             }
+            if (pastedText.trim().length < 50) {
+                setError("Please provide at least 50 characters for a meaningful analysis.");
+                return;
+            }
             const words = countWords(pastedText);
             if (currentQuotaUsage + words > currentLimit) {
                 setError(`Usage limit exceeded. You have ${remainingWords} words left. Please upgrade or reduce text.`);
@@ -92,25 +96,39 @@ export default function UploadPage() {
                 }
             });
 
-            if (!response.ok) {
-                const errData = await response.json();
-                throw new Error(errData.error || 'Analysis failed');
+            // Robust response handling
+            const contentType = response.headers.get("content-type");
+            let data;
+
+            if (contentType && contentType.includes("application/json")) {
+                data = await response.json();
+            } else {
+                // If the server returns HTML (Next.js error page), read as text
+                const text = await response.text();
+                throw new Error(text.substring(0, 50) || "Server error occurred");
             }
 
-            const data = await response.json();
+            if (!response.ok || data.ok === false) {
+                const errorMessage = data.error || 'Analysis failed';
+                const errorDetails = data.details ? `: ${data.details}` : "";
+                throw new Error(`${errorMessage}${errorDetails}`);
+            }
+
+            // data.ok is true, analysis is in data.data
+            const result = data.data;
 
             // Track successful usage
-            if (data.wordCount) {
-                trackUsage(data.wordCount, isUserLoggedIn);
+            if (result.wordCount) {
+                trackUsage(result.wordCount, isUserLoggedIn);
                 setUsage(getUsage(isUserLoggedIn));
             }
 
-            localStorage.setItem('analysisResult', JSON.stringify(data));
+            localStorage.setItem('analysisResult', JSON.stringify(result));
             router.push('/analysis');
 
-        } catch (err) {
-            console.error(err);
-            setError(err instanceof Error ? err.message : 'Failed to analyze document. Please try again.');
+        } catch (err: any) {
+            console.error("Analysis Error:", err);
+            setError(err.message || 'Failed to analyze document. Please try again.');
         } finally {
             setIsAnalyzing(false);
         }
