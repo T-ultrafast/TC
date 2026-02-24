@@ -3,7 +3,7 @@
 import { Check, Shield, Zap, Target, Star, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Navbar } from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const tiers = [
     {
@@ -58,7 +58,6 @@ const tiers = [
 export default function PricingPage() {
     return (
         <>
-            <Navbar />
             <main className="min-h-screen bg-slate-50 pt-24 pb-20 px-6">
                 <div className="max-w-7xl mx-auto space-y-16">
                     <div className="text-center space-y-4 max-w-3xl mx-auto">
@@ -146,6 +145,7 @@ export default function PricingPage() {
                     </div>
                 </div>
             </main>
+            <Footer />
         </>
     );
 }

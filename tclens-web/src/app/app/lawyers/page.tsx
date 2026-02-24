@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     Users,
     Search,
@@ -13,43 +13,47 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const mockLawyers = [
-    {
-        id: 1,
-        name: "Sarah Jenkins",
-        title: "Corporate & Tech Specialist",
-        location: "Silicon Valley, CA",
-        rating: 4.9,
-        reviews: 124,
-        price: "$250/hr",
-        tags: ["Intellectual Property", "SaaS Contracts"],
-        image: "https://images.unsplash.com/photo-1544717305-2782549b5136?w=400&h=400&fit=crop"
-    },
-    {
-        id: 2,
-        name: "Michael Chen",
-        title: "Employment Law Expert",
-        location: "New York, NY",
-        rating: 4.8,
-        reviews: 89,
-        price: "$300/hr",
-        tags: ["Litigation", "Disputes"],
-        image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400&h=400&fit=crop"
-    },
-    {
-        id: 3,
-        name: "Emma Rodriguez",
-        title: "Consumer Rights Advocate",
-        location: "Austin, TX",
-        rating: 5.0,
-        reviews: 212,
-        price: "$180/hr",
-        tags: ["T&Cs", "Privacy Law"],
-        image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop"
-    }
-];
-
 export default function LawyerPage() {
+    const [lawyers, setLawyers] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [locationQuery, setLocationQuery] = useState("");
+    const [debouncedSearch, setDebouncedSearch] = useState("");
+    const [debouncedLocation, setDebouncedLocation] = useState("");
+
+    // Debounce effect
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(searchQuery);
+            setDebouncedLocation(locationQuery);
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [searchQuery, locationQuery]);
+
+    // Fetch lawyers
+    useEffect(() => {
+        const fetchLawyers = async () => {
+            setLoading(true);
+            try {
+                const params = new URLSearchParams();
+                if (debouncedSearch) params.append("query", debouncedSearch);
+                if (debouncedLocation) params.append("location", debouncedLocation);
+
+                const res = await fetch(`/api/lawyers/search?${params.toString()}`);
+                const data = await res.json();
+                if (data.ok) {
+                    setLawyers(data.data);
+                }
+            } catch (err) {
+                console.error("Failed to fetch lawyers", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchLawyers();
+    }, [debouncedSearch, debouncedLocation]);
+
     return (
         <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500">
             {/* Header */}
@@ -58,60 +62,97 @@ export default function LawyerPage() {
                     <h1 className="text-3xl font-black text-legal-navy font-outfit mb-2">Lawyer Network</h1>
                     <p className="text-slate-500">Connect with vetted legal professionals for expert consultation.</p>
                 </div>
-                <Button variant="outline" className="h-12 px-6 rounded-xl border-slate-200 font-bold gap-2">
-                    Lawyer Signup
-                </Button>
             </div>
 
             {/* Search Bar */}
             <div className="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-2">
                 <div className="flex-1 relative">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                    <input type="text" placeholder="Search by name, expertise, or keyword..." className="w-full h-12 pl-12 pr-4 bg-transparent outline-none text-sm" />
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Search by name, expertise, or keyword..."
+                        className="w-full h-12 pl-12 pr-4 bg-transparent outline-none text-sm"
+                    />
                 </div>
                 <div className="md:w-px h-8 bg-slate-100 self-center hidden md:block" />
                 <div className="flex-1 relative">
                     <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                    <input type="text" placeholder="Location..." className="w-full h-12 pl-12 pr-4 bg-transparent outline-none text-sm" />
+                    <input
+                        type="text"
+                        value={locationQuery}
+                        onChange={(e) => setLocationQuery(e.target.value)}
+                        placeholder="Location..."
+                        className="w-full h-12 pl-12 pr-4 bg-transparent outline-none text-sm"
+                    />
                 </div>
                 <Button className="h-12 px-8 rounded-xl bg-legal-navy font-bold">Search</Button>
             </div>
 
             {/* Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {mockLawyers.map((l) => (
-                    <div key={l.id} className="bg-white rounded-[2rem] border border-slate-200 overflow-hidden group hover:border-legal-navy/20 transition-all hover:shadow-xl hover:shadow-slate-100">
-                        <div className="relative h-48 bg-slate-100 overflow-hidden">
-                            <img src={l.image} alt={l.name} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
-                            <div className="absolute top-4 right-4 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full flex items-center gap-1 shadow-sm">
-                                <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
-                                <span className="text-xs font-black text-legal-navy">{l.rating}</span>
-                            </div>
-                        </div>
-                        <div className="p-6 space-y-4">
-                            <div>
-                                <h4 className="text-lg font-black text-legal-navy font-outfit">{l.name}</h4>
-                                <p className="text-sm text-slate-500 font-medium">{l.title}</p>
-                            </div>
-                            <div className="flex flex-wrap gap-2">
-                                {l.tags.map(t => (
-                                    <span key={t} className="px-2 py-0.5 bg-slate-50 border border-slate-100 rounded-md text-[10px] font-bold text-slate-600 uppercase tracking-tighter">{t}</span>
-                                ))}
-                            </div>
-                            <div className="pt-4 border-t border-slate-50 flex items-center justify-between">
-                                <div className="flex flex-col">
-                                    <span className="text-xs text-slate-400 font-bold uppercase tracking-widest">Pricing</span>
-                                    <span className="text-sm font-black text-legal-navy">{l.price}</span>
+            {loading ? (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {[1, 2, 3].map(i => (
+                        <div key={i} className="h-[300px] bg-slate-50 rounded-[2rem] animate-pulse border border-slate-100" />
+                    ))}
+                </div>
+            ) : lawyers.length > 0 ? (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {lawyers.map((l) => (
+                        <div key={l.id} className="bg-white rounded-[2rem] border border-slate-200 overflow-hidden group hover:border-legal-navy/20 transition-all hover:shadow-xl hover:shadow-slate-100">
+                            <div className="relative h-48 bg-slate-100 overflow-hidden">
+                                {l.avatarUrl ? (
+                                    <img src={l.avatarUrl} alt={l.name} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400">
+                                        <Users className="w-12 h-12" />
+                                    </div>
+                                )}
+                                <div className="absolute top-4 right-4 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full flex items-center gap-1 shadow-sm">
+                                    <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                                    <span className="text-xs font-black text-legal-navy">{l.rating > 0 ? l.rating : "New"}</span>
                                 </div>
-                                <Button size="sm" className="bg-legal-navy rounded-xl px-4 gap-2 font-bold group">
-                                    Consult
-                                    <MessageCircle className="w-4 h-4 group-hover:animate-bounce" />
-                                </Button>
+                            </div>
+                            <div className="p-6 space-y-4">
+                                <div>
+                                    <h4 className="text-lg font-black text-legal-navy font-outfit">{l.name}</h4>
+                                    <p className="text-sm text-slate-500 font-medium">{l.title}</p>
+                                    <div className="flex items-center gap-1 mt-1 text-xs text-slate-400">
+                                        <MapPin className="w-3 h-3" />
+                                        {l.city}, {l.state}, {l.country}
+                                    </div>
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                    {l.specialties.slice(0, 3).map((t: string) => (
+                                        <span key={t} className="px-2 py-0.5 bg-slate-50 border border-slate-100 rounded-md text-[10px] font-bold text-slate-600 uppercase tracking-tighter">{t}</span>
+                                    ))}
+                                </div>
+                                <div className="pt-4 border-t border-slate-50 flex items-center justify-between">
+                                    <div className="flex flex-col">
+                                        <span className="text-xs text-slate-400 font-bold uppercase tracking-widest">Pricing</span>
+                                        <span className="text-sm font-black text-legal-navy">${l.hourlyRate}/hr</span>
+                                    </div>
+                                    <Button size="sm" className="bg-legal-navy rounded-xl px-4 gap-2 font-bold group">
+                                        Consult
+                                        <MessageCircle className="w-4 h-4 group-hover:animate-bounce" />
+                                    </Button>
+                                </div>
                             </div>
                         </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="text-center py-20 bg-slate-50 rounded-[2.5rem] border border-dashed border-slate-200">
+                    <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+                        <Users className="w-10 h-10 text-slate-300" />
                     </div>
-                ))}
-            </div>
+                    <h3 className="text-xl font-bold text-legal-navy font-outfit mb-2">No lawyers available yet</h3>
+                    <p className="text-slate-500 max-w-sm mx-auto">
+                        We couldn't find any lawyers matching your filters. Check back soon or try widening your search.
+                    </p>
+                </div>
+            )}
 
             {/* Trust Banner */}
             <div className="bg-emerald-50 rounded-[2.5rem] p-8 md:p-12 text-center space-y-4 border border-emerald-100">

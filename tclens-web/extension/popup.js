@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsDiv = document.getElementById('results');
     const loadingDiv = document.getElementById('loading');
     const initialDiv = document.getElementById('initial');
+    const viewReportBtn = document.getElementById('viewReportBtn');
+
+    let currentFullReportUrl = null;
 
     scanBtn.addEventListener('click', async () => {
         // UI State: Loading
@@ -19,37 +22,74 @@ document.addEventListener('DOMContentLoaded', () => {
             const [{ result }] = await chrome.scripting.executeScript({
                 target: { tabId: tab.id },
                 func: () => {
+                    // Inline smart extraction
+                    function getSmartText() {
+                        const clone = document.body.cloneNode(true);
+                        const unwanted = ['nav', 'footer', 'header', 'aside', 'script', 'style', 'noscript', '[role="navigation"]'];
+                        unwanted.forEach(sel => clone.querySelectorAll(sel).forEach(el => el.remove()));
+
+                        const main = clone.querySelector('main, article, #content') || clone;
+                        return main.innerText.replace(/\s+/g, ' ').trim().substring(0, 50000);
+                    }
+
                     return {
-                        text: document.body.innerText,
+                        text: getSmartText(),
                         url: window.location.href
                     };
                 },
             });
 
-            // 3. Call API
-            const response = await fetch('http://localhost:3000/api/extension/analyze', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
+            // 3. Call API via Background Script
+            chrome.runtime.sendMessage({
+                action: "analyze",
+                payload: {
                     page_text: result.text,
                     url: result.url
-                })
+                }
+            }, (response) => {
+                if (chrome.runtime.lastError) {
+                    console.error("Runtime error:", chrome.runtime.lastError);
+                    showError("Extension connection failed.");
+                    loadingDiv.style.display = 'none';
+                    initialDiv.style.display = 'block';
+                    return;
+                }
+
+                if (response && response.success) {
+                    renderResults(response.data);
+                } else {
+                    console.error("Analysis error:", response?.error);
+                    loadingDiv.style.display = 'none';
+                    initialDiv.style.display = 'block';
+                    showError(response?.error || "Analysis failed.");
+                }
             });
-
-            if (!response.ok) throw new Error("Analysis failed");
-
-            const data = await response.json();
-
-            // 4. Render Results
-            renderResults(data);
 
         } catch (error) {
             console.error(error);
             loadingDiv.style.display = 'none';
             initialDiv.style.display = 'block';
-            alert("Failed to analyze page. Ensure localhost:3000 is running.");
+            showError("Analysis failed. Please try again.");
         }
     });
+
+    function showError(message) {
+        const errorMsg = document.createElement('div');
+        errorMsg.style.color = 'red';
+        errorMsg.style.marginTop = '10px';
+        errorMsg.style.fontSize = '12px';
+        errorMsg.innerText = message.includes("Failed to fetch")
+            ? "Server unreachable. Please check your internet connection."
+            : message;
+
+        const existing = initialDiv.querySelector('.error-msg');
+        if (existing) existing.remove();
+
+        errorMsg.className = 'error-msg';
+        initialDiv.appendChild(errorMsg);
+
+        setTimeout(() => errorMsg.remove(), 5000);
+    }
 
     function renderResults(data) {
         loadingDiv.style.display = 'none';
@@ -60,53 +100,72 @@ document.addEventListener('DOMContentLoaded', () => {
         scoreEl.textContent = data.risk_score;
         scoreEl.className = `score ${getScoreClass(data.risk_score)}`;
 
+        // Risk Level
+        let levelEl = document.getElementById('riskLevel');
+        if (!levelEl) {
+            levelEl = document.createElement('div');
+            levelEl.id = 'riskLevel';
+            levelEl.style.fontSize = '12px';
+            levelEl.style.fontWeight = 'bold';
+            levelEl.style.textTransform = 'uppercase';
+            levelEl.style.marginTop = '4px';
+            scoreEl.parentNode.appendChild(levelEl);
+        }
+        const riskLevel = data.risk_level || (data.risk_score > 80 ? 'Severe' : data.risk_score > 60 ? 'High' : data.risk_score > 30 ? 'Moderate' : 'Low');
+        levelEl.textContent = riskLevel;
+        levelEl.style.color = data.risk_score >= 75 ? '#ef4444' : data.risk_score >= 50 ? '#f59e0b' : '#10b981';
+
         // Document Type
-        document.getElementById('docType').textContent = data.document_type;
+        document.getElementById('docType').textContent = data.document_type || "Legal Document";
 
-        // Summary (mapped from short_summary)
-        document.getElementById('summary').textContent = data.short_summary;
+        // Summary
+        document.getElementById('summary').textContent = data.short_summary || data.summary || "No summary available.";
 
-        // Key Takeaways (mapped from key_takeaways)
+        // Key Takeaways
         const bulletsList = document.getElementById('bullets');
         bulletsList.innerHTML = '';
-        if (data.key_takeaways && Array.isArray(data.key_takeaways)) {
-            data.key_takeaways.forEach(item => {
-                const li = document.createElement('li');
-                li.textContent = item;
-                bulletsList.appendChild(li);
-            });
-        }
+        const items = data.key_takeaways || data.nextSteps || [];
+        items.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            bulletsList.appendChild(li);
+        });
 
         // Critical Warnings
         const flagsContainer = document.getElementById('flags');
         flagsContainer.innerHTML = '';
 
-        if (data.critical_warnings) {
-            Object.entries(data.critical_warnings).forEach(([key, flag]) => {
-                if (flag.value) {
-                    const div = document.createElement('div');
-                    div.className = 'flag-item';
-                    div.innerHTML = `
-            <span class="flag-icon">⚠️</span>
-            <div class="flag-content">
-              <strong>${formatFlagName(key)}</strong>
-              <p>${flag.reason}</p>
-            </div>
-          `;
-                    flagsContainer.appendChild(div);
-                }
+        if (data.breakdown && data.breakdown.length > 0) {
+            data.breakdown.forEach(risk => {
+                const div = document.createElement('div');
+                div.className = 'flag-item';
+                div.innerHTML = `
+                    <span class="flag-icon">🚩</span>
+                    <div class="flag-content">
+                        <strong>${risk.label} (+${risk.weight})</strong>
+                        <p>${risk.evidence}</p>
+                    </div>
+                `;
+                flagsContainer.appendChild(div);
             });
         }
+
+        // Show View Full Report button
+        if (data.full_report_url) {
+            currentFullReportUrl = data.full_report_url;
+            viewReportBtn.style.display = 'block';
+        }
     }
+
+    viewReportBtn.addEventListener('click', () => {
+        if (currentFullReportUrl) {
+            chrome.tabs.create({ url: currentFullReportUrl });
+        }
+    });
 
     function getScoreClass(score) {
         if (score >= 80) return 'score-high';
         if (score >= 50) return 'score-medium';
         return 'score-low';
-    }
-
-    function formatFlagName(key) {
-        // Replace underscores with spaces and capitalize
-        return key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     }
 });

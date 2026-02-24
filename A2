@@ -1,0 +1,216 @@
+Cursor Prompt: Implement Cloud-Based Analysis API for Chrome Extension
+
+I am building a Chrome extension (TCLens) that analyzes Terms of Service and Privacy Policy pages. I want to migrate from using localhost to a production-ready cloud API architecture.
+
+Please refactor the system to follow this structure:
+
+1. Backend (Cloud API)
+
+Create a secure, scalable REST API hosted on my server (e.g. Vercel, Railway, Render, or AWS) at:
+
+https://api.mydomain.com
+
+
+Add these endpoints:
+
+a) Detect Legal Content
+POST /api/extension/detect
+
+
+Input:
+
+page_text (string)
+
+url (string)
+
+title (string)
+
+Output:
+
+document_type
+
+confidence
+
+trigger_recommendation (show_badge | show_popup | ignore)
+
+report_id (UUID)
+
+b) Analyze Document
+POST /api/extension/analyze
+
+
+Input:
+
+page_text
+
+url
+
+report_id
+
+Output:
+
+risk_score (0–100)
+
+red_flags (array of objects)
+
+short_summary (max 80 words)
+
+key_takeaways
+
+disclaimer
+
+full_report_url
+
+c) Health Check
+GET /api/extension/ping
+
+
+Returns:
+
+{ status: "ok" }
+
+2. AI Processing Layer
+
+Implement an internal service that:
+
+Uses OpenAI / Claude / Gemini / local LLM
+
+Extracts legal risks
+
+Calculates risk score using weighted metrics
+
+Summarizes results
+
+Stores reports in database
+
+Ensure:
+
+All AI calls are server-side only
+
+API keys are never exposed
+
+Add timeout + retry logic
+
+3. Database Layer
+
+Create tables/collections for:
+
+analysis_reports
+- id (UUID)
+- url
+- document_type
+- risk_score
+- red_flags (JSON)
+- summary
+- created_at
+
+
+Enable indexed lookup by id.
+
+4. Chrome Extension (Client)
+
+Refactor extension so that:
+
+content.js only extracts page text
+
+Sends message to background.js
+
+background.js calls https://api.mydomain.com
+
+Never calls localhost
+
+Handles network errors gracefully
+
+Flow:
+
+Page → Content Script → Background → Cloud API → UI
+
+5. UI Behavior
+
+When user clicks “Analyze”:
+
+Show a compact popup that displays:
+
+Risk score
+
+Top 3 red flags
+
+“View Full Report” button
+
+The button opens:
+
+https://app.mydomain.com/app/document?report_id=<id>
+
+
+in a new tab.
+
+Do NOT block the page or inject full-screen modals.
+
+6. Security
+
+Implement:
+
+API key authentication for extension
+
+Rate limiting (per IP + per key)
+
+CORS restricted to extension origin
+
+HTTPS only
+
+JWT session support (optional)
+
+7. Deployment
+
+Prepare configs for:
+
+Vercel / Railway / Render
+
+Environment variables
+
+Secrets manager
+
+Production logging
+
+Error monitoring
+
+8. Error Handling
+
+Return structured errors:
+
+{
+  error: "SERVICE_UNAVAILABLE",
+  message: "Analysis service temporarily offline"
+}
+
+
+Extension should show user-friendly UI.
+
+9. Documentation
+
+Generate:
+
+API docs
+
+Setup guide
+
+Dev → Prod migration steps
+
+Testing checklist
+
+Goal
+
+The final system must:
+
+Work on any website
+
+Never depend on localhost
+
+Support scaling
+
+Be Chrome Web Store compliant
+
+Be secure and production-ready
+
+Implement with clean architecture, separation of concerns, and maintainable code.
+

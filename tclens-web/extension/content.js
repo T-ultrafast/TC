@@ -1,261 +1,392 @@
-// TCLens Content Script v4 - T3 Implementation
+// TCLens Content Script v5 - Shadow DOM Implementation
+// TCLens Content Script v5 - Shadow DOM Implementation
 
-const API_BASE_URL = 'http://localhost:3000';
+// Global reference for the shadow root
+let tclensShadowRoot = null;
 
-// Extract visible text from the page
-function extractPageText() {
-    // Remove script and style elements
-    const scripts = document.querySelectorAll('script, style, noscript');
-    scripts.forEach(el => el.remove());
-    
-    // Get visible text
-    const bodyText = document.body.innerText || document.body.textContent || '';
-    
-    // Limit to reasonable size (first 50000 chars)
-    return bodyText.substring(0, 50000);
+// Initialize Shadow DOM root
+function initShadow() {
+    if (tclensShadowRoot) return tclensShadowRoot;
+
+    const host = document.createElement("div");
+    host.id = "tclens-root";
+    // Ensure the host itself doesn't affect layout
+    host.style.cssText = "position: absolute; top: 0; left: 0; width: 0; height: 0; z-index: 2147483647;";
+    document.body.appendChild(host);
+
+    tclensShadowRoot = host.attachShadow({ mode: 'open' });
+
+    // Inject Shared Styles
+    const style = document.createElement('style');
+    style.textContent = `
+        :host {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .tclens-badge {
+            position: fixed; bottom: 20px; right: 20px; z-index: 2147483647;
+            background: #0f172a; color: white; padding: 12px 16px; border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: flex; align-items: center; gap: 12px; animation: slideIn 0.3s ease-out;
+            cursor: pointer; transition: transform 0.2s; max-width: 320px;
+            pointer-events: auto;
+        }
+
+        .tclens-badge:hover { transform: scale(1.02); }
+
+        /* Compact Panel - Top Right */
+        .tclens-panel {
+            position: fixed; top: 20px; right: 20px; z-index: 2147483647;
+            background: white; border-radius: 16px; width: 320px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            display: flex; flex-direction: column; overflow: hidden;
+            border: 1px solid #e2e8f0; animation: slideInTop 0.3s ease-out;
+            max-height: 80vh;
+            pointer-events: auto;
+        }
+
+        .panel-header {
+            padding: 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;
+            display: flex; justify-content: space-between; align-items: flex-start;
+        }
+
+        .risk-score-container {
+            display: flex; align-items: baseline; gap: 4px;
+        }
+
+        .panel-body {
+            padding: 16px; overflow-y: auto; flex: 1;
+        }
+
+        .tclens-close-btn {
+            background: none; border: none; color: #64748b; cursor: pointer;
+            font-size: 20px; padding: 4px; border-radius: 6px; line-height: 1;
+            transition: background 0.2s;
+        }
+
+        .tclens-close-btn:hover { background: #f1f5f9; color: #334155; }
+
+        .flag-item {
+            padding: 12px; background: #fff1f2; border: 1px solid #fecdd3;
+            border-radius: 8px; margin-bottom: 10px; display: flex; gap: 10px;
+        }
+        
+        .flag-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+
+        .flag-content strong {
+            display: block; font-size: 13px; color: #9f1239; margin-bottom: 2px;
+            text-transform: capitalize;
+        }
+        
+        .flag-content p {
+            margin: 0; font-size: 12px; line-height: 1.4; color: #881337;
+        }
+
+        .cta-button {
+            display: block; width: 100%; padding: 12px; margin-top: 16px;
+            background: #0f172a; color: white; text-align: center;
+            border: none; border-radius: 10px; font-weight: 600; font-size: 13px;
+            cursor: pointer; transition: background 0.2s; text-decoration: none;
+        }
+        
+        .cta-button:hover { background: #1e293b; }
+
+        .no-flags {
+            padding: 20px; text-align: center; color: #64748b; font-size: 13px;
+            background: #f8fafc; border-radius: 8px; border: 1px dashed #cbd5e1;
+        }
+
+        @keyframes slideIn { 
+            from { transform: translateY(20px); opacity: 0; } 
+            to { transform: translateY(0); opacity: 1; } 
+        }
+        
+        @keyframes slideInTop { 
+            from { transform: translateY(-20px); opacity: 0; } 
+            to { transform: translateY(0); opacity: 1; } 
+        }
+    `;
+    tclensShadowRoot.appendChild(style);
+
+    return tclensShadowRoot;
 }
 
-// Show badge notification
-function showBadge(detectionResult) {
-    // Check if already shown
-    if (document.getElementById("tclens-badge")) return;
+// Extract text intelligently: Prefer main content, skip nav/footer
+function extractPageText() {
+    // Clone body to avoid modifying the live page
+    const clone = document.body.cloneNode(true);
 
-    const div = document.createElement("div");
-    div.id = "tclens-badge";
-    div.style.cssText = `
-        position: fixed; bottom: 20px; right: 20px; z-index: 2147483647;
-        background: #0f172a; color: white; padding: 16px; border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-family: 'Segoe UI', sans-serif;
-        display: flex; align-items: center; gap: 12px; animation: slideIn 0.3s ease-out;
-        cursor: pointer; transition: transform 0.2s; max-width: 320px;
-    `;
+    // Remove unwanted elements
+    const unwantedSelectors = [
+        'nav', 'footer', 'header', 'aside', 'script', 'style', 'noscript',
+        '.nav', '.footer', '.header', '.sidebar', '.menu', '#menu',
+        '[role="navigation"]', '[role="contentinfo"]', '[aria-hidden="true"]'
+    ];
+
+    unwantedSelectors.forEach(selector => {
+        const elements = clone.querySelectorAll(selector);
+        elements.forEach(el => el.remove());
+    });
+
+    // Try to find the "main" content container
+    const mainSelectors = ['main', 'article', '#content', '#main', '.content', '.main'];
+    let mainContent = null;
+
+    for (const selector of mainSelectors) {
+        const el = clone.querySelector(selector);
+        if (el && el.innerText.length > 500) { // arbitrary threshold for "substantial" content
+            mainContent = el;
+            break;
+        }
+    }
+
+    // Default to the cleaned body if no main container found
+    const target = mainContent || clone;
+
+    // Get text and clean up whitespace
+    let text = target.innerText || "";
+    text = text.replace(/\s+/g, ' ').trim(); // Collapsing multiple spaces/newlines
+
+    return text.substring(0, 50000);
+}
+
+// Helper to send message to background script
+function callBackgroundApi(action, payload) {
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage({ action, payload }, (response) => {
+            if (chrome.runtime.lastError) {
+                return reject(chrome.runtime.lastError.message);
+            }
+            if (response && response.success) {
+                resolve(response.data);
+            } else {
+                reject(response?.error || "Unknown error");
+            }
+        });
+    });
+}
+
+function showBadge(detectionResult) {
+    const root = initShadow();
+    if (root.getElementById("tclens-badge")) return;
+
+    const badge = document.createElement("div");
+    badge.id = "tclens-badge";
+    badge.className = "tclens-badge";
 
     const docType = detectionResult.document_type || "Legal Content";
     const confidence = detectionResult.confidence || 0;
-    
-    div.innerHTML = `
-        <div style="font-size: 24px;">🛡️</div>
+
+    badge.innerHTML = `
+        <div style="font-size: 20px;">🛡️</div>
         <div style="flex: 1;">
-            <div style="font-weight: bold; font-size: 14px;">${docType} Detected</div>
-            <div style="font-size: 12px; color: #94a3b8;">Confidence: ${confidence}% - Click to analyze.</div>
+            <div style="font-weight: 700; font-size: 13px; letter-spacing: -0.01em;">${docType}</div>
+            <div style="font-size: 11px; color: #94a3b8;">${confidence}% confidence</div>
         </div>
-        <button id="tclens-close" style="background:none; border:none; color:#64748b; cursor:pointer; font-size: 16px; margin-left: 8px; padding: 4px;">×</button>
+        <button id="tclens-close" class="tclens-close-btn">×</button>
     `;
 
-    div.onclick = (e) => {
+    badge.onclick = (e) => {
         if (e.target.id !== "tclens-close") {
-            // Open extension popup by sending message to background
-            chrome.runtime.sendMessage({ action: "open_popup" });
+            // Trigger analysis popup
+            performAnalysis();
         }
     };
 
-    document.body.appendChild(div);
+    root.appendChild(badge);
 
-    // Add animation style
-    if (!document.getElementById("tclens-style")) {
-        const style = document.createElement('style');
-        style.id = "tclens-style";
-        style.textContent = `
-            @keyframes slideIn { 
-                from { transform: translateY(20px); opacity: 0; } 
-                to { transform: translateY(0); opacity: 1; } 
-            }
-        `;
-        document.head.appendChild(style);
-    }
-
-    document.getElementById("tclens-close").onclick = (e) => {
+    root.getElementById("tclens-close").onclick = (e) => {
         e.stopPropagation();
-        div.remove();
+        badge.remove();
     };
 }
 
-// Show full popup overlay
-function showPopup(detectionResult) {
-    // Check if already shown
-    if (document.getElementById("tclens-popup")) return;
+function showCompactPanel(data) {
+    const root = initShadow();
 
-    const overlay = document.createElement("div");
-    overlay.id = "tclens-popup";
-    overlay.style.cssText = `
-        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0, 0, 0, 0.5); z-index: 2147483646;
-        display: flex; align-items: center; justify-content: center;
-        font-family: 'Segoe UI', sans-serif;
-    `;
+    // Remove existing badge or panel if present
+    const existingBadge = root.getElementById("tclens-badge");
+    if (existingBadge) existingBadge.remove();
 
-    const popup = document.createElement("div");
-    popup.style.cssText = `
-        background: white; border-radius: 16px; padding: 24px;
-        max-width: 600px; max-height: 80vh; overflow-y: auto;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        position: relative;
-    `;
+    const existingPanel = root.getElementById("tclens-panel");
+    if (existingPanel) return; // Already showing
 
-    const riskScore = detectionResult.risk_score || 0;
-    const riskClass = riskScore >= 75 ? 'high' : riskScore >= 50 ? 'medium' : 'low';
-    const riskColor = riskScore >= 75 ? '#dc2626' : riskScore >= 50 ? '#f59e0b' : '#10b981';
+    const panel = document.createElement("div");
+    panel.id = "tclens-panel";
+    panel.className = "tclens-panel";
 
-    let warningsHtml = '';
-    if (detectionResult.critical_warnings) {
-        Object.entries(detectionResult.critical_warnings).forEach(([key, warning]) => {
-            if (warning.value) {
-                warningsHtml += `
-                    <div style="padding: 12px; background: #fef3c7; border-left: 4px solid #f59e0b; margin: 8px 0; border-radius: 4px;">
-                        <strong>${key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</strong>
-                        <p style="margin: 4px 0 0 0; font-size: 14px; color: #78350f;">${warning.reason}</p>
+    const riskScore = data.risk_score || 0;
+    const riskColor = riskScore >= 75 ? '#ef4444' : riskScore >= 50 ? '#f59e0b' : '#10b981';
+    const riskLevel = data.risk_level || (riskScore >= 81 ? 'Severe' : riskScore >= 61 ? 'High' : riskScore >= 31 ? 'Moderate' : 'Low');
+
+    // Build flags HTML
+    let flagsHtml = '';
+    let flagCount = 0;
+
+    // Use breakdown if available for "Explainability"
+    if (data.breakdown && data.breakdown.length > 0) {
+        data.breakdown.forEach((risk) => {
+            if (flagCount < 5) {
+                flagCount++;
+                flagsHtml += `
+                    <div class="flag-item">
+                        <span class="flag-icon">🚩</span>
+                        <div class="flag-content">
+                            <strong>${risk.label} (+${risk.weight})</strong>
+                            <p>${risk.evidence}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    } else if (data.critical_warnings) {
+        // Fallback to critical_warnings if breakdown is missing
+        Object.entries(data.critical_warnings).forEach(([key, warning]) => {
+            if (warning.value && flagCount < 5) {
+                flagCount++;
+                const title = key.replace(/_/g, ' ');
+                flagsHtml += `
+                    <div class="flag-item">
+                        <span class="flag-icon">⚠️</span>
+                        <div class="flag-content">
+                            <strong>${title}</strong>
+                            <p>${warning.reason}</p>
+                        </div>
                     </div>
                 `;
             }
         });
     }
 
-    let takeawaysHtml = '';
-    if (detectionResult.key_takeaways && detectionResult.key_takeaways.length > 0) {
-        takeawaysHtml = '<ul style="margin: 12px 0; padding-left: 20px;">';
-        detectionResult.key_takeaways.forEach(takeaway => {
-            takeawaysHtml += `<li style="margin: 6px 0;">${takeaway}</li>`;
-        });
-        takeawaysHtml += '</ul>';
+    if (!flagsHtml) {
+        flagsHtml = `
+            <div class="no-flags">
+                <div style="font-size: 24px; margin-bottom: 8px;">✅</div>
+                No major red flags detected<br>in this summary.
+            </div>
+        `;
     }
 
-    popup.innerHTML = `
-        <button id="tclens-popup-close" style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b;">×</button>
-        <div style="margin-bottom: 20px;">
-            <h2 style="margin: 0 0 8px 0; font-size: 20px; font-weight: bold;">${detectionResult.document_type || 'Legal Document'}</h2>
-            <div style="display: flex; align-items: center; gap: 12px; margin-top: 12px;">
-                <div style="font-size: 14px; color: #64748b;">Risk Score:</div>
-                <div style="font-size: 32px; font-weight: bold; color: ${riskColor};">${riskScore}</div>
-                <div style="font-size: 12px; color: #94a3b8;">/ 100</div>
+    panel.innerHTML = `
+        <div class="panel-header">
+            <div>
+                <h2 style="margin: 0; font-size: 16px; font-weight: 800; color: #0f172a;">${data.document_type || 'Legal Analysis'}</h2>
+                <div class="risk-score-container" style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                    <span style="font-size: 32px; font-weight: 900; color: ${riskColor}; line-height: 1;">${riskScore}</span>
+                    <div style="display: flex; flex-direction: column;">
+                        <span style="font-size: 10px; color: #64748b; font-weight: 600; text-transform: uppercase;">/ 100 Risk</span>
+                        <span style="font-size: 12px; color: ${riskColor}; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">${riskLevel}</span>
+                    </div>
+                </div>
             </div>
-            ${detectionResult.risk_reason ? `<p style="margin: 8px 0; font-size: 14px; color: #64748b;">${detectionResult.risk_reason}</p>` : ''}
+            <button id="tclens-panel-close" class="tclens-close-btn">×</button>
         </div>
         
-        ${detectionResult.short_summary ? `
-            <div style="margin: 20px 0; padding: 16px; background: #f8fafc; border-radius: 8px;">
-                <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600;">Summary</h3>
-                <p style="margin: 0; font-size: 14px; line-height: 1.6;">${detectionResult.short_summary}</p>
+        <div class="panel-body">
+            <h3 style="margin: 0 0 12px 0; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">
+                ${flagCount > 0 ? 'Why this score?' : 'Analysis Result'}
+            </h3>
+            
+            <div style="max-height: 300px; overflow-y: auto; padding-right: 4px;">
+                ${flagsHtml}
             </div>
-        ` : ''}
-        
-        ${takeawaysHtml ? `
-            <div style="margin: 20px 0;">
-                <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600;">Key Takeaways</h3>
-                ${takeawaysHtml}
-            </div>
-        ` : ''}
-        
-        ${warningsHtml ? `
-            <div style="margin: 20px 0;">
-                <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #dc2626;">⚠️ Critical Warnings</h3>
-                ${warningsHtml}
-            </div>
-        ` : ''}
-        
-        ${detectionResult.cta_text ? `
-            <div style="margin: 20px 0; padding: 12px; background: #0f172a; color: white; border-radius: 8px; text-align: center; cursor: pointer;" id="tclens-cta">
-                ${detectionResult.cta_text}
-            </div>
-        ` : ''}
-        
-        ${detectionResult.disclaimer ? `
-            <p style="margin: 16px 0 0 0; font-size: 12px; color: #94a3b8; text-align: center;">${detectionResult.disclaimer}</p>
-        ` : ''}
+            
+            <button id="tclens-full-report" class="cta-button" style="margin-top: 16px;">
+                Open Full Report ↗
+            </button>
+        </div>
     `;
 
-    overlay.appendChild(popup);
-    document.body.appendChild(overlay);
+    root.appendChild(panel);
 
-    // Close handlers
-    document.getElementById("tclens-popup-close").onclick = () => overlay.remove();
-    overlay.onclick = (e) => {
-        if (e.target === overlay) overlay.remove();
+    root.getElementById("tclens-panel-close").onclick = () => panel.remove();
+
+    root.getElementById("tclens-full-report").onclick = () => {
+        // Here you would typically open your web app with the text payload
+        // For now, let's just alert or log, or open the base URL
+        const appUrl = (typeof TCLENS_CONFIG !== 'undefined') ? TCLENS_CONFIG.getApiUrl() : 'http://localhost:3000';
+        window.open(`${appUrl}/dashboard`, '_blank');
     };
+}
 
-    const ctaEl = document.getElementById("tclens-cta");
-    if (ctaEl) {
-        ctaEl.onclick = () => {
-            chrome.runtime.sendMessage({ action: "open_full_report" });
-        };
+async function performAnalysis() {
+    try {
+        const pageText = extractPageText();
+
+        // Use background script to analyze
+        const result = await callBackgroundApi("analyze", {
+            page_text: pageText,
+            url: window.location.href
+        });
+
+        if (result) {
+            showCompactPanel(result);
+        }
+    } catch (error) {
+        console.error('TCLens: Analysis failed', error);
+        alert("Analysis failed. Please check the extension connection.");
     }
 }
 
-// Main detection function
 async function detectLegalContent() {
     try {
-        const pageText = extractPageText();
-        const url = window.location.href;
-        const title = document.title;
-
-        // Call detection API
-        const response = await fetch(`${API_BASE_URL}/api/extension/detect`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                page_text: pageText,
-                url: url,
-                title: title
-            })
-        });
-
-        if (!response.ok) {
-            console.log('TCLens: Detection API not available or error occurred');
+        // Skip auto-detection if we are on the TCLens web app itself
+        const appDomains = ["localhost", "tclens-web.vercel.app", "tclens.net"];
+        if (appDomains.some(domain => window.location.hostname.includes(domain))) {
+            console.log('TCLens: Auto-detection skipped on app domain');
             return;
         }
 
-        const detectionResult = await response.json();
+        const pageText = extractPageText();
 
-        // Handle based on trigger recommendation
-        if (detectionResult.trigger_recommendation === 'show_popup') {
-            // If popup is recommended, we need to get the full analysis
-            // For now, show popup with detection result if it has summary data
-            if (detectionResult.short_summary) {
-                showPopup(detectionResult);
-            } else {
-                // Fetch full analysis
-                const analyzeResponse = await fetch(`${API_BASE_URL}/api/extension/analyze`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        page_text: pageText,
-                        url: url
-                    })
-                });
-                
-                if (analyzeResponse.ok) {
-                    const analysisResult = await analyzeResponse.json();
-                    showPopup(analysisResult);
-                }
-            }
-        } else if (detectionResult.trigger_recommendation === 'show_badge') {
-            showBadge(detectionResult);
-        }
-        // If trigger_recommendation is 'none', do nothing
-
-        // Notify background script
-        chrome.runtime.sendMessage({
-            action: "detection_complete",
-            result: detectionResult
+        // Use background script to detect
+        const result = await callBackgroundApi("detect", {
+            page_text: pageText,
+            url: window.location.href,
+            title: document.title
         });
 
+        if (result.trigger_recommendation === 'show_popup') {
+            if (result.short_summary) {
+                showCompactPanel(result);
+            } else {
+                performAnalysis();
+            }
+        } else if (result.trigger_recommendation === 'show_badge') {
+            showBadge(result);
+        }
+
     } catch (error) {
-        console.error('TCLens: Detection error:', error);
-        // Fail silently - don't interrupt user experience
+        console.error('TCLens: Detection failed', error);
     }
 }
 
-// Run detection after page load
-// Wait a bit for dynamic content to load
-setTimeout(() => {
-    detectLegalContent();
-}, 2000);
+// Handshake for TCLens web app
+function sendHandshake() {
+    const appDomains = ["localhost", "tclens-web.vercel.app", "tclens.net"];
+    if (appDomains.some(domain => window.location.hostname.includes(domain))) {
+        console.log('TCLens: Sending handshake to web app');
+        window.postMessage({ type: "TCLENS_HANDSHAKE" }, "*");
+    }
+}
 
-// Also run on navigation for SPAs
+// Startup
+sendHandshake();
+setTimeout(detectLegalContent, 2000);
+
 let lastUrl = location.href;
 new MutationObserver(() => {
-    const url = location.href;
-    if (url !== lastUrl) {
-        lastUrl = url;
+    if (location.href !== lastUrl) {
+        lastUrl = location.href;
         setTimeout(detectLegalContent, 2000);
     }
 }).observe(document, { subtree: true, childList: true });
+
+// Listen for messages from popup or background
+chrome.runtime.onMessage.addListener((request) => {
+    if (request.action === "open_popup") {
+        performAnalysis();
+    }
+});

@@ -14,11 +14,17 @@ create table public.users (
 -- LAWYERS TABLE
 create table public.lawyers (
   id uuid references public.users(id) not null primary key,
+  title text, -- e.g. "Senior Partner", "Employment Specialist"
   license_number text not null,
   bar_association text not null,
   specialties text[] not null, -- Array of specialties (e.g., "IP", "Contract", "Privacy")
+  city text,
+  state text,
+  country text default 'USA',
   hourly_rate numeric(10, 2) not null,
   bio text,
+  rating numeric(3, 2) default 0, -- 0 means "New"
+  reviews_count integer default 0,
   verification_status text default 'pending' check (verification_status in ('pending', 'verified', 'rejected')),
   verified_at timestamp with time zone,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null

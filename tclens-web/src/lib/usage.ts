@@ -7,8 +7,11 @@ export const LIMITS = {
     ANONYMOUS: 5000,
     FREE_ACCOUNT: 10000,
     PRO: 100000,
-    BUSINESS: 500000
+    BUSINESS: 500000,
+    UNLIMITED: Infinity
 };
+
+export const UNLIMITED_MODE = true; // Global Dev Toggle
 
 const STORAGE_KEYS = {
     ANON_USAGE: "tc_reader_anon_word_count",
@@ -16,11 +19,18 @@ const STORAGE_KEYS = {
 };
 
 /**
- * Simple word count based on whitespace
+ * Robust word count based on whitespace and line breaks
  */
 export const countWords = (text: string): number => {
-    if (!text || !text.trim()) return 0;
-    return text.trim().split(/\s+/).length;
+    if (!text) return 0;
+    // Normalize: remove extra whitespace, convert line breaks to spaces
+    const normalized = text
+        .replace(/\r?\n/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    if (!normalized) return 0;
+    return normalized.split(' ').length;
 };
 
 /**
@@ -46,19 +56,18 @@ export const trackUsage = (words: number, isLoggedIn: boolean): number => {
 };
 
 /**
- * Get remaining quota
+ * Get remaining quota based on a specific limit
  */
-export const getRemainingQuota = (isLoggedIn: boolean): number => {
+export const getRemainingQuota = (isLoggedIn: boolean, limit: number): number => {
     const usage = getUsage(isLoggedIn);
-    const limit = isLoggedIn ? LIMITS.FREE_ACCOUNT : LIMITS.ANONYMOUS;
     return Math.max(0, limit - usage);
 };
 
 /**
  * Check if the user has reached their limit
  */
-export const hasReachedLimit = (isLoggedIn: boolean, incomingText: string): boolean => {
-    const remaining = getRemainingQuota(isLoggedIn);
+export const hasReachedLimit = (isLoggedIn: boolean, incomingText: string, limit: number): boolean => {
+    const remaining = getRemainingQuota(isLoggedIn, limit);
     const wordCount = countWords(incomingText);
     return wordCount > remaining;
 };

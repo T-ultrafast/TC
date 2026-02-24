@@ -13,26 +13,51 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json().catch(() => ({}));
-        const { type } = body;
+        const { type, jurisdiction, state, keyDetails } = body;
 
         if (!type) {
             return NextResponse.json({ error: "Missing document type" }, { status: 400 });
         }
 
+        if (!keyDetails || !keyDetails.trim()) {
+            return NextResponse.json({ error: "Key details are required for accurate document generation" }, { status: 400 });
+        }
+
         const client = new GoogleGenAI({ apiKey });
 
+        // Convert HTML to plain text for AI processing
+        const plainKeyDetails = keyDetails.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+
         const prompt = `
-        Draft a professional, legally structured ${type}. 
-        
-        STRICT FORMATTING RULES:
-        1. DO NOT use Markdown symbols like #, **, *, or - for headers or lists.
-        2. DO NOT wrap the output in code fences (e.g., \`\`\`text or \`\`\`).
-        3. Use professional legal numbering for sections (e.g., "1. SCOPE OF SERVICES", "1.1 Deliverables").
-        4. Use double line breaks between sections.
-        5. Include placeholders [IN BRACKETS] for specific names, dates, and terms.
-        6. Ensure it includes standard protective clauses for an individual user/contractor.
-        
-        The output should be a clean, plain-text document ready for a professional legal agreement.
+        Generate a professional, legally structured ${type} using the following key details as the PRIMARY SOURCE:
+
+        KEY DETAILS PROVIDED BY USER:
+        ${plainKeyDetails}
+
+        JURISDICTION: ${jurisdiction}${state ? ` (${state})` : ''}
+
+        INSTRUCTIONS:
+        1. Use the Key Details above as your primary source of truth - extract entities, terms, and requirements from this content
+        2. If the Key Details mention specific parties, dates, amounts, or terms, use those EXACTLY as provided
+        3. Only infer missing details when absolutely necessary, and clearly mark them as "assumed" or use brackets [EXAMPLE]
+        4. Adapt the document structure and wording to comply with ${jurisdiction} laws and requirements${state ? `, specifically considering ${state} state/provincial requirements` : ''}
+        5. Generate a complete, professional legal document that reads like a real agreement, not an AI response
+
+        FORMATTING REQUIREMENTS:
+        1. DO NOT use Markdown symbols like #, **, *, or - for headers or lists
+        2. DO NOT wrap the output in code fences (e.g., \`\`\`text or \`\`\`)
+        3. Use professional legal numbering for sections (e.g., "1. SCOPE OF SERVICES", "1.1 Deliverables")
+        4. Use double line breaks between sections
+        5. Include proper legal clauses and protective language appropriate for the document type
+        6. Preserve any list structure from the user's Key Details
+
+        QUALITY REQUIREMENTS:
+        - Extract and use: parties, dates, payment terms, obligations, termination conditions, governing law
+        - Generate structured clauses with proper headings
+        - Include appropriate legal boilerplate for the jurisdiction
+        - End with a "Notes / Assumptions" section if any assumptions were made
+
+        The output should be a clean, plain-text legal document ready for professional use.
         `;
 
         const result = await client.models.generateContent({

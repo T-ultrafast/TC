@@ -20,6 +20,9 @@ interface AnalysisResult {
     };
     summary: string;
     riskScore: number;
+    risk_level?: string;
+    risk_breakdown?: any[];
+    ai_severity?: any;
     confidence: number;
     clauses: Clause[];
     redFlags?: { title: string; description: string }[];
@@ -93,14 +96,21 @@ export default function AnalysisPage() {
                         </p>
                     </div>
 
-                    {/* Critical Alerts */}
+                    {/* Critical Alerts / Risk Breakdown */}
                     <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
                         <h2 className="text-lg font-bold text-legal-navy mb-4 flex items-center gap-2">
                             <AlertTriangle className="w-5 h-5 text-amber-500" />
-                            Critical Alerts
+                            {result.risk_breakdown?.length ? 'Risk Breakdown' : 'Critical Alerts'}
                         </h2>
                         <div className="space-y-3">
-                            {((result.redFlags ?? result.criticalAlerts) || []).length > 0 ? (
+                            {result.risk_breakdown?.length ? (
+                                result.risk_breakdown.map((risk: any, idx: number) => (
+                                    <div key={idx} className="p-3 bg-red-50 border-l-4 border-red-500 rounded-r-md">
+                                        <p className="text-xs font-bold text-red-700 uppercase mb-1">{risk.label} (+{risk.weight})</p>
+                                        <p className="text-sm text-slate-800 line-clamp-2 italic">{risk.evidence}</p>
+                                    </div>
+                                ))
+                            ) : ((result.redFlags ?? result.criticalAlerts) || []).length > 0 ? (
                                 ((result.redFlags ?? result.criticalAlerts) || []).map((alert, idx) => (
                                     <div key={idx} className="p-3 bg-red-50 border-l-4 border-red-500 rounded-r-md">
                                         <p className="text-xs font-bold text-red-700 uppercase mb-1">{alert.title}</p>

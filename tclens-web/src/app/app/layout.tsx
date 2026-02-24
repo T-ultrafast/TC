@@ -2,9 +2,10 @@
 
 import { Sidebar } from "@/components/Sidebar";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { auth } from "@/lib/auth";
-import { Loader2 } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { auth, LawyerProfile } from "@/lib/auth";
+import { Loader2, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function AppLayout({
@@ -13,6 +14,7 @@ export default function AppLayout({
     children: React.ReactNode;
 }) {
     const router = useRouter();
+    const pathname = usePathname();
     const [user, setUser] = useState<any>(null);
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
     const [isVerified, setIsVerified] = useState(false);
@@ -41,6 +43,16 @@ export default function AppLayout({
         return () => window.removeEventListener('sidebar-toggle', handleToggleEvent);
     }, [router]);
 
+    useEffect(() => {
+        const currentUser = auth.getUser();
+        if (currentUser?.role === 'lawyer') {
+            const lawyer = currentUser as LawyerProfile;
+            if (lawyer.verificationStatus !== 'verified' && pathname === '/app/lawyers') {
+                router.push('/app/document');
+            }
+        }
+    }, [pathname, router]);
+
     // Show loading state while verifying auth
     if (!isVerified) {
         return (
@@ -59,6 +71,27 @@ export default function AppLayout({
                     isSidebarCollapsed ? "pl-[72px]" : "pl-72"
                 )}
             >
+                {user?.role === 'lawyer' && user?.verificationStatus === 'pending' && (
+                    <div className="bg-amber-500 text-white px-6 py-2 flex items-center justify-between animate-in slide-in-from-top duration-500">
+                        <div className="flex items-center gap-2">
+                            <AlertCircle className="w-4 h-4" />
+                            <span className="text-sm font-bold font-outfit uppercase tracking-wider">
+                                Account Pending Verification
+                            </span>
+                            <span className="text-xs opacity-90 hidden md:inline">
+                                — Your professional profile is under review. Some features remain restricted.
+                            </span>
+                        </div>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-white hover:bg-white/10 font-bold text-xs"
+                            onClick={() => router.push('/app/admin')}
+                        >
+                            Review Details
+                        </Button>
+                    </div>
+                )}
                 <header className="h-16 border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-40 px-6 flex items-center justify-between">
                     <h2 className="text-sm font-medium text-slate-500 uppercase tracking-wider font-outfit lg:block hidden">
                         Dashboard Workspace

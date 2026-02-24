@@ -5,8 +5,15 @@
     "description": "Automatically detect and analyze Terms & Conditions.",
     "permissions": [
         "activeTab",
-        "scripting"
+        "scripting",
+        "storage"
     ],
+    "host_permissions": [
+        "http://localhost:3000/*"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
     "action": {
         "default_popup": "popup.html",
         "default_icon": {
@@ -21,6 +28,7 @@
                 "<all_urls>"
             ],
             "js": [
+                "config.js",
                 "content.js"
             ]
         }

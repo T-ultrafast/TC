@@ -57,6 +57,25 @@
       background: #059669;
     }
 
+    .view-report-btn {
+      width: 100%;
+      padding: 12px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+      display: none;
+      transition: background 0.2s;
+    }
+
+    .view-report-btn:hover {
+      background: #1d4ed8;
+    }
+
     /* Loading */
     #loading {
       display: none;
@@ -218,6 +237,8 @@
 
       <div class="section-title">Critical Warnings</div>
       <div id="flags"></div>
+
+      <button id="viewReportBtn" class="view-report-btn">View Full Report</button>
 
       <div class="disclaimer">
         This summary is informational only and does not constitute legal advice.

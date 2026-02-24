@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
+import crypto from 'crypto';
+import { calculateClauseRisk } from '@/lib/risk-scoring';
+import { enforceWordLimit } from '@/lib/string-utils';
 
 // Define schema for Gemini Structured Output
 const responseSchema = {
@@ -13,6 +16,7 @@ const responseSchema = {
         classification: { type: "STRING" },
         reason: { type: "STRING" },
         document_type: { type: "STRING", nullable: true },
+        // Legacy fields for backward compatibility
         risk_score: { type: "NUMBER", nullable: true },
         risk_reason: { type: "STRING", nullable: true },
         short_summary: { type: "STRING", nullable: true },
@@ -43,7 +47,7 @@ const responseSchema = {
 };
 
 const SYSTEM_PROMPT = `
-You are **TCLens Browser Agent v4**, an AI assistant powered by Google Gemini.
+You are **Terms Analyzer Browser Agent v4**, an AI assistant powered by Google Gemini.
 
 Your responsibilities:
 1. Detect whether the current webpage contains ANY content that is, or could reasonably be interpreted as, **legally binding** on the user.
@@ -76,7 +80,7 @@ STEP 2 — DETERMINE RECOMMENDED UI TRIGGER
 ------------------------------------------------------------
 STEP 3 — POPUP SUMMARY (Only if show_popup)
 ------------------------------------------------------------
-Provide risk_score, risk_reason, short_summary, key_takeaways (3-5 items), critical_warnings, and cta_text.
+Provide risk_score, risk_reason, short_summary (Strictly maximum 80 words), key_takeaways (3-5 items), critical_warnings, and cta_text.
 
 If trigger_recommendation != "show_popup":
 - Set risk_score = null
@@ -108,10 +112,18 @@ export async function POST(req: NextRequest) {
 
         const client = new GoogleGenAI({ apiKey });
 
-        // Build user message
+        // 1. Quick Base Scoring (Internal use/Log)
+        const { score: baseScore, breakdown } = calculateClauseRisk(page_text);
+
+        // 2. Build AI message
         let userMessage = `PAGE TEXT:\n${page_text.substring(0, 30000)}`;
         if (url) userMessage = `URL: ${url}\n${userMessage}`;
         if (title) userMessage = `TITLE: ${title}\n${userMessage}`;
+
+        // Add hints to AI about what we already found
+        if (breakdown.length > 0) {
+            userMessage = `HEURISTIC HINTS: ${JSON.stringify(breakdown.map(b => b.label))}\n${userMessage}`;
+        }
 
         const result = await client.models.generateContent({
             model: "gemini-2.0-flash",
@@ -121,6 +133,7 @@ export async function POST(req: NextRequest) {
                 responseMimeType: "application/json",
                 // @ts-ignore
                 responseSchema: responseSchema,
+                temperature: 0,
             }
         });
 
@@ -131,9 +144,16 @@ export async function POST(req: NextRequest) {
 
         const parsedResult = JSON.parse(responseContent);
 
-        // Normalize result just in case (though structured outputs should handle it)
+        // 3. Construct response with improved scoring
         const normalizedResult = {
             ...parsedResult,
+            report_id: crypto.randomUUID(),
+            // In detect mode, we show the base score as a fast estimate 
+            // if AI didn't provide a comprehensive one yet
+            risk_score: parsedResult.risk_score ?? baseScore,
+            risk_level: (parsedResult.risk_score ?? baseScore) > 60 ? "High" : (parsedResult.risk_score ?? baseScore) > 30 ? "Moderate" : "Low",
+            short_summary: enforceWordLimit(parsedResult.short_summary ?? "", 80),
+            risk_breakdown: breakdown,
             key_takeaways: parsedResult.key_takeaways || [],
             critical_warnings: parsedResult.critical_warnings || {
                 automatic_renewal: { value: false, reason: "" },
@@ -143,13 +163,30 @@ export async function POST(req: NextRequest) {
             }
         };
 
-        return NextResponse.json(normalizedResult);
+        // CORS headers
+        const headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+        };
+
+        return NextResponse.json(normalizedResult, { headers });
 
     } catch (error) {
         console.error('Detection error:', error);
         return NextResponse.json(
             { error: 'Failed to analyze page', details: error instanceof Error ? error.message : String(error) },
-            { status: 500 }
+            { status: 500, headers: { 'Access-Control-Allow-Origin': '*' } }
         );
     }
+}
+
+export async function OPTIONS() {
+    return NextResponse.json({}, {
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+        },
+    });
 }

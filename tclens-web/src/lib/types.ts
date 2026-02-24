@@ -51,6 +51,9 @@ export interface DetectionResult {
   short_summary: string | null;
   key_takeaways: string[];
   critical_warnings: CriticalWarnings;
+  risk_level: string | null;
+  risk_breakdown: any[];
+  ai_severity: any | null;
   cta_text: string | null;
   disclaimer: string | null;
 }
@@ -66,6 +69,9 @@ export interface AnalysisResult {
   short_summary: string;
   key_takeaways: string[];
   critical_warnings: CriticalWarnings;
+  risk_level: string;
+  risk_breakdown: any[];
+  ai_severity: any;
   cta_text: string;
   disclaimer: string;
 }

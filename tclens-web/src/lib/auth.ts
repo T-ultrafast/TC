@@ -8,10 +8,37 @@ export interface UserProfile {
     lastName: string;
     email: string;
     jurisdiction?: string;
-    plan: "free" | "pro" | "business";
+    plan: "free" | "pro" | "business" | "unlimited";
+    role: "user" | "lawyer" | "admin";
     wordsUsed: number;
     wordsLimit: number;
     createdAt: string;
+}
+
+export interface LawyerProfile extends UserProfile {
+    role: "lawyer";
+    professionalTitle: string;
+    licenseNumber: string;
+    issuingAuthority: string;
+    jurisdictionsOfPractice: string[];
+    licenseStatus: string;
+    yearOfAdmission: number;
+    practiceAreas: string[];
+    secondaryExpertise?: string;
+    clientTypes: string[];
+    consultationTypes: string[];
+    availability: string[];
+    hourlyRate?: string;
+    bio: string;
+    lawFirm?: string;
+    website?: string;
+    languages: string[];
+    verificationStatus: 'pending' | 'verified' | 'rejected';
+    attestationName?: string;
+    acceptedJurisdiction?: boolean;
+    acceptedPlatform?: boolean;
+    acceptedCodeOfConduct?: boolean;
+    certifiedAccurate?: boolean;
 }
 
 export const auth = {
@@ -22,27 +49,51 @@ export const auth = {
     },
 
     // Get current user profile
-    getUser: (): UserProfile | null => {
+    getUser: (): UserProfile | LawyerProfile | null => {
         if (typeof window === "undefined") return null;
         const userStr = localStorage.getItem(USER_KEY);
+
+        // If authenticated but no user profile, still return a mock unlimited shell
+        if (auth.isAuthenticated() && !userStr) {
+            return {
+                firstName: "User",
+                lastName: "",
+                email: "",
+                plan: "unlimited",
+                role: "user",
+                wordsUsed: 0,
+                wordsLimit: Infinity as any,
+                createdAt: new Date().toISOString()
+            } as any;
+        }
+
         if (!userStr) return null;
         try {
-            return JSON.parse(userStr);
+            const user = JSON.parse(userStr);
+            user.plan = 'unlimited'; // Force unlimited plan
+            return user;
         } catch (e) {
             return null;
         }
     },
 
     // Perform a fake sign up
-    signUp: (data: Pick<UserProfile, 'firstName' | 'lastName' | 'email' | 'jurisdiction'>) => {
+    signUp: (data: Partial<UserProfile | LawyerProfile>) => {
         if (typeof window !== "undefined") {
-            const newUser: UserProfile = {
+            const isLawyer = data.role === "lawyer";
+            const newUser: any = {
                 ...data,
-                plan: "free",
+                plan: "unlimited", // Temporary Dev Override
+                role: data.role || "user",
                 wordsUsed: 0,
-                wordsLimit: 10000,
+                wordsLimit: isLawyer ? 50000 : 10000,
                 createdAt: new Date().toISOString()
             };
+
+            if (isLawyer) {
+                newUser.verificationStatus = 'pending';
+            }
+
             localStorage.setItem(USER_KEY, JSON.stringify(newUser));
             localStorage.setItem(AUTH_KEY, "true");
             resetAccountUsage();

@@ -49,6 +49,29 @@ const config: Config = {
                     emerald: "#10b981", // Safe
                     amber: "#f59e0b", // Warning
                     red: "#ef4444", // Danger
+                },
+                // Redesign Colors
+                brand: {
+                    lavender: {
+                        base: "#FBFAFF",
+                        glow1: "#F3E8FF",
+                        glow2: "#FBE7F2",
+                        text: "#7C3AED", // Accent Purple
+                    },
+                    teal: {
+                        base: "#F6FDFF",
+                        tint: "#E9FBFF",
+                        ctaTop: "#0A9F86",
+                        ctaBottom: "#078A76",
+                    },
+                    cream: {
+                        base: "#FFF8ED",
+                        tint: "#FFF2DE",
+                    },
+                    navy: {
+                        primary: "#081427",
+                        secondary: "#0A1B33",
+                    }
                 }
             },
             borderRadius: {
@@ -58,7 +81,7 @@ const config: Config = {
             },
             fontFamily: {
                 sans: ["var(--font-inter)"],
-                outfit: ["var(--font-outfit)"],
+                jakarta: ["var(--font-jakarta)"],
             },
             keyframes: {
                 gradient: {

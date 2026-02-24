@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
     Briefcase,
     Plus,
@@ -8,13 +9,17 @@ import {
     FileText,
     Search,
     ChevronRight,
-    Filter,
     MoreVertical,
-    X
+    X,
+    Upload,
+    Loader2,
+    CheckCircle,
+    AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { auth } from "@/lib/auth";
 
 interface Case {
     id: string;
@@ -22,51 +27,142 @@ interface Case {
     description: string;
     status: "Active" | "Pending" | "Completed";
     updatedAt: string;
-    documentCount: number;
+    attachmentCount: number;
 }
 
-const STORAGE_KEY = "tc_reader_cases";
+interface UploadingFile {
+    file: File;
+    status: 'pending' | 'uploading' | 'success' | 'error';
+    progress: number;
+}
 
 export default function CasePage() {
+    const router = useRouter();
     const [cases, setCases] = useState<Case[]>([]);
+    const [loading, setLoading] = useState(true);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [newCase, setNewCase] = useState({ title: "", description: "" });
     const [searchTerm, setSearchTerm] = useState("");
+    const [filesToUpload, setFilesToUpload] = useState<UploadingFile[]>([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
-        const savedCases = localStorage.getItem(STORAGE_KEY);
-        if (savedCases) {
-            try {
-                setCases(JSON.parse(savedCases));
-            } catch (e) {
-                console.error("Failed to parse cases", e);
-                setCases([]);
-            }
+        if (auth.isAuthenticated()) {
+            fetchCases();
+        } else {
+            setLoading(false);
         }
     }, []);
 
-    const saveCases = (updatedCases: Case[]) => {
-        setCases(updatedCases);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedCases));
+    const fetchCases = async () => {
+        try {
+            const user = auth.getUser();
+            if (!user) return;
+
+            const res = await fetch('/api/cases', {
+                headers: {
+                    'x-user-id': user.email,
+                    'x-is-logged-in': 'true'
+                }
+            });
+            const data = await res.json();
+            if (data.ok) {
+                setCases(data.data.map((c: any) => ({
+                    ...c,
+                    updatedAt: new Date(c.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                })));
+            }
+        } catch (error) {
+            console.error("Failed to fetch cases", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleCreateCase = (e: React.FormEvent) => {
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const newFiles = Array.from(e.target.files).map(file => ({
+                file,
+                status: 'pending' as const,
+                progress: 0
+            }));
+
+            // Limit to 5 files total
+            if (filesToUpload.length + newFiles.length > 5) {
+                alert("Maximum 5 files allowed");
+                return;
+            }
+
+            setFilesToUpload(prev => [...prev, ...newFiles]);
+        }
+    };
+
+    const removeFile = (index: number) => {
+        setFilesToUpload(prev => prev.filter((_, i) => i !== index));
+    };
+
+    const handleCreateCase = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!newCase.title.trim()) return;
 
-        const createdCase: Case = {
-            id: Math.random().toString(36).substr(2, 9),
-            title: newCase.title,
-            description: newCase.description,
-            status: "Active",
-            updatedAt: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-            documentCount: 0
-        };
+        setIsSubmitting(true);
+        const user = auth.getUser();
+        if (!user) return;
 
-        const updatedCases = [createdCase, ...cases];
-        saveCases(updatedCases);
-        setIsCreateModalOpen(false);
-        setNewCase({ title: "", description: "" });
+        try {
+            // 1. Create Case
+            const createRes = await fetch('/api/cases', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-user-id': user.email,
+                    'x-is-logged-in': 'true'
+                },
+                body: JSON.stringify(newCase)
+            });
+
+            const createData = await createRes.json();
+            if (!createData.ok) throw new Error(createData.error);
+
+            const caseId = createData.data.id;
+
+            // 2. Upload Files (Parallel)
+            if (filesToUpload.length > 0) {
+                const uploadPromises = filesToUpload.map(async (fileObj, index) => {
+                    const formData = new FormData();
+                    formData.append('file', fileObj.file);
+
+                    // Update status to uploading
+                    setFilesToUpload(prev => prev.map((f, i) => i === index ? { ...f, status: 'uploading' } : f));
+
+                    try {
+                        const uploadRes = await fetch(`/api/cases/${caseId}/attachments`, {
+                            method: 'POST',
+                            headers: {
+                                'x-user-id': user.email,
+                                'x-is-logged-in': 'true'
+                            },
+                            body: formData
+                        });
+
+                        if (!uploadRes.ok) throw new Error('Upload failed');
+
+                        setFilesToUpload(prev => prev.map((f, i) => i === index ? { ...f, status: 'success' } : f));
+                    } catch (err) {
+                        setFilesToUpload(prev => prev.map((f, i) => i === index ? { ...f, status: 'error' } : f));
+                    }
+                });
+
+                await Promise.all(uploadPromises);
+            }
+
+            // 3. Redirect
+            router.push(`/app/case/${caseId}`);
+
+        } catch (error) {
+            console.error("Creation failed:", error);
+            setIsSubmitting(false);
+        }
     };
 
     const filteredCases = cases.filter(c =>
@@ -108,14 +204,18 @@ export default function CasePage() {
                     </div>
                 </div>
 
-                {cases.length === 0 ? (
+                {loading ? (
+                    <div className="flex items-center justify-center py-20">
+                        <Loader2 className="w-8 h-8 text-legal-navy animate-spin" />
+                    </div>
+                ) : cases.length === 0 ? (
                     <div className="bg-white rounded-[2rem] border border-slate-200 p-20 text-center space-y-4 shadow-sm">
                         <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto text-slate-300">
                             <Briefcase className="w-8 h-8" />
                         </div>
                         <div className="space-y-1">
                             <h3 className="text-xl font-bold text-legal-navy font-outfit">No cases found</h3>
-                            <p className="text-slate-400 max-w-xs mx-auto text-sm">Create your first legal matter to start organizing your documents and analysis history.</p>
+                            <p className="text-slate-400 max-w-xs mx-auto text-sm">Create your first legal matter to start organizing your documents.</p>
                         </div>
                         <Button
                             variant="outline"
@@ -128,10 +228,12 @@ export default function CasePage() {
                 ) : (
                     <div className="bg-white rounded-[2rem] border border-slate-200 overflow-hidden shadow-sm">
                         {filteredCases.map((c, i) => (
-                            <div key={c.id} className={cn(
-                                "group flex items-center justify-between p-6 hover:bg-slate-50/50 transition-all cursor-pointer",
-                                i !== filteredCases.length - 1 && "border-b border-slate-100"
-                            )}>
+                            <div key={c.id}
+                                onClick={() => router.push(`/app/case/${c.id}`)}
+                                className={cn(
+                                    "group flex items-center justify-between p-6 hover:bg-slate-50/50 transition-all cursor-pointer",
+                                    i !== filteredCases.length - 1 && "border-b border-slate-100"
+                                )}>
                                 <div className="flex items-center gap-4">
                                     <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-legal-navy group-hover:text-emerald-400 transition-all">
                                         <Briefcase className="w-6 h-6" />
@@ -145,7 +247,7 @@ export default function CasePage() {
                                             </span>
                                             <span className="flex items-center gap-1 text-[10px] text-slate-400 font-bold uppercase tracking-wider">
                                                 <FileText className="w-3 h-3" />
-                                                {c.documentCount} Documents
+                                                {c.attachmentCount} Documents
                                             </span>
                                         </div>
                                     </div>
@@ -170,7 +272,7 @@ export default function CasePage() {
             {/* Create Case Modal */}
             {isCreateModalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300">
-                    <div className="bg-white w-full max-w-lg rounded-[2.5rem] p-8 shadow-2xl relative animate-in zoom-in-95 duration-300">
+                    <div className="bg-white w-full max-w-lg rounded-[2.5rem] p-8 shadow-2xl relative animate-in zoom-in-95 duration-300 overflow-y-auto max-h-[90vh]">
                         <button
                             onClick={() => setIsCreateModalOpen(false)}
                             className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-xl transition-all"
@@ -202,8 +304,51 @@ export default function CasePage() {
                                         placeholder="Brief summary of the legal context..."
                                         value={newCase.description}
                                         onChange={(e) => setNewCase({ ...newCase, description: e.target.value })}
-                                        className="w-full h-32 p-4 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-legal-navy text-sm transition-all"
+                                        className="w-full h-32 p-4 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-legal-navy text-sm transition-all resize-none"
                                     />
+                                </div>
+
+                                {/* Attachments Section */}
+                                <div className="space-y-2">
+                                    <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Attachments (Optional)</label>
+
+                                    <div className="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:bg-slate-50 transition-colors relative">
+                                        <input
+                                            type="file"
+                                            multiple
+                                            onChange={handleFileSelect}
+                                            className="absolute inset-0 opacity-0 cursor-pointer"
+                                            accept=".pdf,.txt,.doc,.docx"
+                                        />
+                                        <Upload className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                                        <p className="text-sm font-bold text-legal-navy">Click or drag files here</p>
+                                        <p className="text-[10px] text-slate-400 mt-1">PDF, TXT, DOC, DOCX (Max 10MB)</p>
+                                    </div>
+
+                                    {filesToUpload.length > 0 && (
+                                        <div className="space-y-2 mt-2">
+                                            {filesToUpload.map((item, i) => (
+                                                <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-100">
+                                                    <div className="flex items-center gap-3 overflow-hidden">
+                                                        <FileText className="w-4 h-4 text-slate-400 shrink-0" />
+                                                        <div className="truncate">
+                                                            <p className="text-xs font-bold text-legal-navy truncate">{item.file.name}</p>
+                                                            <p className="text-[10px] text-slate-400">{(item.file.size / 1024 / 1024).toFixed(2)} MB</p>
+                                                        </div>
+                                                    </div>
+                                                    <Button
+                                                        type="button"
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        onClick={() => removeFile(i)}
+                                                        className="h-6 w-6 p-0 text-slate-400 hover:text-red-500"
+                                                    >
+                                                        <X className="w-3.5 h-3.5" />
+                                                    </Button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="pt-4 flex gap-3">
@@ -211,15 +356,22 @@ export default function CasePage() {
                                         type="button"
                                         variant="outline"
                                         onClick={() => setIsCreateModalOpen(false)}
+                                        disabled={isSubmitting}
                                         className="flex-1 h-12 rounded-xl font-bold"
                                     >
                                         Cancel
                                     </Button>
                                     <Button
                                         type="submit"
+                                        disabled={isSubmitting}
                                         className="flex-1 h-12 rounded-xl bg-legal-navy hover:bg-slate-800 font-bold text-white shadow-lg shadow-legal-navy/10"
                                     >
-                                        Create Matter
+                                        {isSubmitting ? (
+                                            <>
+                                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                                Creating...
+                                            </>
+                                        ) : "Create Matter"}
                                     </Button>
                                 </div>
                             </form>

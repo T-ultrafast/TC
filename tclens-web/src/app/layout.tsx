@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
-
 export const metadata: Metadata = {
-    title: "TCLens - Terms & Conditions Intelligence",
-    description: "AI-powered legal document analysis and lawyer marketplace.",
+    title: "Terms Analyzer - Smart Legal Document Analysis",
+    description: "Actually understand what you're agreeing to with AI-powered legal document summaries.",
 };
-
-import { Navbar } from "@/components/Navbar";
 
 export default function RootLayout({
     children,
@@ -20,8 +14,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={cn(inter.variable, outfit.variable, "min-h-screen bg-white font-sans antialiased")}>
-                {/* Navbar is handled conditionally or only on landing pages */}
+            <body className={cn("min-h-screen bg-white font-sans antialiased", "font-[-apple-system,BlinkMacSystemFont,'SF_Pro_Display','SF_Pro_Text','Helvetica_Neue',Arial,sans-serif]")}>
                 {children}
             </body>
         </html>
