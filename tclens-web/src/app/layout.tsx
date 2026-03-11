@@ -22,6 +22,9 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
     title: "Terms Analyzer - Smart Legal Document Analysis",
     description: "Actually understand what you're agreeing to with AI-powered legal document summaries.",
+    icons: {
+        icon: "/favicon.svg",
+    },
 };
 
 export default function RootLayout({
