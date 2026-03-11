@@ -7,19 +7,18 @@ import { enforceWordLimit } from '@/lib/string-utils';
 
 export const runtime = 'nodejs';
 
-// Multilingual System Prompt based on T2, t4 Hardening & Extreme Conciseness (80 words)
-const SYSTEM_PROMPT = `You are an expert legal analysis AI generating ultra-concise summaries for a dashboard UI.
-MISSION: Generate a concise, well-structured summary with a maximum length of 80 words.
-
-ABSOLUTE RULES (NON-NEGOTIABLE):
-1) HARD LIMIT: Maximum 80 words total. If you exceed this, the response is invalid.
-2) Use clear section headings: **Overview**, **Key Clauses**, **User Obligations**, **Platform Powers**, **Risk Indicators**.
-3) Apply real bold formatting (**text**) for headings and critical keywords for UI scannability.
-4) Do NOT use single asterisks (*text*) for italics.
-5) Use clean "•" bullet points where appropriate.
-6) Proper paragraph spacing between sections.
-7) No legal jargon, boilerplate, or repetitive explanations.
-8) Plain English, neutral tone, designed for < 30s scanning.
+// Multilingual System Prompt based on T2, t4 Hardening & Conciseness (500 words)
+const SYSTEM_PROMPT = `You are a high-level legal architect generating concise summaries for a premium dashboard UI. 
+MISSION: Provide deep legal value with clarity. 
+Rules:
+1) TOTAL WORD LIMIT: 500 words (Max). 
+2) Section headings: **Overview**, **Key Clauses**, **User Obligations**, **Platform Powers**, **Risk Indicators**.
+3) Apply real bold formatting (**text**) for UI scannability.
+4) Do NOT use italics. Use "•" bullet points.
+5) NO boilerplate text, legal disclaimers, or repetitive filler.
+6) For "clauses": Each summary must be one clear line of text, and the "explanation" MUST be 2-3 sentences long, describing the legal implication for the user. Avoid "This is..." starting phrases.
+7) For "redFlags": Provide a clear "implication" for each flag, explaining precisely why it is dangerous or unfavorable.
+8) Focus on high-value terms only: Arbitration, Liability, Data, Termination.
 
 REQUIRED SUMMARY STRUCTURE (The "summary" field in JSON must follow this exactly):
 **Overview**
@@ -41,11 +40,11 @@ TAXONOMY: Arbitration, Governing law, Liability limits, Indemnification, Auto-re
 
 Return the response in strictly valid JSON format. {
   "languageDetection": { "primary": "string", "secondary": ["string"] },
-  "summary": "string (Strictly 80-word max, 5-section structure)",
+  "summary": "string (Strictly 500-word max, 5-section structure)",
   "ai_severity": { "rating": number (1-10), "reason": "string" },
   "confidence": number,
   "clauses": [{ "type": "string", "summary": "string", "riskLevel": "Low" | "Medium" | "High" | "Critical", "explanation": "string", "originalExcerpt": "string", "translatedExcerpt": "string" }],
-  "redFlags": [{ "title": "string", "description": "string" }],
+  "redFlags": [{ "title": "string", "description": "string", "implication": "string (Why this is a red flag & how it affects the user)" }],
   "nextSteps": ["string"],
   "disclaimer": "Informational only — not legal advice."
 }`;
@@ -198,17 +197,18 @@ export async function POST(req: NextRequest) {
                 const buffer = Buffer.from(arrayBuffer);
 
                 if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
-                    const pdfParser = await import('pdf-parse/lib/pdf-parse.js');
-                    const data = await pdfParser(buffer);
-                    textToAnalyze = data.text;
+                    try {
+                        const pdfParser = await import('pdf-parse/lib/pdf-parse.js');
+                        const data = await pdfParser(buffer);
+                        textToAnalyze = data.text;
+                    } catch (pdfErr) {
+                        console.error("[API_ANALYZE] pdf-parse failed, will attempt multimodal fallback", pdfErr);
+                        textToAnalyze = "";
+                    }
 
-                    if (!textToAnalyze || textToAnalyze.trim().length === 0) {
-                        return NextResponse.json({
-                            ok: false,
-                            error: "Could not extract text from file",
-                            details: "The PDF appears to be empty or contains only images/scanned text.",
-                            code: "ERR_EMPTY_PDF"
-                        }, { status: 400 });
+                    if (!textToAnalyze || textToAnalyze.trim().length < 150) {
+                        console.log("[API_ANALYZE] PDF content very low (" + (textToAnalyze?.length || 0) + " chars), falling back to multimodal analysis");
+                        textToAnalyze = "[SCANNED_PDF]";
                     }
                 } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.name.toLowerCase().endsWith('.docx')) {
                     const mammoth = await import('mammoth');
@@ -225,11 +225,14 @@ export async function POST(req: NextRequest) {
                     }
                 } else if (file.type === 'text/plain' || file.name.toLowerCase().endsWith('.txt')) {
                     textToAnalyze = await file.text();
+                } else if (file.type?.startsWith('image/')) {
+                    // Image handled as part of multimodal prompt later
+                    textToAnalyze = "[IMAGE_UPLOAD]";
                 } else {
                     return NextResponse.json({
                         ok: false,
                         error: 'Unsupported file type',
-                        details: `File type '${file.type}' is not recognized. Please use PDF, DOCX, or TXT.`,
+                        details: `File type '${file.type}' is not recognized. Please use PDF, DOCX, TXT, or Image files.`,
                         code: "ERR_UNSUPPORTED_TYPE"
                     }, { status: 400 });
                 }
@@ -258,7 +261,14 @@ export async function POST(req: NextRequest) {
             textToAnalyze = textInput || '';
         }
 
-        if (!textToAnalyze || textToAnalyze.trim().length < 50) {
+        const isImageUpload = file?.type?.startsWith('image/');
+        const isPdfFallback = (file?.type === 'application/pdf' || file?.name?.toLowerCase().endsWith('.pdf')) && (textToAnalyze === "[SCANNED_PDF]" || (textToAnalyze?.trim().length || 0) < 150);
+        const isMultimodal = isImageUpload || isPdfFallback;
+
+        // Bypassing length check for all file uploads (even if text is short, we still analyze it if it's a file)
+        const isFileUpload = !!file;
+
+        if (!isFileUpload && (!textToAnalyze || textToAnalyze.trim().length < 50)) {
             return NextResponse.json({
                 ok: false,
                 error: 'Content too short',
@@ -267,7 +277,7 @@ export async function POST(req: NextRequest) {
             }, { status: 400 });
         }
 
-        const wordCount = textToAnalyze.trim().split(/\s+/).length;
+        const wordCount = textToAnalyze === "[SCANNED_PDF]" ? 500 : textToAnalyze.trim().split(/\s+/).length;
         const currentUsage = parseInt(req.headers.get('x-usage') || '0', 10);
         const isLoggedIn = req.headers.get('x-is-logged-in') === 'true';
         const plan = req.headers.get('x-plan') || 'free';
@@ -291,13 +301,22 @@ export async function POST(req: NextRequest) {
 
         const charLimit = 60000;
         let finalInputText = textToAnalyze;
-        if (textToAnalyze.length > charLimit) {
+
+        if (textToAnalyze.length > charLimit && !isMultimodal) {
             finalInputText = textToAnalyze.substring(0, charLimit) + "\n\n[... DOCUMENT TRUNCATED ...]";
         }
 
-        // 1. New Hybrid Scoring Logic (A2 Compliant)
-        const { score: clauseRisk, breakdown } = calculateClauseRisk(finalInputText, jurisdiction, state);
-        const transparencyRisk = calculateTransparency(finalInputText);
+        // 1. Initial Scoring (For text documents)
+        let clauseRisk = 0;
+        let breakdown: any[] = [];
+
+        if (!isMultimodal) {
+            const result = calculateClauseRisk(finalInputText, jurisdiction, state);
+            clauseRisk = result.score;
+            breakdown = result.breakdown;
+        }
+
+        const transparencyRisk = isMultimodal ? 0 : calculateTransparency(finalInputText);
 
         const client = new GoogleGenAI({ apiKey });
         let responseText = "";
@@ -309,11 +328,27 @@ export async function POST(req: NextRequest) {
 
         while (retryCount < maxRetries) {
             try {
+                const parts: any[] = [];
+
+                if (isMultimodal && file) {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const base64Data = Buffer.from(arrayBuffer).toString('base64');
+                    parts.push({
+                        inlineData: {
+                            data: base64Data,
+                            mimeType: file.type
+                        }
+                    });
+                    parts.push({ text: `SYSTEM INSTRUCTION:\n${SYSTEM_PROMPT}\n\nTASK: ANALYZE THE ATTACHED ${isPdfFallback ? 'SCANNED PDF' : 'IMAGE'}. Perform OCR first, then generate the legal analysis in JSON as instructed. Use the prompt rules for rating. JURISDICTION: ${locationContext}` });
+                } else {
+                    parts.push({ text: `SYSTEM INSTRUCTION:\n${SYSTEM_PROMPT}\n\nJURISDICTION: ${locationContext}\n\nBASE CLAUSE RISK: ${clauseRisk}\nDETECTED RISKS: ${JSON.stringify(breakdown.map((b: any) => b.category))}\n\nDOCUMENT TEXT:\n${finalInputText}` });
+                }
+
                 const result = await client.models.generateContent({
                     model: "gemini-2.0-flash",
                     contents: [{
                         role: 'user',
-                        parts: [{ text: `SYSTEM INSTRUCTION:\n${SYSTEM_PROMPT}\n\nJURISDICTION: ${locationContext}\n\nBASE CLAUSE RISK: ${clauseRisk}\nDETECTED RISKS: ${JSON.stringify(breakdown.map((b: any) => b.category))}\n\nDOCUMENT TEXT:\n${finalInputText}` }]
+                        parts: parts
                     }],
                     config: {
                         responseMimeType: "application/json",
@@ -362,7 +397,8 @@ export async function POST(req: NextRequest) {
             aggressivenessRisk,
             transparencyRisk,
             aiRating,
-            aiResult.ai_severity?.reasons || [aiResult.ai_severity?.reason].filter(Boolean)
+            aiResult.ai_severity?.reasons || [aiResult.ai_severity?.reason].filter(Boolean),
+            wordCount
         );
 
         // Map breakdown evidence and extend with A2 schema
@@ -371,7 +407,7 @@ export async function POST(req: NextRequest) {
         const responsePayload = {
             ...finalAnalysis,
             languageDetection: aiResult.languageDetection,
-            summary: enforceWordLimit(aiResult.summary, 80),
+            summary: enforceWordLimit(aiResult.summary, 500),
             clauses: aiResult.clauses,
             redFlags: aiResult.redFlags,
             nextSteps: aiResult.nextSteps,

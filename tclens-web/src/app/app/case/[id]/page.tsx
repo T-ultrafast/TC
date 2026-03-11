@@ -143,8 +143,8 @@ export default function CaseDetailsPage() {
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[50vh]">
-                <Loader2 className="w-10 h-10 text-legal-navy animate-spin mb-4" />
-                <p className="text-slate-400 font-bold">Loading case details...</p>
+                <Loader2 className="w-10 h-10 text-foreground animate-spin mb-4" />
+                <p className="text-muted-foreground font-bold">Loading case details...</p>
             </div>
         );
     }
@@ -157,35 +157,35 @@ export default function CaseDetailsPage() {
             <div className="space-y-4">
                 <button
                     onClick={() => router.push('/app/case')}
-                    className="flex items-center gap-2 text-slate-400 hover:text-legal-navy transition-colors text-sm font-bold uppercase tracking-wider"
+                    className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm font-bold uppercase tracking-wider"
                 >
                     <ChevronLeft className="w-4 h-4" />
                     Back to Cases
                 </button>
-                <div className="flex items-start justify-between border-b border-slate-200 pb-8">
+                <div className="flex items-start justify-between border-b border-border pb-8">
                     <div className="space-y-2">
                         <div className="flex items-center gap-3">
-                            <h1 className="text-3xl font-black text-legal-navy font-outfit">{caseData.title}</h1>
+                            <h1 className="text-3xl font-black text-foreground font-playfair">{caseData.title}</h1>
                             <span className={cn(
                                 "px-3 py-1 rounded-full text-[10px] font-black tracking-tight uppercase",
                                 caseData.status === "Active" ? "bg-emerald-100 text-emerald-700" :
-                                    caseData.status === "Pending" ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-600"
+                                    caseData.status === "Pending" ? "bg-amber-100 text-amber-700" : "bg-muted/50 text-muted-foreground"
                             )}>
                                 {caseData.status}
                             </span>
                         </div>
                         {caseData.description && (
-                            <p className="text-slate-600 max-w-2xl leading-relaxed">{caseData.description}</p>
+                            <p className="text-muted-foreground max-w-2xl leading-relaxed">{caseData.description}</p>
                         )}
-                        <p className="text-xs font-bold text-slate-400 flex items-center gap-2 pt-2">
+                        <p className="text-xs font-bold text-muted-foreground flex items-center gap-2 pt-2">
                             <Clock className="w-3.5 h-3.5" />
                             Started on {new Date(caseData.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                         </p>
                     </div>
                     {/* Action Buttons (Future) */}
                     <div>
-                        <Button variant="outline" size="icon" className="rounded-xl border-slate-200">
-                            <MoreVertical className="w-5 h-5 text-slate-400" />
+                        <Button variant="outline" size="icon" className="rounded-none border-border">
+                            <MoreVertical className="w-5 h-5 text-muted-foreground" />
                         </Button>
                     </div>
                 </div>
@@ -194,10 +194,10 @@ export default function CaseDetailsPage() {
             {/* Attachments Section */}
             <div className="space-y-6">
                 <div className="flex items-center justify-between px-1">
-                    <h3 className="text-lg font-bold text-legal-navy font-outfit uppercase tracking-tighter flex items-center gap-2">
+                    <h3 className="text-lg font-bold text-foreground font-playfair uppercase tracking-tighter flex items-center gap-2">
                         <FileText className="w-5 h-5" />
                         Attachments
-                        <span className="bg-slate-100 text-slate-500 text-xs px-2 py-0.5 rounded-full ml-1">{caseData.attachments.length}</span>
+                        <span className="bg-muted/50 text-muted-foreground text-xs px-2 py-0.5 rounded-full ml-1">{caseData.attachments.length}</span>
                     </h3>
                     <div className="relative">
                         <input
@@ -209,7 +209,7 @@ export default function CaseDetailsPage() {
                         />
                         <Button
                             variant="outline"
-                            className="h-10 px-4 rounded-xl border-slate-200 font-bold gap-2 hover:bg-slate-50"
+                            className="h-10 px-4 rounded-none border-border font-bold gap-2 hover:bg-muted/30"
                             disabled={uploading}
                         >
                             {uploading ? (
@@ -223,25 +223,25 @@ export default function CaseDetailsPage() {
                 </div>
 
                 {caseData.attachments.length === 0 ? (
-                    <div className="bg-slate-50 rounded-[2rem] border border-dashed border-slate-200 p-12 text-center">
-                        <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm text-slate-300">
+                    <div className="bg-muted/30 rounded-none border border-dashed border-border p-12 text-center">
+                        <div className="w-14 h-14 bg-background rounded-none flex items-center justify-center mx-auto mb-4 shadow-sm text-slate-300">
                             <Upload className="w-6 h-6" />
                         </div>
-                        <p className="text-slate-500 font-medium text-sm">No files attached yet.</p>
-                        <p className="text-xs text-slate-400 mt-1">Upload relevant documents to keep everything in one place.</p>
+                        <p className="text-muted-foreground font-medium text-sm">No files attached yet.</p>
+                        <p className="text-xs text-muted-foreground mt-1">Upload relevant documents to keep everything in one place.</p>
                     </div>
                 ) : (
                     <div className="grid md:grid-cols-2 gap-4">
                         {caseData.attachments.map((file) => (
-                            <div key={file.id} className="bg-white p-5 rounded-2xl border border-slate-100 hover:border-legal-navy/30 hover:shadow-lg hover:shadow-legal-navy/5 transition-all group relative">
+                            <div key={file.id} className="bg-background p-5 rounded-none border border-border hover:border-legal-navy/30 hover:shadow-lg hover:shadow-legal-navy/5 transition-all group relative">
                                 <div className="flex items-start justify-between gap-4">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center shrink-0 text-legal-navy">
+                                        <div className="w-12 h-12 bg-muted/30 rounded-none flex items-center justify-center shrink-0 text-foreground">
                                             <FileText className="w-6 h-6" />
                                         </div>
                                         <div className="overflow-hidden">
-                                            <h4 className="font-bold text-legal-navy text-sm truncate max-w-[200px]" title={file.fileName}>{file.fileName}</h4>
-                                            <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-wider text-slate-400 mt-1">
+                                            <h4 className="font-bold text-foreground text-sm truncate max-w-[200px]" title={file.fileName}>{file.fileName}</h4>
+                                            <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-wider text-muted-foreground mt-1">
                                                 <span>{(file.fileSize / 1024 / 1024).toFixed(2)} MB</span>
                                                 <span>•</span>
                                                 <span>{new Date(file.uploadedAt).toLocaleDateString()}</span>
@@ -257,7 +257,7 @@ export default function CaseDetailsPage() {
                                             target="_blank"
                                             rel="noreferrer"
                                         >
-                                            <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-legal-navy hover:bg-slate-100 rounded-lg">
+                                            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-none">
                                                 <Download className="w-4 h-4" />
                                             </Button>
                                         </a>
@@ -265,7 +265,7 @@ export default function CaseDetailsPage() {
                                             variant="ghost"
                                             size="icon"
                                             onClick={() => handleDeleteAttachment(file.id)}
-                                            className="h-8 w-8 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg"
+                                            className="h-8 w-8 text-muted-foreground hover:text-red-500 hover:bg-red-50 rounded-none"
                                         >
                                             <Trash2 className="w-4 h-4" />
                                         </Button>

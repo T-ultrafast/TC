@@ -76,36 +76,36 @@ export default function SignUpPage() {
     };
 
     return (
-        <div className="relative flex flex-col items-center justify-center p-6 pt-32 overflow-hidden bg-white flex-1">
-            {/* Background Gradient / Wash */}
-            <div className="absolute inset-0 -z-10">
-                <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-purple-50 via-white to-white blur-3xl opacity-60" />
-                <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-indigo-50/40 via-white to-white blur-3xl opacity-40" />
+        <div className="relative flex flex-col items-center justify-center p-6 pt-32 overflow-hidden bg-background flex-1">
+            {/* Background Haze Effects */}
+            <div className="bg-haze">
+                <div className="haze-gradient-1" />
+                <div className="haze-gradient-2" />
             </div>
 
             <div className="max-w-md w-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <div className="text-center space-y-2">
-                    <h1 className="text-3xl font-black text-slate-900 font-outfit mt-6">Create Free Account</h1>
-                    <p className="text-slate-500 font-medium">Join 20,000+ users protecting their legal rights.</p>
+                <div className="text-center space-y-2 mb-4">
+                    <h1 className="text-4xl font-black text-foreground font-playfair tracking-tight mt-6">Create Free Account</h1>
+                    <p className="text-muted-foreground font-medium text-sm">Join 20,000+ users protecting their legal rights.</p>
                     <div className="pt-2">
-                        <Link href="/signup/lawyer" className="text-xs font-black text-purple-600 uppercase tracking-widest hover:text-purple-700 flex items-center justify-center gap-1 group">
+                        <Link href="/signup/lawyer" className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] hover:text-emerald-500 flex items-center justify-center gap-2 group transition-colors">
                             Professional? Sign up as a Lawyer
-                            <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                            <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                         </Link>
                     </div>
                 </div>
 
-                <div className="bg-white rounded-[2rem] p-8 shadow-2xl shadow-purple-500/5 border border-slate-100">
+                <div className="bg-background rounded-none p-10 shadow-2xl border border-border">
                     <form onSubmit={handleSignUp} className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-bold text-slate-700 ml-1">First Name</label>
+                                <label className="text-sm font-bold text-muted-foreground ml-1">First Name</label>
                                 <div className="relative">
-                                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                     <Input
                                         name="firstName"
                                         placeholder="Jane"
-                                        className={`pl-10 h-12 rounded-xl transition-all ${errors.firstName ? 'border-red-500 focus-visible:ring-red-500' : 'focus:ring-purple-600/20 focus:border-purple-600'}`}
+                                        className={`pl-10 h-12 rounded-none transition-all ${errors.firstName ? 'border-red-500 focus-visible:ring-red-500' : 'focus:ring-emerald-500/20 focus:border-emerald-500'}`}
                                         value={formData.firstName}
                                         onChange={handleChange}
                                     />
@@ -113,13 +113,13 @@ export default function SignUpPage() {
                                 {errors.firstName && <p className="text-xs text-red-500 ml-1 font-medium">{errors.firstName}</p>}
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-bold text-slate-700 ml-1">Last Name</label>
+                                <label className="text-sm font-bold text-muted-foreground ml-1">Last Name</label>
                                 <div className="relative">
-                                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                     <Input
                                         name="lastName"
                                         placeholder="Doe"
-                                        className={`pl-10 h-12 rounded-xl transition-all ${errors.lastName ? 'border-red-500 focus-visible:ring-red-500' : 'focus:ring-purple-600/20 focus:border-purple-600'}`}
+                                        className={`pl-10 h-12 rounded-none transition-all ${errors.lastName ? 'border-red-500 focus-visible:ring-red-500' : 'focus:ring-emerald-500/20 focus:border-emerald-500'}`}
                                         value={formData.lastName}
                                         onChange={handleChange}
                                     />
@@ -129,13 +129,13 @@ export default function SignUpPage() {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-slate-700 ml-1">Jurisdiction (Optional)</label>
+                            <label className="text-sm font-bold text-muted-foreground ml-1">Jurisdiction (Optional)</label>
                             <div className="relative">
-                                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                 <Input
                                     name="jurisdiction"
-                                    placeholder="e.g. California, USA"
-                                    className="pl-10 h-12 rounded-xl focus:ring-purple-600/20 focus:border-purple-600 transition-all font-medium"
+                                    placeholder="e.g. London, UK"
+                                    className="pl-10 h-12 rounded-none focus:ring-emerald-500/20 focus:border-emerald-500 bg-muted/50 transition-all font-medium text-sm"
                                     value={formData.jurisdiction}
                                     onChange={handleChange}
                                 />
@@ -143,14 +143,14 @@ export default function SignUpPage() {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
+                            <label className="text-sm font-bold text-muted-foreground ml-1">Email Address</label>
                             <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                 <Input
                                     name="email"
                                     type="email"
                                     placeholder="jane@example.com"
-                                    className={`pl-10 h-12 rounded-xl transition-all ${errors.email ? 'border-red-500 focus-visible:ring-red-500' : 'focus:ring-purple-600/20 focus:border-purple-600'}`}
+                                    className={`pl-10 h-12 rounded-none transition-all ${errors.email ? 'border-red-500 focus-visible:ring-red-500' : 'focus:ring-emerald-500/20 focus:border-emerald-500'}`}
                                     value={formData.email}
                                     onChange={handleChange}
                                 />
@@ -159,14 +159,14 @@ export default function SignUpPage() {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-slate-700 ml-1">Password</label>
+                            <label className="text-sm font-bold text-muted-foreground ml-1">Password</label>
                             <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                 <Input
                                     name="password"
                                     type="password"
                                     placeholder="••••••••"
-                                    className={`pl-10 h-12 rounded-xl transition-all ${errors.password ? 'border-red-500 focus-visible:ring-red-500' : 'focus:ring-purple-600/20 focus:border-purple-600'}`}
+                                    className={`pl-10 h-12 rounded-none transition-all ${errors.password ? 'border-red-500 focus-visible:ring-red-500' : 'focus:ring-emerald-500/20 focus:border-emerald-500'}`}
                                     value={formData.password}
                                     onChange={handleChange}
                                 />
@@ -177,24 +177,24 @@ export default function SignUpPage() {
                         <Button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full h-14 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-2xl font-black text-lg shadow-xl shadow-purple-600/20 transition-all transform hover:scale-[1.02] active:scale-[0.98] mt-4"
+                            className="w-full h-14 bg-emerald-600 hover:bg-emerald-500 text-white rounded-none font-bold text-lg shadow-xl transition-all transform hover:translate-y-[-2px] active:translate-y-0 mt-4"
                         >
-                            {isLoading ? "Creating Account..." : "Start Free Analysis"}
+                            {isLoading ? "Provisioning..." : "Commence Free Analysis"}
                             {!isLoading && <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />}
                         </Button>
 
                         {errors.form && <p className="text-sm text-red-500 text-center font-bold">{errors.form}</p>}
                     </form>
 
-                    <div className="mt-8 pt-6 border-t border-slate-100 space-y-4">
+                    <div className="mt-8 pt-6 border-t border-border space-y-4">
                         <div className="flex items-center gap-3">
-                            <div className="w-5 h-5 rounded-full bg-purple-50 flex items-center justify-center">
-                                <Check className="w-3 h-3 text-purple-600" />
+                            <div className="w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                                <Check className="w-3 h-3 text-emerald-600" />
                             </div>
-                            <span className="text-xs text-slate-500 font-bold">10,000 Free words included</span>
+                            <span className="text-xs text-muted-foreground font-bold italic">10,000 Free words included</span>
                         </div>
-                        <p className="text-center text-sm font-bold text-slate-500">
-                            Already have an account? <Link href="/signin" className="text-purple-600 hover:text-purple-700 transition-colors">Sign In</Link>
+                        <p className="text-center text-sm font-bold text-muted-foreground">
+                            Already have an account? <Link href="/signin" className="text-emerald-600 hover:text-emerald-700 transition-colors underline underline-offset-4">Sign In</Link>
                         </p>
                     </div>
                 </div>

@@ -7,12 +7,8 @@ export async function GET(
     { params }: { params: Promise<{ id: string }> }
 ) {
     const { id } = await params;
-    const userId = req.headers.get('x-user-id');
+    const userId = req.headers.get('x-user-id') || 'anonymous';
     const isLoggedIn = req.headers.get('x-is-logged-in') === 'true';
-
-    if (!isLoggedIn || !userId) {
-        return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
-    }
 
     try {
         const messages = await storage.getChatHistory(id, userId);
@@ -28,12 +24,8 @@ export async function POST(
 ) {
     const { id } = await params;
     const apiKey = process.env.GEMINI_API_KEY;
-    const userId = req.headers.get('x-user-id');
+    const userId = req.headers.get('x-user-id') || 'anonymous';
     const isLoggedIn = req.headers.get('x-is-logged-in') === 'true';
-
-    if (!isLoggedIn || !userId) {
-        return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
-    }
 
     if (!apiKey) {
         return NextResponse.json({ ok: false, error: 'API Key missing' }, { status: 500 });
@@ -115,7 +107,7 @@ INSTRUCTIONS: Answer the question clearly and directly based on the provided con
                 if (isRetryable && retryCount < maxRetries - 1) {
                     retryCount++;
                     const delay = Math.pow(2, retryCount) * 1000 + Math.random() * 1000;
-                    console.warn(`[API_CHAT] Gemini ${isRateLimit ? "Rate Limit" : "Server Error"}. Retrying in ${Math.round(delay)}ms... (Attempt ${retryCount}/${maxRetries})`);
+                    console.warn(\`[API_CHAT] Gemini \${isRateLimit ? "Rate Limit" : "Server Error"}. Retrying in \${Math.round(delay)}ms... (Attempt \${retryCount}/\${maxRetries})\`);
                     await new Promise(resolve => setTimeout(resolve, delay));
                     continue;
                 }

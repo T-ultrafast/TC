@@ -158,42 +158,42 @@ export default function TemplatePage() {
     };
 
     return (
-        <div className="max-w-6xl mx-auto space-y-12 animate-in fade-in duration-500 pb-20">
+        <div className="max-w-[1600px] mx-auto space-y-12 animate-in fade-in duration-500 pb-20">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-8">
                 <div>
-                    <h1 className="text-3xl font-black text-legal-navy font-outfit mb-2">Legal Templates</h1>
-                    <p className="text-slate-500">High-quality, lawyer-reviewed templates to jumpstart your legal needs.</p>
+                    <h1 className="text-3xl font-black text-foreground font-playfair mb-2">Legal Templates</h1>
+                    <p className="text-muted-foreground">High-quality, lawyer-reviewed templates to jumpstart your legal needs.</p>
                 </div>
                 <div className="relative md:w-80">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <input type="text" placeholder="Search templates..." className="w-full h-11 pl-10 pr-4 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-legal-navy" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <input type="text" placeholder="Search templates..." className="w-full h-11 pl-10 pr-4 bg-background border border-border rounded-none text-sm outline-none focus:ring-2 focus:ring-legal-navy" />
                 </div>
             </div>
 
             {/* Featured Samples Section */}
             <div className="space-y-4">
                 <div className="flex items-center justify-between px-2">
-                    <h3 className="text-xl font-bold text-legal-navy">Preview popular templates</h3>
-                    <p className="text-sm text-slate-400 font-medium">See before you use</p>
+                    <h3 className="text-xl font-bold text-foreground">Preview popular templates</h3>
+                    <p className="text-sm text-muted-foreground font-medium">See before you use</p>
                 </div>
                 <div className="grid md:grid-cols-3 gap-6">
                     {templates.slice(0, 3).map((t) => (
                         <div
                             key={`featured-${t.id}`}
                             onClick={() => togglePreview(t.id)}
-                            className="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-lg hover:border-legal-navy/30 transition-all cursor-pointer group flex flex-col justify-between h-48"
+                            className="bg-background p-6 rounded-none border border-border shadow-sm hover:shadow-lg hover:border-legal-navy/30 transition-all cursor-pointer group flex flex-col justify-between h-48"
                         >
                             <div className="space-y-2">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                                    <div className="w-8 h-8 rounded-none bg-emerald-50 flex items-center justify-center">
                                         <FileText className="w-4 h-4 text-emerald-600" />
                                     </div>
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 truncate max-w-[150px]">{t.cat}</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground truncate max-w-[150px]">{t.cat}</span>
                                 </div>
-                                <h4 className="font-bold text-legal-navy line-clamp-2 leading-tight">{t.name}</h4>
+                                <h4 className="font-bold text-foreground line-clamp-2 leading-tight">{t.name}</h4>
                             </div>
-                            <div className="flex items-center gap-2 text-sm font-bold text-legal-navy group-hover:text-emerald-600 transition-colors">
+                            <div className="flex items-center gap-2 text-sm font-bold text-foreground group-hover:text-emerald-600 transition-colors">
                                 <Eye className="w-4 h-4" />
                                 Preview Sample
                             </div>
@@ -205,34 +205,34 @@ export default function TemplatePage() {
             {/* Categories */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                 {categories.map((cat, i) => (
-                    <div key={i} className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-center group hover:bg-legal-navy transition-all cursor-pointer">
-                        <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-white/10 transition-colors">
-                            <cat.icon className="w-6 h-6 text-legal-navy group-hover:text-emerald-400" />
+                    <div key={i} className="bg-background p-6 rounded-none border border-border shadow-sm flex flex-col items-center text-center group hover:bg-emerald-600 transition-all cursor-pointer">
+                        <div className="w-12 h-12 bg-muted/30 rounded-none flex items-center justify-center mb-4 group-hover:bg-background/10 transition-colors">
+                            <cat.icon className="w-6 h-6 text-foreground group-hover:text-emerald-400" />
                         </div>
-                        <h4 className="font-bold text-legal-navy group-hover:text-white transition-colors">{cat.title}</h4>
-                        <p className="text-xs text-slate-400 mt-1 font-bold tracking-tight uppercase group-hover:text-white/60">{cat.count} Templates</p>
+                        <h4 className="font-bold text-foreground group-hover:text-white transition-colors">{cat.title}</h4>
+                        <p className="text-xs text-muted-foreground mt-1 font-bold tracking-tight uppercase group-hover:text-white/60">{cat.count} Templates</p>
                     </div>
                 ))}
             </div>
 
             {/* Template List */}
             <div className="space-y-6">
-                <h3 className="text-xl font-bold text-legal-navy px-2">All Templates</h3>
-                <div className="bg-white rounded-[2rem] border border-slate-200 overflow-hidden shadow-sm">
+                <h3 className="text-xl font-bold text-foreground px-2">All Templates</h3>
+                <div className="bg-background rounded-none border border-border overflow-hidden shadow-sm">
                     {templates.map((t, i) => (
                         <div key={t.id} className={cn(
                             "transition-all",
-                            i !== templates.length - 1 && "border-b border-slate-100"
+                            i !== templates.length - 1 && "border-b border-border"
                         )}>
-                            <div className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 group hover:bg-slate-50/50">
+                            <div className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 group hover:bg-muted/30/50">
                                 <div className="flex items-start gap-4 flex-1">
-                                    <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 shrink-0 group-hover:bg-white group-hover:shadow-sm transition-all">
+                                    <div className="w-12 h-12 rounded-none bg-muted/30 flex items-center justify-center text-muted-foreground shrink-0 group-hover:bg-background group-hover:shadow-sm transition-all">
                                         <LayoutTemplate className="w-6 h-6" />
                                     </div>
                                     <div className="space-y-1">
-                                        <h4 className="font-bold text-lg text-legal-navy">{t.name}</h4>
+                                        <h4 className="font-bold text-lg text-foreground">{t.name}</h4>
                                         <div className="flex flex-wrap items-center gap-3">
-                                            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{t.cat}</span>
+                                            <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">{t.cat}</span>
                                             <span className={cn(
                                                 "px-2 py-0.5 rounded-md text-[9px] font-black uppercase",
                                                 t.difficulty === "Easy" ? "bg-emerald-50 text-emerald-600" :
@@ -240,11 +240,11 @@ export default function TemplatePage() {
                                             )}>
                                                 {t.difficulty}
                                             </span>
-                                            <span className="text-[10px] text-slate-400 font-medium">Est. length: {t.length}</span>
+                                            <span className="text-[10px] text-muted-foreground font-medium">Est. length: {t.length}</span>
                                         </div>
                                         <div className="flex flex-wrap gap-2 mt-2">
                                             {t.includes?.map((tag) => (
-                                                <span key={tag} className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-medium">
+                                                <span key={tag} className="text-[10px] bg-muted/50 text-muted-foreground px-2 py-0.5 rounded-full font-medium">
                                                     {tag}
                                                 </span>
                                             ))}
@@ -257,8 +257,8 @@ export default function TemplatePage() {
                                         size="sm"
                                         onClick={() => togglePreview(t.id)}
                                         className={cn(
-                                            "rounded-xl font-bold gap-2 border-slate-200",
-                                            expandedId === t.id ? "bg-slate-100 text-legal-navy" : "text-slate-500 hover:text-legal-navy"
+                                            "rounded-none font-bold gap-2 border-border",
+                                            expandedId === t.id ? "bg-muted/50 text-foreground" : "text-muted-foreground hover:text-foreground"
                                         )}
                                     >
                                         {expandedId === t.id ? (
@@ -267,11 +267,11 @@ export default function TemplatePage() {
                                             <>Preview <ChevronDown className="w-4 h-4" /></>
                                         )}
                                     </Button>
-                                    <Button size="sm" className="bg-legal-navy hover:bg-slate-800 text-white rounded-xl font-bold gap-2 shadow-lg shadow-legal-navy/10 px-6">
+                                    <Button size="sm" className="bg-emerald-600 hover:bg-slate-800 text-white rounded-none font-bold gap-2 shadow-lg shadow-legal-navy/10 px-6">
                                         Use Template
                                         <Zap className="w-4 h-4 text-emerald-400 fill-emerald-400" />
                                     </Button>
-                                    <Button variant="ghost" size="icon" className="text-slate-400 hover:text-legal-navy rounded-xl">
+                                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground rounded-none">
                                         <Download className="w-4 h-4" />
                                     </Button>
                                 </div>
@@ -279,10 +279,10 @@ export default function TemplatePage() {
 
                             {/* Preview Panel */}
                             {expandedId === t.id && (
-                                <div className="bg-slate-50/50 border-t border-slate-100 p-6 md:p-8 animate-in slide-in-from-top-2 duration-300">
-                                    <div className="bg-white rounded-xl border border-slate-200 shadow-sm max-w-3xl mx-auto overflow-hidden">
-                                        <div className="bg-slate-50 px-4 py-2 border-b border-slate-100 flex justify-between items-center">
-                                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Sample Preview</span>
+                                <div className="bg-muted/30/50 border-t border-border p-6 md:p-8 animate-in slide-in-from-top-2 duration-300">
+                                    <div className="bg-background rounded-none border border-border shadow-sm max-w-3xl mx-auto overflow-hidden">
+                                        <div className="bg-muted/30 px-4 py-2 border-b border-border flex justify-between items-center">
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Sample Preview</span>
                                             <div className="flex gap-1.5">
                                                 <div className="w-2 h-2 rounded-full bg-red-400/50" />
                                                 <div className="w-2 h-2 rounded-full bg-amber-400/50" />
@@ -292,8 +292,8 @@ export default function TemplatePage() {
                                         <div className="p-8 font-serif text-slate-800 text-sm leading-relaxed whitespace-pre-wrap selection:bg-emerald-100 selection:text-emerald-900">
                                             {t.sampleText}
                                         </div>
-                                        <div className="border-t border-slate-100 p-4 bg-slate-50 flex justify-center">
-                                            <Button size="sm" className="w-full max-w-xs bg-legal-navy hover:bg-slate-800 text-white rounded-xl font-bold gap-2">
+                                        <div className="border-t border-border p-4 bg-muted/30 flex justify-center">
+                                            <Button size="sm" className="w-full max-w-xs bg-emerald-600 hover:bg-slate-800 text-white rounded-none font-bold gap-2">
                                                 Use This Template
                                             </Button>
                                         </div>

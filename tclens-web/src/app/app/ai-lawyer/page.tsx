@@ -63,16 +63,16 @@ export default function AILawyerPage() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto h-[calc(100vh-12rem)] flex flex-col space-y-4 animate-in fade-in duration-500">
+        <div className="max-w-[1600px] mx-auto h-[calc(100vh-12rem)] flex flex-col space-y-4 animate-in fade-in duration-500">
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-slate-200 pb-4 shrink-0">
+            <div className="flex items-center justify-between border-b border-border pb-4 shrink-0">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-legal-navy rounded-xl flex items-center justify-center">
+                    <div className="w-10 h-10 bg-emerald-600 rounded-none flex items-center justify-center">
                         <Bot className="w-6 h-6 text-emerald-400" />
                     </div>
                     <div>
-                        <h1 className="text-xl font-black text-legal-navy font-outfit">AI Legal Assistant</h1>
-                        <p className="text-xs text-slate-500 font-medium flex items-center gap-1">
+                        <h1 className="text-xl font-black text-foreground font-playfair">AI Legal Assistant</h1>
+                        <p className="text-xs text-muted-foreground font-medium flex items-center gap-1">
                             <Shield className="w-3 h-3 text-emerald-500" />
                             GDRP Compliant
                         </p>
@@ -94,16 +94,16 @@ export default function AILawyerPage() {
                         )}
                     >
                         <div className={cn(
-                            "w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 shadow-sm",
-                            msg.role === "user" ? "bg-legal-navy" : "bg-white border border-slate-100"
+                            "w-10 h-10 rounded-none flex items-center justify-center shrink-0 shadow-sm",
+                            msg.role === "user" ? "bg-emerald-600" : "bg-background border border-border"
                         )}>
                             {msg.role === "user" ? <User className="w-5 h-5 text-white" /> : <Bot className="w-5 h-5 text-emerald-500" />}
                         </div>
                         <div className={cn(
                             "p-4 rounded-[1.5rem] text-sm leading-relaxed whitespace-pre-wrap",
                             msg.role === "user"
-                                ? "bg-legal-navy text-white rounded-tr-none"
-                                : "bg-white border border-slate-200 text-slate-800 rounded-tl-none shadow-sm"
+                                ? "bg-emerald-600 text-white rounded-tr-none"
+                                : "bg-background border border-border text-slate-800 rounded-tl-none shadow-sm"
                         )}>
                             {msg.role === "assistant" ? (
                                 <div className="markdown-content">
@@ -121,10 +121,10 @@ export default function AILawyerPage() {
                 ))}
                 {loading && (
                     <div className="flex gap-4 max-w-[85%] mr-auto animate-pulse">
-                        <div className="w-10 h-10 rounded-2xl bg-white border border-slate-100 flex items-center justify-center shrink-0 shadow-sm">
+                        <div className="w-10 h-10 rounded-none bg-background border border-border flex items-center justify-center shrink-0 shadow-sm">
                             <Bot className="w-5 h-5 text-slate-300" />
                         </div>
-                        <div className="p-4 rounded-[1.5rem] rounded-tl-none bg-white border border-slate-200 text-slate-400 flex items-center gap-2">
+                        <div className="p-4 rounded-[1.5rem] rounded-tl-none bg-background border border-border text-muted-foreground flex items-center gap-2">
                             <Loader2 className="w-4 h-4 animate-spin text-emerald-400" />
                             AI is thinking...
                         </div>
@@ -133,7 +133,7 @@ export default function AILawyerPage() {
             </div>
 
             {/* Input Area */}
-            <div className="shrink-0 space-y-4 pt-4 border-t border-slate-100 bg-slate-50/50 -mx-4 px-4 pb-4 mt-auto">
+            <div className="shrink-0 space-y-4 pt-4 border-t border-border bg-muted/30/50 -mx-4 px-4 pb-4 mt-auto">
                 <div className="relative group">
                     <input
                         type="text"
@@ -141,18 +141,18 @@ export default function AILawyerPage() {
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && handleSend()}
                         placeholder="Ask anything about legal terms, contracts, or your rights..."
-                        className="w-full h-14 pl-6 pr-16 bg-white border border-slate-200 rounded-2xl text-sm focus:ring-2 focus:ring-legal-navy focus:border-transparent outline-none shadow-xl shadow-slate-200/50 transition-all placeholder:text-slate-400"
+                        className="w-full h-14 pl-6 pr-16 bg-background border border-border rounded-none text-sm focus:ring-2 focus:ring-legal-navy focus:border-transparent outline-none shadow-xl shadow-slate-200/50 transition-all placeholder:text-muted-foreground"
                     />
                     <button
                         onClick={handleSend}
                         disabled={!input.trim() || loading}
-                        className="absolute right-2 top-2 h-10 w-10 bg-legal-navy hover:bg-slate-800 disabled:bg-slate-300 rounded-xl flex items-center justify-center transition-all group-hover:scale-105"
+                        className="absolute right-2 top-2 h-10 w-10 bg-emerald-600 hover:bg-slate-800 disabled:bg-slate-300 rounded-none flex items-center justify-center transition-all group-hover:scale-105"
                     >
                         <Send className="w-5 h-5 text-white" />
                     </button>
                 </div>
 
-                <div className="p-3 bg-amber-50 rounded-xl border border-amber-100 flex items-center gap-3">
+                <div className="p-3 bg-amber-50 rounded-none border border-amber-100 flex items-center gap-3">
                     <Scale className="w-4 h-4 text-amber-600 shrink-0" />
                     <p className="text-[10px] text-amber-800 leading-tight italic font-medium">
                         <strong>Disclaimer:</strong> This assistant provides general legal information using AI. It is <strong>NOT</strong> a substitute for professional legal advice from a qualified attorney.

@@ -60,10 +60,10 @@ export function UploadZone() {
             <div
                 {...getRootProps()}
                 className={cn(
-                    "border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all duration-200",
+                    "border-2 border-dashed rounded-none p-10 text-center cursor-pointer transition-all duration-200",
                     isDragActive
-                        ? "border-legal-emerald bg-emerald-50/50"
-                        : "border-slate-200 hover:border-legal-navy/30 hover:bg-slate-50",
+                        ? "border-emerald-600 bg-emerald-500/10"
+                        : "border-border hover:border-legal-navy/30 hover:bg-muted/30",
                     isUploading && "opacity-50 cursor-not-allowed pointer-events-none"
                 )}
             >
@@ -71,10 +71,10 @@ export function UploadZone() {
                 <div className="flex flex-col items-center gap-4">
                     <div className={cn(
                         "w-16 h-16 rounded-full flex items-center justify-center mb-2",
-                        isDragActive ? "bg-emerald-100 text-legal-emerald" : "bg-slate-100 text-slate-400"
+                        isDragActive ? "bg-emerald-100 text-legal-emerald" : "bg-muted/50 text-muted-foreground"
                     )}>
                         {isUploading ? (
-                            <Loader2 className="w-8 h-8 animate-spin text-legal-navy" />
+                            <Loader2 className="w-8 h-8 animate-spin text-foreground" />
                         ) : (
                             <UploadCloud className="w-8 h-8" />
                         )}
@@ -82,15 +82,15 @@ export function UploadZone() {
 
                     {isUploading ? (
                         <div className="space-y-2">
-                            <h3 className="text-xl font-bold text-legal-navy">Analyzing Document...</h3>
-                            <p className="text-slate-500">Our AI is reading the fine print. This may take a moment.</p>
+                            <h3 className="text-xl font-bold text-foreground">Analyzing Document...</h3>
+                            <p className="text-muted-foreground">Our AI is reading the fine print. This may take a moment.</p>
                         </div>
                     ) : (
                         <div className="space-y-2">
-                            <h3 className="text-xl font-bold text-legal-navy">
+                            <h3 className="text-xl font-bold text-foreground">
                                 {isDragActive ? "Drop it here!" : "Drag & Drop your contract"}
                             </h3>
-                            <p className="text-slate-500">
+                            <p className="text-muted-foreground">
                                 Supports PDF and TXT files. Max 10MB.
                             </p>
                             <Button variant="outline" className="mt-4">
@@ -102,7 +102,7 @@ export function UploadZone() {
             </div>
 
             {error && (
-                <div className="mt-4 p-4 bg-red-50 text-red-600 rounded-lg flex items-center gap-2">
+                <div className="mt-4 p-4 bg-red-50 text-red-600 rounded-none flex items-center gap-2">
                     <AlertCircle className="w-5 h-5" />
                     {error}
                 </div>

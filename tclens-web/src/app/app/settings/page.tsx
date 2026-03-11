@@ -88,66 +88,66 @@ export default function SettingsPage() {
     const usagePercentage = Math.min(100, (usage / currentLimit) * 100);
 
     return (
-        <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500 pb-20">
+        <div className="max-w-[1600px] mx-auto space-y-8 animate-in fade-in duration-500 pb-20">
             {/* Page Header */}
-            <div className="border-b border-slate-200 pb-8">
-                <h1 className="text-3xl font-black text-legal-navy font-outfit mb-2">Account Settings</h1>
-                <p className="text-slate-500">Manage your profile, preferences, and billing information.</p>
+            <div className="border-b border-border pb-8">
+                <h1 className="text-3xl font-black text-foreground font-playfair mb-2">Account Settings</h1>
+                <p className="text-muted-foreground">Manage your profile, preferences, and billing information.</p>
             </div>
 
             <div className="grid md:grid-cols-12 gap-8">
                 {/* Left: Main Settings */}
                 <div className="md:col-span-8 space-y-8">
                     {/* Profile Section */}
-                    <section className="bg-white rounded-[2rem] border border-slate-200 p-8 shadow-sm space-y-6">
-                        <div className="flex items-center gap-3 border-b border-slate-50 pb-4">
-                            <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
+                    <section className="bg-background rounded-none border border-border p-8 shadow-sm space-y-6">
+                        <div className="flex items-center gap-3 border-b border-border pb-4">
+                            <div className="w-10 h-10 bg-emerald-50 rounded-none flex items-center justify-center">
                                 <User className="w-5 h-5 text-emerald-600" />
                             </div>
-                            <h2 className="text-xl font-bold text-legal-navy font-outfit">Personal Profile</h2>
+                            <h2 className="text-xl font-bold text-foreground font-playfair">Personal Profile</h2>
                         </div>
 
                         <div className="grid grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <label className="text-sm font-bold text-slate-700 ml-1">First Name</label>
+                                <label className="text-sm font-bold text-foreground ml-1">First Name</label>
                                 <Input
                                     value={formData.firstName}
                                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                                    className="h-12 rounded-xl focus-visible:ring-legal-navy"
+                                    className="h-12 rounded-none focus-visible:ring-legal-navy"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-bold text-slate-700 ml-1">Last Name</label>
+                                <label className="text-sm font-bold text-foreground ml-1">Last Name</label>
                                 <Input
                                     value={formData.lastName}
                                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                                    className="h-12 rounded-xl focus-visible:ring-legal-navy"
+                                    className="h-12 rounded-none focus-visible:ring-legal-navy"
                                 />
                             </div>
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
+                            <label className="text-sm font-bold text-foreground ml-1">Email Address</label>
                             <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                 <Input
                                     value={user.email}
                                     disabled
-                                    className="pl-10 h-12 rounded-xl bg-slate-50 text-slate-500 cursor-not-allowed border-slate-200"
+                                    className="pl-10 h-12 rounded-none bg-muted/30 text-muted-foreground cursor-not-allowed border-border"
                                 />
                             </div>
-                            <p className="text-[10px] text-slate-400 ml-1 italic">* Email cannot be changed in this beta version.</p>
+                            <p className="text-[10px] text-muted-foreground ml-1 italic">* Email cannot be changed in this beta version.</p>
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-slate-700 ml-1">Jurisdiction Preference</label>
+                            <label className="text-sm font-bold text-foreground ml-1">Jurisdiction Preference</label>
                             <div className="relative">
-                                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                 <Input
                                     placeholder="e.g. California, USA"
                                     value={formData.jurisdiction}
                                     onChange={(e) => setFormData({ ...formData, jurisdiction: e.target.value })}
-                                    className="pl-10 h-12 rounded-xl focus-visible:ring-legal-navy"
+                                    className="pl-10 h-12 rounded-none focus-visible:ring-legal-navy"
                                 />
                             </div>
                         </div>
@@ -163,7 +163,7 @@ export default function SettingsPage() {
                             <Button
                                 onClick={handleSaveProfile}
                                 disabled={isSaving}
-                                className="h-12 px-8 bg-legal-navy hover:bg-slate-800 text-white rounded-xl font-bold flex items-center gap-2 transition-all min-w-[160px]"
+                                className="h-12 px-8 bg-emerald-600 hover:bg-slate-800 text-white rounded-none font-bold flex items-center gap-2 transition-all min-w-[160px]"
                             >
                                 {isSaving ? "Saving..." : (
                                     <>
@@ -176,21 +176,21 @@ export default function SettingsPage() {
                     </section>
 
                     {/* Usage Section */}
-                    <section className="bg-white rounded-[2rem] border border-slate-200 p-8 shadow-sm space-y-6">
-                        <div className="flex items-center gap-3 border-b border-slate-50 pb-4">
-                            <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
+                    <section className="bg-background rounded-none border border-border p-8 shadow-sm space-y-6">
+                        <div className="flex items-center gap-3 border-b border-border pb-4">
+                            <div className="w-10 h-10 bg-blue-50 rounded-none flex items-center justify-center">
                                 <Zap className="w-5 h-5 text-blue-600" />
                             </div>
-                            <h2 className="text-xl font-bold text-legal-navy font-outfit">Usage Tracking</h2>
+                            <h2 className="text-xl font-bold text-foreground font-playfair">Usage Tracking</h2>
                         </div>
 
                         <div className="space-y-6">
                             <div>
-                                <div className="flex justify-between items-center text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
+                                <div className="flex justify-between items-center text-xs font-black uppercase tracking-widest text-muted-foreground mb-3">
                                     <span>Plan Quota: {usage.toLocaleString()} / {currentLimit.toLocaleString()} Words Used</span>
                                     <span>{Math.round(usagePercentage)}%</span>
                                 </div>
-                                <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden p-0.5 border border-slate-50">
+                                <div className="h-3 w-full bg-muted/50 rounded-full overflow-hidden p-0.5 border border-border">
                                     <div
                                         className={`h-full transition-all duration-1000 rounded-full ${usagePercentage > 90 ? 'bg-red-500' : 'bg-emerald-500'}`}
                                         style={{ width: `${usagePercentage}%` }}
@@ -198,7 +198,7 @@ export default function SettingsPage() {
                                 </div>
                             </div>
 
-                            <div className="bg-blue-50/50 rounded-2xl p-4 flex gap-3 items-start border border-blue-100">
+                            <div className="bg-blue-50/50 rounded-none p-4 flex gap-3 items-start border border-blue-100">
                                 <Info className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
                                 <p className="text-xs text-blue-700 leading-relaxed font-medium">
                                     Your 10,000 word quota is part of your Free Account package.
@@ -212,48 +212,48 @@ export default function SettingsPage() {
                 {/* Right: Sidebar Settings */}
                 <div className="md:col-span-4 space-y-6">
                     {/* Billing Card (Placeholder) */}
-                    <section className="bg-legal-navy rounded-[2rem] p-8 text-white relative overflow-hidden shadow-xl">
+                    <section className="bg-emerald-600 rounded-none p-8 text-white relative overflow-hidden shadow-xl">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl -mr-16 -mt-16" />
 
                         <div className="relative z-10 space-y-6">
                             <div className="space-y-1">
                                 <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400">Current Plan</p>
-                                <h3 className="text-2xl font-black font-outfit capitalize">{user.plan}</h3>
+                                <h3 className="text-2xl font-black font-playfair capitalize">{user.plan}</h3>
                             </div>
 
                             <div className="space-y-4 pt-4 border-t border-white/10">
                                 <div className="flex justify-between items-center text-sm">
-                                    <span className="text-slate-400">Next Reset</span>
+                                    <span className="text-muted-foreground">Next Reset</span>
                                     <span className="font-bold">Jan 29, 2026</span>
                                 </div>
                                 <div className="flex justify-between items-center text-sm">
-                                    <span className="text-slate-400">Billing Cycle</span>
+                                    <span className="text-muted-foreground">Billing Cycle</span>
                                     <span className="font-bold">Monthly</span>
                                 </div>
                             </div>
 
-                            <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold h-12 rounded-xl group" asChild>
+                            <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold h-12 rounded-none group" asChild>
                                 <Link href="/pricing">
                                     Upgrade to Pro
                                     <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                 </Link>
                             </Button>
 
-                            <p className="text-[10px] text-center text-slate-400 italic">Payments coming soon • Beta access</p>
+                            <p className="text-[10px] text-center text-muted-foreground italic">Payments coming soon • Beta access</p>
                         </div>
                     </section>
 
                     {/* Invoices (Mock) */}
-                    <section className="bg-white rounded-[2rem] border border-slate-200 p-6 shadow-sm space-y-4">
+                    <section className="bg-background rounded-none border border-border p-6 shadow-sm space-y-4">
                         <div className="flex items-center gap-2 px-2">
-                            <CreditCard className="w-4 h-4 text-slate-400" />
-                            <h3 className="text-sm font-bold text-legal-navy uppercase tracking-tighter">Billing History</h3>
+                            <CreditCard className="w-4 h-4 text-muted-foreground" />
+                            <h3 className="text-sm font-bold text-foreground uppercase tracking-tighter">Billing History</h3>
                         </div>
                         <div className="text-center py-8 space-y-2">
-                            <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto">
+                            <div className="w-12 h-12 bg-muted/30 rounded-full flex items-center justify-center mx-auto">
                                 <FileText className="w-6 h-6 text-slate-300" />
                             </div>
-                            <p className="text-xs text-slate-400 font-medium">No invoices yet.</p>
+                            <p className="text-xs text-muted-foreground font-medium">No invoices yet.</p>
                         </div>
                     </section>
 
@@ -261,14 +261,14 @@ export default function SettingsPage() {
                     <div className="space-y-3 pt-4 px-2">
                         <button
                             onClick={handleSignOut}
-                            className="w-full h-12 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-50 transition-all"
+                            className="w-full h-12 rounded-none border border-border text-muted-foreground font-bold text-sm flex items-center justify-center gap-2 hover:bg-muted/30 transition-all"
                         >
                             <LogOut className="w-4 h-4" />
                             Sign Out
                         </button>
                         <button
                             onClick={handleDeleteAccount}
-                            className="w-full h-12 rounded-xl border border-red-100 text-red-500 font-bold text-sm flex items-center justify-center gap-2 hover:bg-red-50 transition-all"
+                            className="w-full h-12 rounded-none border border-red-100 text-red-500 font-bold text-sm flex items-center justify-center gap-2 hover:bg-red-50 transition-all"
                         >
                             <Trash2 className="w-4 h-4" />
                             Delete Account

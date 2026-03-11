@@ -35,7 +35,7 @@ export default function AnalysisPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-slate-50">
+            <div className="min-h-screen flex items-center justify-center bg-muted/30">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-legal-navy"></div>
             </div>
         );
@@ -43,7 +43,7 @@ export default function AnalysisPage() {
 
     if (!data) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 gap-4">
+            <div className="min-h-screen flex flex-col items-center justify-center bg-muted/30 gap-4">
                 <h1 className="text-2xl font-bold text-legal-navy">Analysis Not Found</h1>
                 <Button onClick={() => router.push("/dashboard")}>Return to Dashboard</Button>
             </div>
@@ -65,26 +65,26 @@ export default function AnalysisPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 flex flex-col h-screen">
+        <div className="min-h-screen bg-muted/30 flex flex-col h-screen">
             {/* Header */}
-            <header className="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between shrink-0">
+            <header className="bg-background border-b border-border px-6 py-3 flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-4">
                     <Button variant="ghost" size="icon" onClick={() => router.push("/dashboard")}>
                         <ArrowLeft className="w-5 h-5" />
                     </Button>
                     <div>
                         <h1 className="font-bold text-legal-navy text-lg flex items-center gap-2">
-                            <FileText className="w-4 h-4 text-slate-400" />
+                            <FileText className="w-4 h-4 text-muted-foreground" />
                             {data.fileName}
                         </h1>
-                        <p className="text-xs text-slate-500">AI Analysis Report</p>
+                        <p className="text-xs text-muted-foreground">AI Analysis Report</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-full">
+                    <div className="flex items-center gap-2 px-4 py-2 bg-muted/50 rounded-full">
                         <div className={cn("w-3 h-3 rounded-full", getRiskColor(data.analysis.riskScore))} />
                         <span className="font-bold text-legal-navy">{data.analysis.riskScore}/100</span>
-                        <span className="text-sm text-slate-500">({getRiskLabel(data.analysis.riskScore)})</span>
+                        <span className="text-sm text-muted-foreground">({getRiskLabel(data.analysis.riskScore)})</span>
                     </div>
                     <Button variant="premium">Consult a Lawyer</Button>
                 </div>
@@ -93,38 +93,38 @@ export default function AnalysisPage() {
             {/* Main Content - Split View */}
             <div className="flex-1 flex overflow-hidden">
                 {/* Left Panel: Document Text */}
-                <div className="flex-1 overflow-y-auto p-8 border-r border-slate-200 bg-white">
-                    <div className="max-w-3xl mx-auto font-serif text-slate-700 leading-relaxed whitespace-pre-wrap">
+                <div className="flex-1 overflow-y-auto p-8 border-r border-border bg-background">
+                    <div className="max-w-3xl mx-auto font-serif text-muted-foreground leading-relaxed whitespace-pre-wrap">
                         {data.text}
                     </div>
                 </div>
 
                 {/* Right Panel: Analysis */}
-                <div className="w-[450px] overflow-y-auto bg-slate-50 p-6 shrink-0">
+                <div className="w-[450px] overflow-y-auto bg-muted/30 p-6 shrink-0">
                     <div className="space-y-6">
                         {/* Summary Card */}
-                        <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                        <div className="bg-background p-5 rounded-xl shadow-sm border border-border">
                             <h3 className="font-bold text-legal-navy mb-3 flex items-center gap-2">
                                 <Shield className="w-5 h-5 text-emerald-500" />
                                 Executive Summary
                             </h3>
-                            <p className="text-sm text-slate-600 leading-relaxed">
+                            <p className="text-sm text-muted-foreground leading-relaxed">
                                 {data.analysis.summary}
                             </p>
                         </div>
 
                         {/* Clauses List */}
                         <div className="space-y-4">
-                            <h3 className="font-bold text-legal-navy text-sm uppercase tracking-wider text-slate-500">
+                            <h3 className="font-bold text-legal-navy text-sm uppercase tracking-wider text-muted-foreground">
                                 Key Clauses & Risks
                             </h3>
 
                             {data.analysis.clauses.map((clause, idx) => (
                                 <div key={idx} className={cn(
-                                    "bg-white p-4 rounded-xl shadow-sm border transition-all hover:shadow-md",
+                                    "bg-background p-4 rounded-xl shadow-sm border transition-all hover:shadow-md",
                                     clause.riskLevel === "critical" ? "border-red-200 bg-red-50/30" :
                                         clause.riskLevel === "high" ? "border-amber-200 bg-amber-50/30" :
-                                            "border-slate-200"
+                                            "border-border"
                                 )}>
                                     <div className="flex justify-between items-start mb-2">
                                         <span className={cn(
@@ -144,7 +144,7 @@ export default function AnalysisPage() {
                                         {clause.explanation}
                                     </p>
 
-                                    <div className="bg-slate-100 p-2 rounded text-xs text-slate-600 font-mono mb-2 border-l-2 border-slate-300">
+                                    <div className="bg-muted/50 p-2 rounded text-xs text-muted-foreground font-mono mb-2 border-l-2 border-slate-300">
                                         "{clause.text.slice(0, 150)}..."
                                     </div>
 

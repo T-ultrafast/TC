@@ -170,16 +170,16 @@ export default function CasePage() {
     );
 
     return (
-        <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500 pb-20">
+        <div className="max-w-[1600px] mx-auto space-y-8 animate-in fade-in duration-500 pb-20">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-8 tracking-tight">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-8 tracking-tight">
                 <div>
-                    <h1 className="text-3xl font-black text-legal-navy font-outfit mb-2">Cases</h1>
-                    <p className="text-slate-500">Manage your legal matters and organize related documents.</p>
+                    <h1 className="text-3xl font-black text-foreground font-playfair mb-2">Cases</h1>
+                    <p className="text-muted-foreground">Manage your legal matters and organize related documents.</p>
                 </div>
                 <Button
                     onClick={() => setIsCreateModalOpen(true)}
-                    className="h-12 px-6 rounded-xl bg-legal-navy hover:bg-slate-800 font-bold gap-2 shadow-lg shadow-legal-navy/10 transition-all hover:scale-105"
+                    className="h-12 px-6 rounded-none bg-emerald-600 hover:bg-slate-800 font-bold gap-2 shadow-lg shadow-legal-navy/10 transition-all hover:scale-105"
                 >
                     <Plus className="w-5 h-5" />
                     Create Case
@@ -189,16 +189,16 @@ export default function CasePage() {
             {/* List */}
             <div className="space-y-4">
                 <div className="flex items-center justify-between px-2">
-                    <h3 className="text-lg font-bold text-legal-navy font-outfit uppercase tracking-tighter">Your Matters</h3>
+                    <h3 className="text-lg font-bold text-foreground font-playfair uppercase tracking-tighter">Your Matters</h3>
                     <div className="flex items-center gap-2">
                         <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                             <Input
                                 type="text"
                                 placeholder="Search cases..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-10 pr-4 h-10 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-legal-navy w-64"
+                                className="pl-10 pr-4 h-10 border border-border rounded-none text-xs outline-none focus:ring-2 focus:ring-legal-navy w-64"
                             />
                         </div>
                     </div>
@@ -206,46 +206,46 @@ export default function CasePage() {
 
                 {loading ? (
                     <div className="flex items-center justify-center py-20">
-                        <Loader2 className="w-8 h-8 text-legal-navy animate-spin" />
+                        <Loader2 className="w-8 h-8 text-foreground animate-spin" />
                     </div>
                 ) : cases.length === 0 ? (
-                    <div className="bg-white rounded-[2rem] border border-slate-200 p-20 text-center space-y-4 shadow-sm">
-                        <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto text-slate-300">
+                    <div className="bg-background rounded-none border border-border p-20 text-center space-y-4 shadow-sm">
+                        <div className="w-16 h-16 bg-muted/30 rounded-none flex items-center justify-center mx-auto text-slate-300">
                             <Briefcase className="w-8 h-8" />
                         </div>
                         <div className="space-y-1">
-                            <h3 className="text-xl font-bold text-legal-navy font-outfit">No cases found</h3>
-                            <p className="text-slate-400 max-w-xs mx-auto text-sm">Create your first legal matter to start organizing your documents.</p>
+                            <h3 className="text-xl font-bold text-foreground font-playfair">No cases found</h3>
+                            <p className="text-muted-foreground max-w-xs mx-auto text-sm">Create your first legal matter to start organizing your documents.</p>
                         </div>
                         <Button
                             variant="outline"
                             onClick={() => setIsCreateModalOpen(true)}
-                            className="h-10 px-6 rounded-xl border-slate-200 font-bold hover:bg-slate-50"
+                            className="h-10 px-6 rounded-none border-border font-bold hover:bg-muted/30"
                         >
                             Create First Case
                         </Button>
                     </div>
                 ) : (
-                    <div className="bg-white rounded-[2rem] border border-slate-200 overflow-hidden shadow-sm">
+                    <div className="bg-background rounded-none border border-border overflow-hidden shadow-sm">
                         {filteredCases.map((c, i) => (
                             <div key={c.id}
                                 onClick={() => router.push(`/app/case/${c.id}`)}
                                 className={cn(
-                                    "group flex items-center justify-between p-6 hover:bg-slate-50/50 transition-all cursor-pointer",
-                                    i !== filteredCases.length - 1 && "border-b border-slate-100"
+                                    "group flex items-center justify-between p-6 hover:bg-muted/30/50 transition-all cursor-pointer",
+                                    i !== filteredCases.length - 1 && "border-b border-border"
                                 )}>
                                 <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-legal-navy group-hover:text-emerald-400 transition-all">
+                                    <div className="w-12 h-12 rounded-none bg-muted/30 flex items-center justify-center text-muted-foreground group-hover:bg-emerald-600 group-hover:text-emerald-400 transition-all">
                                         <Briefcase className="w-6 h-6" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-legal-navy group-hover:text-legal-navy">{c.title}</h4>
+                                        <h4 className="font-bold text-foreground group-hover:text-foreground">{c.title}</h4>
                                         <div className="flex items-center gap-3 mt-1">
-                                            <span className="flex items-center gap-1 text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                                            <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
                                                 <Clock className="w-3 h-3" />
                                                 Updated {c.updatedAt}
                                             </span>
-                                            <span className="flex items-center gap-1 text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                                            <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
                                                 <FileText className="w-3 h-3" />
                                                 {c.attachmentCount} Documents
                                             </span>
@@ -256,12 +256,12 @@ export default function CasePage() {
                                     <span className={cn(
                                         "px-3 py-1 rounded-full text-[10px] font-black tracking-tight uppercase",
                                         c.status === "Active" ? "bg-emerald-100 text-emerald-700" :
-                                            c.status === "Pending" ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-600"
+                                            c.status === "Pending" ? "bg-amber-100 text-amber-700" : "bg-muted/50 text-muted-foreground"
                                     )}>
                                         {c.status}
                                     </span>
-                                    <Button variant="ghost" size="icon" className="text-slate-400"><MoreVertical className="w-4 h-4" /></Button>
-                                    <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-legal-navy transition-all" />
+                                    <Button variant="ghost" size="icon" className="text-muted-foreground"><MoreVertical className="w-4 h-4" /></Button>
+                                    <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-foreground transition-all" />
                                 </div>
                             </div>
                         ))}
@@ -272,47 +272,47 @@ export default function CasePage() {
             {/* Create Case Modal */}
             {isCreateModalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300">
-                    <div className="bg-white w-full max-w-lg rounded-[2.5rem] p-8 shadow-2xl relative animate-in zoom-in-95 duration-300 overflow-y-auto max-h-[90vh]">
+                    <div className="bg-background w-full max-w-lg rounded-[2.5rem] p-8 shadow-2xl relative animate-in zoom-in-95 duration-300 overflow-y-auto max-h-[90vh]">
                         <button
                             onClick={() => setIsCreateModalOpen(false)}
-                            className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-xl transition-all"
+                            className="absolute top-6 right-6 p-2 text-muted-foreground hover:text-muted-foreground hover:bg-muted/30 rounded-none transition-all"
                         >
                             <X className="w-5 h-5" />
                         </button>
 
                         <div className="space-y-6">
                             <div className="space-y-2">
-                                <h2 className="text-2xl font-black text-legal-navy font-outfit">New Legal Matter</h2>
-                                <p className="text-sm text-slate-500">Provide a title and optional description for your case.</p>
+                                <h2 className="text-2xl font-black text-foreground font-playfair">New Legal Matter</h2>
+                                <p className="text-sm text-muted-foreground">Provide a title and optional description for your case.</p>
                             </div>
 
                             <form onSubmit={handleCreateCase} className="space-y-4">
                                 <div className="space-y-2">
-                                    <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Case Title</label>
+                                    <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Case Title</label>
                                     <Input
                                         required
                                         placeholder="e.g. Service Provider Agreement Review"
                                         value={newCase.title}
                                         onChange={(e) => setNewCase({ ...newCase, title: e.target.value })}
-                                        className="h-12 rounded-xl focus-visible:ring-legal-navy"
+                                        className="h-12 rounded-none focus-visible:ring-legal-navy"
                                     />
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Description (Optional)</label>
+                                    <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Description (Optional)</label>
                                     <textarea
                                         placeholder="Brief summary of the legal context..."
                                         value={newCase.description}
                                         onChange={(e) => setNewCase({ ...newCase, description: e.target.value })}
-                                        className="w-full h-32 p-4 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-legal-navy text-sm transition-all resize-none"
+                                        className="w-full h-32 p-4 rounded-none border border-border outline-none focus:ring-2 focus:ring-legal-navy text-sm transition-all resize-none"
                                     />
                                 </div>
 
                                 {/* Attachments Section */}
                                 <div className="space-y-2">
-                                    <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Attachments (Optional)</label>
+                                    <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Attachments (Optional)</label>
 
-                                    <div className="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:bg-slate-50 transition-colors relative">
+                                    <div className="border-2 border-dashed border-border rounded-none p-6 text-center hover:bg-muted/30 transition-colors relative">
                                         <input
                                             type="file"
                                             multiple
@@ -321,19 +321,19 @@ export default function CasePage() {
                                             accept=".pdf,.txt,.doc,.docx"
                                         />
                                         <Upload className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                                        <p className="text-sm font-bold text-legal-navy">Click or drag files here</p>
-                                        <p className="text-[10px] text-slate-400 mt-1">PDF, TXT, DOC, DOCX (Max 10MB)</p>
+                                        <p className="text-sm font-bold text-foreground">Click or drag files here</p>
+                                        <p className="text-[10px] text-muted-foreground mt-1">PDF, TXT, DOC, DOCX (Max 10MB)</p>
                                     </div>
 
                                     {filesToUpload.length > 0 && (
                                         <div className="space-y-2 mt-2">
                                             {filesToUpload.map((item, i) => (
-                                                <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-100">
+                                                <div key={i} className="flex items-center justify-between p-3 bg-muted/30 rounded-none border border-border">
                                                     <div className="flex items-center gap-3 overflow-hidden">
-                                                        <FileText className="w-4 h-4 text-slate-400 shrink-0" />
+                                                        <FileText className="w-4 h-4 text-muted-foreground shrink-0" />
                                                         <div className="truncate">
-                                                            <p className="text-xs font-bold text-legal-navy truncate">{item.file.name}</p>
-                                                            <p className="text-[10px] text-slate-400">{(item.file.size / 1024 / 1024).toFixed(2)} MB</p>
+                                                            <p className="text-xs font-bold text-foreground truncate">{item.file.name}</p>
+                                                            <p className="text-[10px] text-muted-foreground">{(item.file.size / 1024 / 1024).toFixed(2)} MB</p>
                                                         </div>
                                                     </div>
                                                     <Button
@@ -341,7 +341,7 @@ export default function CasePage() {
                                                         variant="ghost"
                                                         size="sm"
                                                         onClick={() => removeFile(i)}
-                                                        className="h-6 w-6 p-0 text-slate-400 hover:text-red-500"
+                                                        className="h-6 w-6 p-0 text-muted-foreground hover:text-red-500"
                                                     >
                                                         <X className="w-3.5 h-3.5" />
                                                     </Button>
@@ -357,14 +357,14 @@ export default function CasePage() {
                                         variant="outline"
                                         onClick={() => setIsCreateModalOpen(false)}
                                         disabled={isSubmitting}
-                                        className="flex-1 h-12 rounded-xl font-bold"
+                                        className="flex-1 h-12 rounded-none font-bold"
                                     >
                                         Cancel
                                     </Button>
                                     <Button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="flex-1 h-12 rounded-xl bg-legal-navy hover:bg-slate-800 font-bold text-white shadow-lg shadow-legal-navy/10"
+                                        className="flex-1 h-12 rounded-none bg-emerald-600 hover:bg-slate-800 font-bold text-white shadow-lg shadow-legal-navy/10"
                                     >
                                         {isSubmitting ? (
                                             <>
