@@ -107,7 +107,7 @@ INSTRUCTIONS: Answer the question clearly and directly based on the provided con
                 if (isRetryable && retryCount < maxRetries - 1) {
                     retryCount++;
                     const delay = Math.pow(2, retryCount) * 1000 + Math.random() * 1000;
-                    console.warn(\`[API_CHAT] Gemini \${isRateLimit ? "Rate Limit" : "Server Error"}. Retrying in \${Math.round(delay)}ms... (Attempt \${retryCount}/\${maxRetries})\`);
+                    console.warn(`[API_CHAT] Gemini ${isRateLimit ? "Rate Limit" : "Server Error"}. Retrying in ${Math.round(delay)}ms... (Attempt ${retryCount}/${maxRetries})`);
                     await new Promise(resolve => setTimeout(resolve, delay));
                     continue;
                 }
