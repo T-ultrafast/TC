@@ -18,6 +18,8 @@
     "docx": "^9.5.1",
     "file-saver": "^2.0.5",
     "framer-motion": "^12.23.25",
+    "html-to-docx": "^1.8.0",
+    "html2pdf.js": "^0.14.0",
     "jsdom": "^27.4.0",
     "lucide-react": "^0.556.0",
     "mammoth": "^1.11.0",
@@ -39,6 +41,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/file-saver": "^2.0.7",
+    "@types/html-to-docx": "^1.8.0",
     "@types/jsdom": "^27.0.0",
     "@types/mozilla__readability": "^0.4.2",
     "@types/node": "^20",

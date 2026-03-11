@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
+import { buildDocumentPrompt } from "@/lib/prompts";
 
 export const runtime = "nodejs";
 
@@ -13,7 +14,7 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json().catch(() => ({}));
-        const { type, jurisdiction, state, keyDetails } = body;
+        const { type, jurisdiction, state, keyDetails, customParams } = body;
 
         if (!type) {
             return NextResponse.json({ error: "Missing document type" }, { status: 400 });
@@ -28,37 +29,16 @@ export async function POST(req: NextRequest) {
         // Convert HTML to plain text for AI processing
         const plainKeyDetails = keyDetails.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
 
-        const prompt = `
-        Generate a professional, legally structured ${type} using the following key details as the PRIMARY SOURCE:
+        // Format customParams ignoring N/A or empty
+        let formattedParams = '';
+        if (customParams && typeof customParams === 'object') {
+            formattedParams = Object.entries(customParams)
+                .filter(([_, value]) => value && String(value).trim().toLowerCase() !== 'na' && String(value).trim().toLowerCase() !== 'n/a')
+                .map(([key, value]) => `• ${key}: ${value}`)
+                .join('\n');
+        }
 
-        KEY DETAILS PROVIDED BY USER:
-        ${plainKeyDetails}
-
-        JURISDICTION: ${jurisdiction}${state ? ` (${state})` : ''}
-
-        INSTRUCTIONS:
-        1. Use the Key Details above as your primary source of truth - extract entities, terms, and requirements from this content
-        2. If the Key Details mention specific parties, dates, amounts, or terms, use those EXACTLY as provided
-        3. Only infer missing details when absolutely necessary, and clearly mark them as "assumed" or use brackets [EXAMPLE]
-        4. Adapt the document structure and wording to comply with ${jurisdiction} laws and requirements${state ? `, specifically considering ${state} state/provincial requirements` : ''}
-        5. Generate a complete, professional legal document that reads like a real agreement, not an AI response
-
-        FORMATTING REQUIREMENTS:
-        1. DO NOT use Markdown symbols like #, **, *, or - for headers or lists
-        2. DO NOT wrap the output in code fences (e.g., \`\`\`text or \`\`\`)
-        3. Use professional legal numbering for sections (e.g., "1. SCOPE OF SERVICES", "1.1 Deliverables")
-        4. Use double line breaks between sections
-        5. Include proper legal clauses and protective language appropriate for the document type
-        6. Preserve any list structure from the user's Key Details
-
-        QUALITY REQUIREMENTS:
-        - Extract and use: parties, dates, payment terms, obligations, termination conditions, governing law
-        - Generate structured clauses with proper headings
-        - Include appropriate legal boilerplate for the jurisdiction
-        - End with a "Notes / Assumptions" section if any assumptions were made
-
-        The output should be a clean, plain-text legal document ready for professional use.
-        `;
+        const prompt = buildDocumentPrompt(type, jurisdiction, state || "", plainKeyDetails, formattedParams);
 
         const result = await client.models.generateContent({
             model: "gemini-2.0-flash",
@@ -71,7 +51,14 @@ export async function POST(req: NextRequest) {
             throw new Error("Gemini returned an empty response");
         }
 
-        return NextResponse.json({ content });
+        let finalContent = content.trim();
+        if (finalContent.startsWith("```")) {
+            finalContent = finalContent.replace(/^```[a-zA-Z]*\n/, ""); // remove opening ```html
+            finalContent = finalContent.replace(/\n```$/, ""); // remove closing ```
+            finalContent = finalContent.trim();
+        }
+
+        return NextResponse.json({ content: finalContent });
     } catch (error: any) {
         console.error("Doc gen error:", error);
         return NextResponse.json({

@@ -16,15 +16,18 @@ import { useSearchParams } from 'next/navigation';
 import 'react-quill-new/dist/quill.snow.css';
 
 // Dynamically import ReactQuill with SSR disabled to prevent findDOMNode error
-const ReactQuill = dynamic(() => import('react-quill-new'), {
+const ReactQuill = dynamic(async () => {
+    const { default: RQ } = await import('react-quill-new');
+    return ({ forwardedRef, ...props }: any) => <RQ ref={forwardedRef} {...props} />;
+}, {
     ssr: false,
     loading: () => <div className="min-h-[200px] bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-center">
         <div className="text-sm text-slate-500 font-medium">Loading editor...</div>
     </div>
 });
 import { Input } from "@/components/ui/input";
-import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from "docx";
 import { saveAs } from "file-saver";
+import { DOCUMENT_PARAMS_MAP, DEFAULT_PARAMS } from "@/lib/document-params";
 
 const LIMITS = {
     ANONYMOUS: 200,
@@ -242,6 +245,10 @@ export default function DocumentPage() {
     const [genState, setGenState] = useState("");
     const [keyDetails, setKeyDetails] = useState("");
     const [keyDetailsWordCount, setKeyDetailsWordCount] = useState(0);
+    const [customParams, setCustomParams] = useState<Record<string, string>>({});
+    const [logoFile, setLogoFile] = useState<File | null>(null);
+    const [useWatermark, setUseWatermark] = useState(false);
+    const [signatureFile, setSignatureFile] = useState<File | null>(null);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -457,21 +464,20 @@ export default function DocumentPage() {
                     type: genType,
                     jurisdiction: genJurisdiction,
                     state: genState,
-                    keyDetails: keyDetails
+                    keyDetails: keyDetails,
+                    customParams: customParams
                 }),
             });
             const data = await response.json();
             if (!response.ok) throw new Error(data.error || "Generation failed");
 
-            // Sanitizer: Remove code fences if present
-            let cleanContent = data.content;
-            if (cleanContent.startsWith("```")) {
-                const lines = cleanContent.split("\n");
-                if (lines[0].startsWith("```")) lines.shift();
-                if (lines[lines.length - 1].startsWith("```")) lines.pop();
-                cleanContent = lines.join("\n").trim();
-            }
-            setGenResult(cleanContent);
+            // Directly update the keyDetails editor with the generated content
+            setKeyDetails(data.content);
+            setGenResult(data.content);
+            setKeyDetailsWordCount(countWordsFromHtml(data.content));
+
+            // Scroll back up to the editor if needed
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -479,47 +485,165 @@ export default function DocumentPage() {
         }
     };
 
+    const handleClearAll = () => {
+        setGenResult("");
+        setKeyDetails("");
+        setKeyDetailsWordCount(0);
+        setGenType("");
+        setCustomParams({});
+        setLogoFile(null);
+        setSignatureFile(null);
+        setError(null);
+    };
+
     const handleDownloadDocx = async () => {
         if (!genResult) return;
 
         try {
-            const sections = genResult.split('\n\n');
-            const doc = new Document({
-                sections: [
-                    {
-                        properties: {},
-                        children: [
-                            new Paragraph({
-                                text: genType,
-                                heading: HeadingLevel.HEADING_1,
-                                alignment: AlignmentType.CENTER,
-                                spacing: { after: 400 },
-                            }),
-                            ...sections.map(section => {
-                                // Check if it looks like a heading (e.g., "1. SCOPE OF SERVICES")
-                                const isHeading = /^\d+\.?\s+[A-Z\s,]+$/.test(section.trim());
-                                return new Paragraph({
-                                    children: [
-                                        new TextRun({
-                                            text: section.trim(),
-                                            bold: isHeading,
-                                            size: 24, // 12pt
-                                        }),
-                                    ],
-                                    spacing: { before: 200, after: 200 },
-                                    heading: isHeading ? HeadingLevel.HEADING_2 : undefined,
-                                });
-                            }),
-                        ],
-                    },
-                ],
+            // Include logos and signature right into the HTML that is sent to our backend converter
+            let logoHtml = '';
+            let signatureHtml = '';
+
+            if (logoFile) {
+                const logoBase64 = await new Promise<string>((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result as string);
+                    reader.readAsDataURL(logoFile);
+                });
+
+                if (useWatermark) {
+                    logoHtml = `<div style="text-align:center; margin-bottom: 30px;"><img src="${logoBase64}" style="width: 120px; max-height: 80px; object-fit: contain; opacity:0.3;" alt="logo watermark" /></div>`;
+                } else {
+                    logoHtml = `<div style="text-align:center; margin-bottom: 30px;"><img src="${logoBase64}" style="width: 100px; max-height: 60px; object-fit: contain;" alt="logo" /></div>`;
+                }
+            }
+
+            if (signatureFile) {
+                const sigBase64 = await new Promise<string>((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result as string);
+                    reader.readAsDataURL(signatureFile);
+                });
+
+                let signedBy = "Signatory";
+                if (customParams["employeeName"] || customParams["partyA"]) {
+                    signedBy = customParams["employeeName"] || customParams["partyA"] || "Signatory";
+                }
+
+                signatureHtml = `
+                    <br/><br/>
+                    <p style="font-weight: bold; margin-bottom: 20px;">IN WITNESS WHEREOF:</p>
+                    <img src="${sigBase64}" width="150" alt="Signature" style="margin-bottom: 5px;" />
+                    <p style="margin: 0;">____________________________</p>
+                    <p style="margin-top: 5px;">${signedBy}</p>
+                `;
+            }
+
+            // Also capture the current edited state of the document (ReactQuill outputs clean HTML)
+            const fullHtml = `
+                ${logoHtml}
+                ${genResult}
+                ${signatureHtml}
+            `;
+
+            const res = await fetch('/api/download-docx', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ html: fullHtml, title: genType })
             });
 
-            const blob = await Packer.toBlob(doc);
+            if (!res.ok) throw new Error("Failed to export Word file. Server error.");
+
+            const blob = await res.blob();
             saveAs(blob, `${genType.replace(/\s+/g, '_')}_Draft.docx`);
         } catch (err) {
             console.error("DOCX Export Error:", err);
             setError("Failed to generate DOCX file.");
+        }
+    };
+
+    const handleDownloadPdf = async () => {
+        if (!keyDetails) return;
+        try {
+            const html2pdf = (await import('html2pdf.js')).default;
+
+            let logoHtml = '';
+            let signatureHtml = '';
+
+            if (logoFile) {
+                const logoBase64 = await new Promise<string>((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result as string);
+                    reader.readAsDataURL(logoFile);
+                });
+                logoHtml = `<div style="text-align:center; margin-bottom: 30px;"><img src="${logoBase64}" style="width: 100px; max-height: 60px; object-fit: contain;" alt="logo" /></div>`;
+            }
+
+            if (signatureFile) {
+                const sigBase64 = await new Promise<string>((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result as string);
+                    reader.readAsDataURL(signatureFile);
+                });
+                let signedBy = customParams["employeeName"] || customParams["partyA"] || "Signatory";
+                signatureHtml = `
+                    <div style="margin-top: 50px; page-break-inside: avoid;">
+                        <p style="font-weight: bold; margin-bottom: 10px;">IN WITNESS WHEREOF:</p>
+                        <img src="${sigBase64}" style="width: 120px; height: auto; margin-bottom: 5px;" alt="Signature" />
+                        <p style="margin: 0; border-top: 1px solid black; width: 200px; pt: 5px;">${signedBy}</p>
+                    </div>
+                `;
+            }
+
+            // Clean Legal Document Template (Matches Word / Formal Print)
+            const contentHtml = `
+                <div style="padding: 1in; font-family: 'Times New Roman', Times, serif; color: #000; line-height: 1.5; font-size: 11pt; text-align: justify; background: white;">
+                    ${logoHtml}
+                    
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h1 style="font-size: 16pt; margin: 0; font-weight: bold; text-transform: uppercase;">
+                            ${genType || 'LEGAL AGREEMENT'}
+                        </h1>
+                    </div>
+
+                    <div style="margin-bottom: 40px; min-height: 500px;">
+                        ${keyDetails}
+                    </div>
+
+                    <div style="margin-top: 50px; page-break-inside: avoid;">
+                        ${signatureHtml}
+                    </div>
+
+                    <div style="margin-top: 50px; border-top: 1px solid #eee; padding-top: 10px; font-size: 8pt; color: #888; text-align: center;">
+                        Draft Generated via TCLens Legal Hub - Official Copy
+                    </div>
+                </div>
+            `;
+
+            const element = document.createElement('div');
+            element.style.width = '210mm'; // Standard A4 width
+            element.innerHTML = contentHtml;
+            document.body.appendChild(element);
+
+            const opt = {
+                margin: [0, 0, 0, 0] as [number, number, number, number],
+                filename: `${genType?.replace(/\s+/g, '_') || 'Legal_Document'}_Draft.pdf`,
+                image: { type: 'jpeg' as const, quality: 1.0 },
+                html2canvas: {
+                    scale: 3,
+                    useCORS: true,
+                    logging: false,
+                    letterRendering: true,
+                    windowWidth: 794
+                },
+                jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
+            };
+
+            await html2pdf().set(opt).from(element).save();
+            document.body.removeChild(element);
+        } catch (err) {
+            console.error("PDF Export Error:", err);
+            setError("Failed to generate PDF. Make sure you are using a compatible browser.");
         }
     };
 
@@ -1270,18 +1394,136 @@ export default function DocumentPage() {
                             </div>
                         )}
 
+                        {/* Custom Parameters */}
+                        {genType && (
+                            <div className="space-y-4 animate-in fade-in pt-4 border-t border-slate-100">
+                                <h3 className="text-sm font-black text-legal-navy uppercase tracking-wider">Specific Details</h3>
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    {(DOCUMENT_PARAMS_MAP[genType] || DEFAULT_PARAMS).map(field => (
+                                        <div key={field.id} className="space-y-2">
+                                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{field.label}</label>
+                                            <input
+                                                type={field.type}
+                                                className="w-full h-10 px-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-legal-navy outline-none text-sm bg-slate-50 text-slate-700"
+                                                placeholder={field.placeholder || ""}
+                                                value={customParams[field.id] || ""}
+                                                onChange={e => setCustomParams(prev => ({ ...prev, [field.id]: e.target.value }))}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Branding and Signatures */}
+                        {genType && (
+                            <div className="space-y-4 pt-4 border-t border-slate-100">
+                                <h3 className="text-sm font-black text-legal-navy uppercase tracking-wider">Branding & Signature (Optional)</h3>
+                                <div className="grid md:grid-cols-2 gap-8">
+                                    {/* Logo Upload */}
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Company Logo</label>
+                                        <div className="flex items-center gap-4">
+                                            {logoFile ? (
+                                                <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm">
+                                                    <CheckCircle className="w-4 h-4 text-emerald-500" />
+                                                    <span className="truncate max-w-[120px] text-slate-600">{logoFile.name}</span>
+                                                    <button onClick={() => setLogoFile(null)} className="text-red-500 hover:text-red-700 font-bold ml-2 text-xs">X</button>
+                                                </div>
+                                            ) : (
+                                                <label className="cursor-pointer px-4 py-2 bg-slate-100 hover:bg-slate-200 text-legal-navy text-xs font-bold rounded-lg transition-colors flex items-center gap-2">
+                                                    <Upload className="w-3.5 h-3.5" /> Upload Logo
+                                                    <input type="file" accept="image/*" className="hidden" onChange={e => {
+                                                        if (e.target.files && e.target.files[0]) {
+                                                            setLogoFile(e.target.files[0]);
+                                                        }
+                                                    }} />
+                                                </label>
+                                            )}
+                                        </div>
+                                        {logoFile && (
+                                            <label className="flex items-center gap-2 text-xs text-slate-600 cursor-pointer w-fit p-1 select-none">
+                                                <input type="checkbox" checked={useWatermark} onChange={e => setUseWatermark(e.target.checked)} className="rounded border-slate-300 text-legal-navy h-4 w-4" />
+                                                Use logo as document watermark
+                                            </label>
+                                        )}
+                                    </div>
+
+                                    {/* Signature Upload */}
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Your Signature</label>
+                                        <div className="flex items-center gap-4">
+                                            {signatureFile ? (
+                                                <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm">
+                                                    <CheckCircle className="w-4 h-4 text-emerald-500" />
+                                                    <span className="truncate max-w-[120px] text-slate-600">{signatureFile.name}</span>
+                                                    <button onClick={() => setSignatureFile(null)} className="text-red-500 hover:text-red-700 font-bold ml-2 text-xs">X</button>
+                                                </div>
+                                            ) : (
+                                                <label className="cursor-pointer px-4 py-2 bg-slate-100 hover:bg-slate-200 text-legal-navy text-xs font-bold rounded-lg transition-colors flex items-center gap-2">
+                                                    <Upload className="w-3.5 h-3.5" /> Upload Signature
+                                                    <input type="file" accept="image/*" className="hidden" onChange={e => {
+                                                        if (e.target.files && e.target.files[0]) {
+                                                            setSignatureFile(e.target.files[0]);
+                                                        }
+                                                    }} />
+                                                </label>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         {/* Key Details Rich Text Editor */}
                         <div className="mt-8 space-y-4">
                             <div className="flex items-center justify-between">
-                                <label className="text-sm font-black text-legal-navy uppercase tracking-wider">Key Details</label>
-                                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                                    {keyDetailsWordCount} words
-                                </span>
+                                <div className="space-y-1">
+                                    <label className="text-sm font-black text-legal-navy uppercase tracking-wider">
+                                        {genResult ? "Generated Document" : "Key Details & Instructions"}
+                                    </label>
+                                    <p className="text-[10px] text-slate-500 font-medium">
+                                        {genResult ? "Edit your generated draft below." : "Add important details or instructions. The AI will use this as the source of truth."}
+                                    </p>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    {genResult && (
+                                        <div className="flex items-center gap-2 animate-in fade-in zoom-in duration-300">
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => copyToClipboard(keyDetails)}
+                                                className="h-8 px-3 rounded-lg font-bold text-[10px] flex items-center gap-1.5 border-slate-200 bg-white"
+                                            >
+                                                {copied ? <Check className="w-3 h-3 text-emerald-500" /> : <Plus className="w-3 h-3" />}
+                                                {copied ? "Copied" : "Copy"}
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={handleDownloadPdf}
+                                                className="h-8 px-3 rounded-lg font-bold text-[10px] flex items-center gap-1.5 border-slate-200 bg-white"
+                                            >
+                                                <Download className="w-3 h-3" />
+                                                PDF
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={handleDownloadDocx}
+                                                className="h-8 px-3 rounded-lg font-bold text-[10px] flex items-center gap-1.5 border-slate-200 bg-white"
+                                            >
+                                                <Download className="w-3 h-3" />
+                                                Word
+                                            </Button>
+                                        </div>
+                                    )}
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-1 rounded-md">
+                                        {keyDetailsWordCount} words
+                                    </span>
+                                </div>
                             </div>
-                            <p className="text-xs text-slate-500 font-medium">
-                                Add important details, clauses, or instructions. The AI will use this as the source of truth.
-                            </p>
-                            <div className="rounded-xl border border-slate-200 overflow-hidden bg-slate-50/50">
+                            <div id="document-preview-content" className="rounded-xl border border-slate-200 overflow-hidden bg-white">
                                 {mounted ? (
                                     <ReactQuill
                                         value={keyDetails}
@@ -1293,21 +1535,76 @@ export default function DocumentPage() {
                                         theme="snow"
                                         modules={{
                                             toolbar: [
+                                                [{ 'font': ['', 'serif', 'monospace', 'roboto', 'montserrat', 'playfair', 'lora', 'arial'] }],
                                                 ['bold', 'italic', 'underline'],
                                                 [{ 'list': 'ordered' }, { 'list': 'bullet' }],
                                                 [{ 'header': [1, 2, false] }],
+                                                [{ 'color': [] }, { 'background': [] }],
                                                 ['link'],
                                                 ['clean']
                                             ]
                                         }}
-                                        className="min-h-[200px]"
+                                        className="min-h-[400px]"
                                     />
                                 ) : (
-                                    <div className="min-h-[200px] bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-center">
+                                    <div className="min-h-[400px] bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-center">
                                         <div className="text-sm text-slate-500 font-medium">Loading editor...</div>
                                     </div>
                                 )}
                             </div>
+                            {/* Professional editor styling */}
+                            <style jsx global>{`
+                                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto:wght@400;700&family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&family=Lora:wght@400;700&display=swap');
+
+                                .ql-editor { 
+                                    font-size: 16px !important; 
+                                    line-height: 1.6 !important;
+                                    padding: 35px !important;
+                                    min-height: 400px !important;
+                                }
+
+                                /* Custom Font Styles */
+                                .ql-font-serif { font-family: 'Times New Roman', Times, serif !important; }
+                                .ql-font-monospace { font-family: 'Courier New', Courier, monospace !important; }
+                                .ql-font-roboto { font-family: 'Roboto', sans-serif !important; }
+                                .ql-font-montserrat { font-family: 'Montserrat', sans-serif !important; }
+                                .ql-font-playfair { font-family: 'Playfair Display', serif !important; }
+                                .ql-font-lora { font-family: 'Lora', serif !important; }
+                                .ql-font-arial { font-family: Arial, Helvetica, sans-serif !important; }
+
+                                .ql-container.ql-snow { border: none !important; }
+                                .ql-toolbar.ql-snow { 
+                                    border: none !important; 
+                                    border-bottom: 1px solid #f1f5f9 !important; 
+                                    padding: 12px 20px !important; 
+                                    background: #fff !important; 
+                                }
+
+                                /* Toolbar Picker Labels */
+                                .ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="serif"]::before,
+                                .ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="serif"]::before { content: "Times New Roman"; font-family: serif; }
+                                
+                                .ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="monospace"]::before,
+                                .ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="monospace"]::before { content: "Monospace"; font-family: monospace; }
+                                
+                                .ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="roboto"]::before,
+                                .ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="roboto"]::before { content: "Roboto"; font-family: 'Roboto'; }
+
+                                .ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="montserrat"]::before,
+                                .ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="montserrat"]::before { content: "Montserrat"; font-family: 'Montserrat'; }
+
+                                .ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="playfair"]::before,
+                                .ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="playfair"]::before { content: "Playfair Display"; font-family: 'Playfair Display'; }
+
+                                .ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="lora"]::before,
+                                .ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="lora"]::before { content: "Lora"; font-family: 'Lora'; }
+
+                                .ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="arial"]::before,
+                                .ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="arial"]::before { content: "Arial"; font-family: Arial, sans-serif; }
+
+                                .ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-label::before,
+                                .ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-item::before { content: "Inter (Default)"; font-family: 'Inter'; }
+                            `}</style>
                         </div>
 
                         {/* Preview Inputs Summary */}
@@ -1342,61 +1639,43 @@ export default function DocumentPage() {
                             </div>
                         )}
 
-                        <Button
-                            onClick={handleGenerate}
-                            disabled={genLoading || !genType || !genJurisdiction || !keyDetails.trim()}
-                            className="w-full h-14 rounded-2xl bg-legal-navy hover:bg-slate-800 text-lg font-bold mt-8 shadow-xl shadow-legal-navy/10 transition-all border-none disabled:bg-slate-100 disabled:text-slate-400"
-                        >
-                            {genLoading ? (
-                                <>
-                                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                                    Drafting Legal Language...
-                                </>
-                            ) : (
-                                <>
-                                    Generate Draft +
-                                    <Plus className="ml-2 w-5 h-5" />
-                                </>
+                        <div className="flex gap-4 mt-8">
+                            <Button
+                                onClick={handleGenerate}
+                                disabled={genLoading || !genType || !genJurisdiction || !keyDetails.trim()}
+                                className="flex-1 h-14 rounded-2xl bg-legal-navy hover:bg-slate-800 text-lg font-bold shadow-xl shadow-legal-navy/10 transition-all border-none disabled:bg-slate-100 disabled:text-slate-400"
+                            >
+                                {genLoading ? (
+                                    <>
+                                        <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                                        Drafting...
+                                    </>
+                                ) : (
+                                    <>
+                                        {genResult ? "Regenerate" : "Generate Draft +"}
+                                        <Plus className="ml-2 w-5 h-5" />
+                                    </>
+                                )}
+                            </Button>
+
+                            {genResult && (
+                                <Button
+                                    onClick={handleClearAll}
+                                    variant="outline"
+                                    className="h-14 px-8 rounded-2xl border-slate-200 text-slate-500 font-bold hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition-all"
+                                >
+                                    Clear All
+                                </Button>
                             )}
-                        </Button>
+                        </div>
                     </div>
 
                     {genResult && (
-                        <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-700">
-                            <div className="flex items-center justify-between px-2">
-                                <h3 className="text-lg font-bold text-legal-navy font-outfit">Draft Result</h3>
-                                <div className="flex items-center gap-2">
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => copyToClipboard(genResult)}
-                                        className="h-10 px-4 rounded-xl font-bold flex items-center gap-2 border-slate-200"
-                                    >
-                                        {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Plus className="w-4 h-4" />}
-                                        {copied ? "Copied" : "Copy"}
-                                    </Button>
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={handleDownloadDocx}
-                                        className="h-10 px-4 rounded-xl font-bold flex items-center gap-2 border-slate-200"
-                                    >
-                                        <Download className="w-4 h-4" />
-                                        Download .DOCX
-                                    </Button>
-                                </div>
-                            </div>
-                            <div className="bg-white rounded-[2rem] border border-slate-200 p-8 shadow-sm font-serif text-slate-800 leading-relaxed text-sm max-h-[600px] overflow-y-auto custom-scrollbar prose prose-slate max-w-none">
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                    {genResult}
-                                </ReactMarkdown>
-                            </div>
-                            <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex items-start gap-3">
-                                <Scale className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                                <p className="text-xs text-amber-800 leading-relaxed italic">
-                                    <strong>Legal Disclaimer:</strong> This document is an AI-generated draft provided for informational purposes only. It does not constitute legal advice and should be reviewed by a qualified attorney before use.
-                                </p>
-                            </div>
+                        <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex items-start gap-3 animate-in fade-in slide-in-from-top-2">
+                            <Scale className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                            <p className="text-xs text-amber-800 leading-relaxed italic">
+                                <strong>Legal Disclaimer:</strong> This document is an AI-generated draft provided for informational purposes only. It does not constitute legal advice and should be reviewed by a qualified attorney before use.
+                            </p>
                         </div>
                     )}
                 </div>
