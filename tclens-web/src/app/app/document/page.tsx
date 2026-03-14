@@ -102,7 +102,8 @@ export default function DocumentPage() {
     const [geoState, setGeoState] = useState(""); // State/Region
 
     useEffect(() => {
-        const loggedIn = auth.isAuthenticated();
+        // Bypassing auth for design
+        const loggedIn = true;
         setIsLoggedIn(loggedIn);
         setUsage(getUsage(loggedIn));
 
@@ -179,7 +180,7 @@ export default function DocumentPage() {
     };
 
     const fetchHistory = async () => {
-        const loggedInUser = auth.getUser();
+        const loggedInUser = { email: "demo@tclens.com", firstName: "Demo", lastName: "User", plan: "premium" };
         if (!loggedInUser) return;
 
         try {
@@ -197,7 +198,7 @@ export default function DocumentPage() {
     };
 
     const fetchChatMessages = async (id: string) => {
-        const loggedInUser = auth.getUser();
+        const loggedInUser = { email: "demo@tclens.com", firstName: "Demo", lastName: "User", plan: "premium" };
         const userId = loggedInUser?.email || 'anonymous';
         const isLoggedInVal = !!loggedInUser;
 
@@ -226,7 +227,7 @@ export default function DocumentPage() {
         }
     }, [text, inputMode, result]);
 
-    const user = auth.getUser();
+    const user = { email: "demo@tclens.com", firstName: "Demo", lastName: "User", plan: "premium" };
     const plan = user?.plan || "free";
 
     let currentLimit = LIMITS.ANONYMOUS;
@@ -469,7 +470,7 @@ export default function DocumentPage() {
         if (!question.trim() || !analysisId) return;
 
         setChatLoading(true);
-        const loggedInUser = auth.getUser();
+        const loggedInUser = { email: "demo@tclens.com", firstName: "Demo", lastName: "User", plan: "premium" };
         const userId = loggedInUser?.email || 'anonymous';
         const isLoggedInVal = !!loggedInUser;
 

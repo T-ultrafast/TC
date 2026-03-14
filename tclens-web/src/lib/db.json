@@ -1,5 +1,188 @@
 {
-  "analyses": [],
+  "analyses": [
+    {
+      "userId": "demo@tclens.com",
+      "createdAt": "2026-03-13T17:04:25.639Z",
+      "inputType": "upload",
+      "sourceName": "Sckolas_Equity_Revenue_Framework_final.docx",
+      "jurisdiction": "Nigeria (State/Region: Lagos)",
+      "wordCount": 2975,
+      "summaryTitle": "en Analysis - 3/13/2026",
+      "rawInputReference": "Sckolas_Equity_Revenue_Framework_final.docx",
+      "analysisResult": {
+        "risk_score": 23,
+        "risk_level": "Low",
+        "analysis_confidence": 90,
+        "components": {
+          "clause_risk": 6.3,
+          "aggressiveness": 7,
+          "transparency": 10
+        },
+        "breakdown": [
+          {
+            "category": "Warranty disclaimer",
+            "label": "Broad warranty disclaimers",
+            "points": 6.3,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "...issued share capital of Sckolas is divided into [10,000,000] ordinary shares of [₦1.00] each,..."
+            ]
+          }
+        ],
+        "ai_severity": {
+          "rating": 7,
+          "points_added": 7,
+          "reasons": [
+            "The document contains clauses that could be unfavorable to users, such as performance-based equity acceleration and potential equity dilution from future investors. The confidentiality clause also presents a risk if breached."
+          ]
+        },
+        "languageDetection": {
+          "primary": "en",
+          "secondary": []
+        },
+        "summary": "**Overview**\nThis document outlines Sckolas' equity ownership and revenue sharing framework, governing the allocation of equity, distribution of profit, and compensation for stakeholders including co-founders, partners, investors, and employees. It is binding on all parties with equity interest or revenue share arrangements and supersedes prior agreements.\n\n**Key Clauses**\n• **Revenue Waterfall:** Defines the order in which revenue is processed, including deductions for operating expenses, partner commissions, taxes, and retained earnings before profit distribution.\n• **Equity Ownership Structure:** Allocates equity between founders and partners, specifying percentages and conditions for future investor equity.\n• **Partner Compensation Structure:** Offers two tracks: equity partnership with a stipend or commission-based service partnership without equity.\n• **Performance Equity Acceleration:** Rewards partners with increased equity based on revenue contribution, drawn from an unallocated partner pool.\n• **Equity Vesting Schedule:** Establishes a 4-year vesting period with a 1-year cliff for all equity grants.\n\n**User Obligations**\n• Stakeholders must read, understand, and sign the framework.\n• Maintain confidentiality of the document.\n• Adhere to the equity vesting schedule.\n• Partners must meet sales OKRs to be eligible for equity acceleration.\n\n**Platform Powers**\n• The company can amend the framework with written consent of co-founders and board approval.\n• The company can adjust revenue thresholds for equity acceleration annually.\n• The company can determine the need-based stipend for equity partners.\n• The company can track and attribute commissions via its CRM system.\n\n**Risk Indicators**\n• **Unilateral Changes:** Amendments require co-founder and board approval, but the framework allows for adjustments to revenue thresholds annually, potentially impacting partner equity acceleration.\n• **Confidentiality Breach:** Sharing the document externally without CEO approval constitutes a material breach.\n• **Equity Dilution:** Future investor equity can dilute partner equity, although existing partners have some protection against dilution below their vested amount without consent.\n• **Performance Requirements:** Equity acceleration is contingent on meeting specific sales targets, creating uncertainty for partners.\n• **Vesting Forfeiture:** Early exit before the cliff results in complete equity forfeiture.",
+        "clauses": [
+          {
+            "type": "Equity Vesting",
+            "summary": "Equity grants are subject to a 4-year vesting schedule with a 1-year cliff.",
+            "riskLevel": "Medium",
+            "explanation": "Vesting ensures equity is earned over time, protecting the company if a stakeholder leaves early. If a stakeholder exits before the 1-year cliff, all equity is forfeited, which could be detrimental to the stakeholder.",
+            "originalExcerpt": "All equity grants — whether to Co-Founders or equity partners — are subject to a vesting schedule. Vesting ensures that equity is earned over time through continued contribution, protecting the Company from scenarios where an equity holder leaves early without having delivered meaningful value.",
+            "translatedExcerpt": "All equity grants — whether to Co-Founders or equity partners — are subject to a vesting schedule. Vesting ensures that equity is earned over time through continued contribution, protecting the Company from scenarios where an equity holder leaves early without having delivered meaningful value."
+          },
+          {
+            "type": "Confidentiality",
+            "summary": "The framework is strictly confidential and cannot be shared externally without the CEO's written consent.",
+            "riskLevel": "Medium",
+            "explanation": "Breaching confidentiality constitutes a material breach of partnership or employment agreement. This could lead to penalties or termination of the agreement, creating a risk for stakeholders who might inadvertently share the document.",
+            "originalExcerpt": "This Framework is strictly confidential. No equity holder, partner, or employee may share the contents of this document with any external party without the prior written consent of the CEO. Breach of this obligation constitutes a material breach of the relevant partnership or employment agreement.",
+            "translatedExcerpt": "This Framework is strictly confidential. No equity holder, partner, or employee may share the contents of this document with any external party without the prior written consent of the CEO. Breach of this obligation constitutes a material breach of the relevant partnership or employment agreement."
+          },
+          {
+            "type": "Equity Dilution",
+            "summary": "Future investor equity can be sourced from the Partners' Pool or Founders' Pool, potentially diluting existing equity.",
+            "riskLevel": "Medium",
+            "explanation": "Dilution reduces the percentage of ownership for existing equity holders. While existing partners have some protection against dilution below their vested amount without consent, the overall value of their equity could still be affected.",
+            "originalExcerpt": "Up to 10% may be carved out of the Partners' Pool and offered to investors.\nUp to 20% may be carved out of the Founders' Pool and offered to investors.",
+            "translatedExcerpt": "Up to 10% may be carved out of the Partners' Pool and offered to investors.\nUp to 20% may be carved out of the Founders' Pool and offered to investors."
+          }
+        ],
+        "redFlags": [
+          {
+            "title": "Performance-Based Equity Acceleration",
+            "description": "Equity acceleration is contingent on meeting specific sales targets.",
+            "implication": "Failure to meet the set revenue targets means a partner will not receive additional equity, potentially limiting their long-term upside and creating pressure to achieve high sales volumes."
+          },
+          {
+            "title": "Unallocated Partners' Pool Replenishment",
+            "description": "Replenishment of the unallocated Partners' Pool requires a formal amendment to the Framework, signed by both Co-Founders.",
+            "implication": "If the unallocated pool is depleted, further equity acceleration is impossible unless the Co-Founders agree to replenish it. This gives the Co-Founders significant control over future equity awards."
+          }
+        ],
+        "nextSteps": [
+          "Carefully review the revenue thresholds for equity acceleration.",
+          "Understand the implications of the vesting schedule.",
+          "Clarify the process for replenishing the unallocated Partners' Pool.",
+          "Seek legal counsel to understand the full implications of the agreement."
+        ],
+        "disclaimer": "Informational only — not legal advice.",
+        "wordCount": 2975
+      },
+      "id": "36nyuu"
+    },
+    {
+      "userId": "demo@tclens.com",
+      "createdAt": "2026-03-13T17:05:05.878Z",
+      "inputType": "upload",
+      "sourceName": "Sckolas_Equity_Revenue_Framework_final.docx",
+      "jurisdiction": "Nigeria (State/Region: Lagos)",
+      "wordCount": 2975,
+      "summaryTitle": "en Analysis - 3/13/2026",
+      "rawInputReference": "Sckolas_Equity_Revenue_Framework_final.docx",
+      "analysisResult": {
+        "risk_score": 23,
+        "risk_level": "Low",
+        "analysis_confidence": 91,
+        "components": {
+          "clause_risk": 6.3,
+          "aggressiveness": 7,
+          "transparency": 10
+        },
+        "breakdown": [
+          {
+            "category": "Warranty disclaimer",
+            "label": "Broad warranty disclaimers",
+            "points": 6.3,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "...issued share capital of Sckolas is divided into [10,000,000] ordinary shares of [₦1.00] each,..."
+            ]
+          }
+        ],
+        "ai_severity": {
+          "rating": 7,
+          "points_added": 7,
+          "reasons": [
+            "The document contains clauses that could be unfavorable to users, such as performance-based equity acceleration and potential equity dilution from future investors. The confidentiality clause also presents a risk if breached."
+          ]
+        },
+        "languageDetection": {
+          "primary": "en",
+          "secondary": []
+        },
+        "summary": "**Overview**\nThis document outlines Sckolas' equity ownership and revenue sharing framework, governing the allocation of equity, distribution of profit, and compensation for stakeholders including co-founders, partners, investors, and employees. It is binding on all parties with equity interest or revenue share arrangements and supersedes prior agreements.\n\n**Key Clauses**\n• **Revenue Waterfall:** Defines the order in which revenue is processed, including deductions for operating expenses, partner commissions, taxes, and retained earnings before profit distribution.\n• **Equity Ownership Structure:** Allocates equity between founders and partners, specifying percentages and conditions for future investor equity.\n• **Partner Compensation Structure:** Offers two tracks: equity partnership with a stipend or commission-based service partnership without equity.\n• **Performance Equity Acceleration:** Rewards partners with increased equity based on revenue contribution, drawn from an unallocated partner pool.\n• **Equity Vesting Schedule:** Establishes a 4-year vesting period with a 1-year cliff for all equity grants.\n\n**User Obligations**\n• Stakeholders must read, understand, and sign the framework.\n• Maintain confidentiality of the document.\n• Adhere to the equity vesting schedule.\n• Partners must meet sales OKRs to be eligible for equity acceleration.\n\n**Platform Powers**\n• The company can amend the framework with written consent of co-founders and board approval.\n• The company can adjust revenue thresholds for equity acceleration annually.\n• The company can determine the need-based stipend for equity partners.\n• The company can track and attribute commissions via its CRM system.\n\n**Risk Indicators**\n• **Unilateral Changes:** Amendments require co-founder and board approval, but the framework allows for adjustments to revenue thresholds annually, potentially impacting partner equity acceleration.\n• **Confidentiality Breach:** Sharing the document externally without CEO approval constitutes a material breach.\n• **Equity Dilution:** Future investor equity can dilute partner equity, although existing partners have some protection against dilution below their vested amount without consent.\n• **Performance Requirements:** Equity acceleration is contingent on meeting specific sales targets, creating uncertainty for partners.\n• **Vesting Forfeiture:** Early exit before the cliff results in complete equity forfeiture.",
+        "clauses": [
+          {
+            "type": "Equity Vesting",
+            "summary": "Equity grants are subject to a 4-year vesting schedule with a 1-year cliff.",
+            "riskLevel": "Medium",
+            "explanation": "Vesting ensures equity is earned over time, protecting the company if a stakeholder leaves early. If a stakeholder exits before the 1-year cliff, all equity is forfeited, which could be detrimental to the stakeholder.",
+            "originalExcerpt": "All equity grants — whether to Co-Founders or equity partners — are subject to a vesting schedule. Vesting ensures that equity is earned over time through continued contribution, protecting the Company from scenarios where an equity holder leaves early without having delivered meaningful value.",
+            "translatedExcerpt": "All equity grants — whether to Co-Founders or equity partners — are subject to a vesting schedule. Vesting ensures that equity is earned over time through continued contribution, protecting the Company from scenarios where an equity holder leaves early without having delivered meaningful value."
+          },
+          {
+            "type": "Confidentiality",
+            "summary": "The framework is strictly confidential and cannot be shared externally without the CEO's written consent.",
+            "riskLevel": "Medium",
+            "explanation": "Breaching confidentiality constitutes a material breach of partnership or employment agreement. This could lead to penalties or termination of the agreement, creating a risk for stakeholders who might inadvertently share the document.",
+            "originalExcerpt": "This Framework is strictly confidential. No equity holder, partner, or employee may share the contents of this document with any external party without the prior written consent of the CEO. Breach of this obligation constitutes a material breach of the relevant partnership or employment agreement.",
+            "translatedExcerpt": "This Framework is strictly confidential. No equity holder, partner, or employee may share the contents of this document with any external party without the prior written consent of the CEO. Breach of this obligation constitutes a material breach of the relevant partnership or employment agreement."
+          },
+          {
+            "type": "Equity Dilution",
+            "summary": "Future investor equity can be sourced from the Partners' Pool or Founders' Pool, potentially diluting existing equity.",
+            "riskLevel": "Medium",
+            "explanation": "Dilution reduces the percentage of ownership for existing equity holders. While existing partners have some protection against dilution below their vested amount without consent, the overall value of their equity could still be affected.",
+            "originalExcerpt": "Up to 10% may be carved out of the Partners' Pool and offered to investors.\nUp to 20% may be carved out of the Founders' Pool and offered to investors.",
+            "translatedExcerpt": "Up to 10% may be carved out of the Partners' Pool and offered to investors.\nUp to 20% may be carved out of the Founders' Pool and offered to investors."
+          }
+        ],
+        "redFlags": [
+          {
+            "title": "Performance-Based Equity Acceleration",
+            "description": "Equity acceleration is contingent on meeting specific sales targets.",
+            "implication": "Failure to meet the set revenue targets means a partner will not receive additional equity, potentially limiting their long-term upside and creating pressure to achieve high sales volumes."
+          },
+          {
+            "title": "Unallocated Partners' Pool Replenishment",
+            "description": "Replenishment of the unallocated Partners' Pool requires a formal amendment to the Framework, signed by both Co-Founders.",
+            "implication": "If the unallocated pool is depleted, further equity acceleration is impossible unless the Co-Founders agree to replenish it. This gives the Co-Founders significant control over future equity awards."
+          }
+        ],
+        "nextSteps": [
+          "Carefully review the revenue thresholds for equity acceleration.",
+          "Understand the implications of the vesting schedule.",
+          "Clarify the process for replenishing the unallocated Partners' Pool.",
+          "Seek legal counsel to understand the full implications of the agreement."
+        ],
+        "disclaimer": "Informational only — not legal advice.",
+        "wordCount": 2975
+      },
+      "id": "59pzr"
+    }
+  ],
   "messages": [],
   "cases": [],
   "attachments": [],

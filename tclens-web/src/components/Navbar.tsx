@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Shield, Menu, X, ArrowRight, Sun, Moon, Laptop } from "lucide-react";
-import { auth } from "@/lib/auth";
+import { useSession } from "@/lib/auth-client";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -12,7 +12,8 @@ import { Logo } from "@/components/Logo";
 
 export function Navbar() {
     const pathname = usePathname();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { data: session } = useSession();
+    const isLoggedIn = !!session;
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const { theme, setTheme } = useTheme();
@@ -20,115 +21,104 @@ export function Navbar() {
 
     useEffect(() => {
         setMounted(true);
-        setIsLoggedIn(auth.isAuthenticated());
-        const handleScroll = () => setScrolled(window.scrollY > 20);
+        const handleScroll = () => setScrolled(window.scrollY > 10);
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
     const navLinks = [
-        { name: "Intelligence", href: "/#features" },
-        { name: "Workflow", href: "/#workflow" },
+        { name: "Features", href: "/#features" },
+        { name: "How it works", href: "/#workflow" },
         { name: "Pricing", href: "/pricing" },
-        { name: "Extension", href: "#" }
+        { name: "Support", href: "#" }
     ];
 
     return (
         <header className={cn(
-            "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-            scrolled ? "py-4" : "py-8"
+            "fixed top-0 left-0 right-0 z-50 transition-all duration-200",
+            scrolled ? "bg-white/95 border-b border-tclens-100/50 py-1.5 shadow-sm shadow-tclens-500/5" : "py-2 bg-tclens-50/80 backdrop-blur-md"
         )}>
-            <div className="max-w-[1800px] mx-auto px-6">
-                <nav className={cn(
-                    "relative flex items-center justify-between transition-all duration-500",
-                    scrolled ? "bg-background/80 backdrop-blur-2xl border border-border rounded-[2rem] px-8 py-4 shadow-[0_8px_32px_rgba(0,0,0,0.1)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)]" : "px-0"
-                )}>
-                    <Logo />
+            <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+                <Logo />
 
-                    <div className="hidden md:flex items-center gap-10">
-                        {navLinks.map((item) => (
-                            <Link
-                                key={item.name}
-                                href={item.href}
-                                className={cn(
-                                    "text-xs font-black uppercase tracking-[0.2em] transition-all relative group/link",
-                                    pathname === item.href || (item.href.startsWith("/#") && pathname === "/")
-                                        ? "text-emerald-500"
-                                        : "text-muted-foreground hover:text-foreground"
-                                )}
-                            >
-                                {item.name}
-                                <span className={cn(
-                                    "absolute -bottom-1 left-0 w-0 h-0.5 bg-emerald-500 transition-all duration-300",
-                                    "group-hover/link:w-full"
-                                )} />
-                            </Link>
-                        ))}
-                    </div>
-
-                    <div className="flex items-center gap-6">
-                        {mounted && (
-                            <button
-                                onClick={() => setTheme(theme === "dark" ? "light" : theme === "light" ? "system" : "dark")}
-                                className="w-10 h-10 rounded-none flex items-center justify-center border border-border text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all focus:outline-none"
-                                aria-label="Toggle theme"
-                            >
-                                {theme === "dark" ? <Moon className="w-4 h-4" /> : theme === "light" ? <Sun className="w-4 h-4" /> : <Laptop className="w-4 h-4" />}
-                            </button>
-                        )}
-                        <Link href="/signin" className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
-                            Auth
-                        </Link>
-                        <Button
-                            className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-none px-6 font-bold text-[11px] uppercase tracking-widest transition-all shadow-xl"
-                            asChild
-                        >
-                            <Link href="/signup">
-                                Initialize
-                                <ArrowRight className="ml-2 w-4 h-4" />
-                            </Link>
-                        </Button>
-
-                        {/* Mobile Menu Toggle */}
-                        <button
-                            className="md:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
-                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        >
-                            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-                        </button>
-                    </div>
-                </nav>
-            </div>
-
-            {/* Mobile Menu Overlay */}
-            {mobileMenuOpen && (
-                <div className="md:hidden fixed inset-0 top-0 left-0 w-full h-screen bg-background/95 backdrop-blur-3xl z-40 p-12 flex flex-col items-center justify-center space-y-8 animate-in fade-in zoom-in-95 duration-300">
-                    <button
-                        className="absolute top-8 right-6 p-2 text-muted-foreground"
-                        onClick={() => setMobileMenuOpen(false)}
-                    >
-                        <X className="w-8 h-8" />
-                    </button>
-
+                {/* Desktop Nav */}
+                <div className="hidden md:flex items-center gap-6">
                     {navLinks.map((item) => (
                         <Link
                             key={item.name}
                             href={item.href}
                             className={cn(
-                                "text-3xl font-black font-playfair transition-all tracking-tighter",
-                                pathname === item.href
-                                    ? "text-emerald-500"
-                                    : "text-muted-foreground hover:text-foreground"
+                                "text-[13px] font-bold transition-colors hover:text-tclens-500",
+                                pathname === item.href ? "text-tclens-500" : "text-slate-500"
                             )}
+                        >
+                            {item.name}
+                        </Link>
+                    ))}
+                </div>
+
+                <div className="flex items-center gap-6">
+                    {!isLoggedIn ? (
+                        <>
+                            <Link href="/signin" className="text-[13px] font-bold text-slate-500 hover:text-tclens-500 transition-colors hidden sm:block">
+                                Login
+                            </Link>
+                            <Button
+                                className="bg-tclens-500 hover:bg-tclens-600 text-white rounded-card px-5 h-10 font-bold text-sm transition-all border border-tclens-400"
+                                asChild
+                            >
+                                <Link href="/signup">
+                                    Sign Up
+                                    <ArrowRight className="ml-2 w-3.5 h-3.5" />
+                                </Link>
+                            </Button>
+                        </>
+                    ) : (
+                        <Button
+                            className="bg-tclens-500 hover:bg-tclens-600 text-white rounded-card px-6 font-bold text-sm"
+                            asChild
+                        >
+                            <Link href="/app/document">
+                                Dashboard
+                            </Link>
+                        </Button>
+                    )}
+
+                    {/* Mobile Menu Toggle */}
+                    <button
+                        className="md:hidden p-2 text-slate-600"
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    >
+                        {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                    </button>
+                </div>
+            </div>
+
+            {/* Mobile Menu Overlay */}
+            {mobileMenuOpen && (
+                <div className="md:hidden fixed inset-0 top-0 left-0 w-full h-screen bg-white z-[60] p-8 flex flex-col space-y-6 animate-in slide-in-from-top duration-300">
+                    <div className="flex justify-between items-center mb-8">
+                        <Logo />
+                        <button onClick={() => setMobileMenuOpen(false)}>
+                            <X className="w-8 h-8 text-slate-600" />
+                        </button>
+                    </div>
+
+                    {navLinks.map((item) => (
+                        <Link
+                            key={item.name}
+                            href={item.href}
+                            className="text-2xl font-bold text-slate-800"
                             onClick={() => setMobileMenuOpen(false)}
                         >
                             {item.name}
                         </Link>
                     ))}
-                    <div className="pt-8 border-t border-border w-full flex flex-col items-center gap-6">
-                        <Link href="/signin" className="text-xl font-bold text-muted-foreground hover:text-foreground font-playfair" onClick={() => setMobileMenuOpen(false)}>Sign In</Link>
-                        <Button size="xl" className="w-full bg-emerald-600 text-white hover:bg-emerald-500 rounded-none font-bold" asChild>
-                            <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>Get Started</Link>
+
+                    <div className="pt-8 border-t border-slate-100 flex flex-col gap-4">
+                        <Link href="/signin" className="text-lg font-bold text-slate-600" onClick={() => setMobileMenuOpen(false)}>Login</Link>
+                        <Button size="lg" className="w-full bg-tclens-500 text-white rounded-card font-bold" asChild>
+                            <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>Sign Up Free</Link>
                         </Button>
                     </div>
                 </div>

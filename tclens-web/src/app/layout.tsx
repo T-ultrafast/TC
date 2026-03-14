@@ -20,8 +20,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-    title: "Terms Analyzer - Smart Legal Document Analysis",
-    description: "Actually understand what you're agreeing to with AI-powered legal document summaries.",
+    title: "TcLens - Professional Legal Document Clarity",
+    description: "Empowering professionals with instant clarity on complex contracts and legal documents using AI-driven insights.",
     icons: {
         icon: "/favicon.svg",
     },

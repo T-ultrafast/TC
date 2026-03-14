@@ -3,7 +3,8 @@
 import { Sidebar } from "@/components/Sidebar";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { auth, LawyerProfile } from "@/lib/auth";
+import { authClient, useSession } from "@/lib/auth-client";
+import { LawyerProfile } from "@/lib/auth-types";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import { Sun, Moon, Laptop, Loader2, AlertCircle, Menu } from "lucide-react";
@@ -16,12 +17,26 @@ export default function AppLayout({
 }) {
     const router = useRouter();
     const pathname = usePathname();
-    const [user, setUser] = useState<any>(null);
+    // For design purposes, we're mocking the session and user
+    const mockSession = {
+        user: {
+            id: "demo-id",
+            firstName: "Demo",
+            lastName: "User",
+            email: "demo@tclens.com",
+            plan: "Premium",
+            role: "user"
+        }
+    };
+    const session = mockSession;
+    const isPending = false;
+
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isVerified, setIsVerified] = useState(false);
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
+
+    const user = session?.user;
 
     // Auto-close sidebar on mobile navigation
     useEffect(() => {
@@ -33,13 +48,12 @@ export default function AppLayout({
     }, []);
 
     useEffect(() => {
-        // Simple Auth Guard: Check if authenticated on mount
-        if (!auth.isAuthenticated()) {
+        // Simple Auth Guard: Disabled for design
+        /*
+        if (!isPending && !session) {
             router.push("/signin");
-        } else {
-            setIsVerified(true);
-            setUser(auth.getUser());
         }
+        */
 
         // Sync sidebar state from localStorage
         const saved = localStorage.getItem("sidebar-collapsed");
@@ -54,20 +68,20 @@ export default function AppLayout({
 
         window.addEventListener('sidebar-toggle', handleToggleEvent);
         return () => window.removeEventListener('sidebar-toggle', handleToggleEvent);
-    }, [router]);
+    }, [router, session, isPending]);
 
     useEffect(() => {
-        const currentUser = auth.getUser();
-        if (currentUser?.role === 'lawyer') {
-            const lawyer = currentUser as LawyerProfile;
-            if (lawyer.verificationStatus !== 'verified' && pathname === '/app/lawyers') {
+        if (user?.role === 'lawyer') {
+            // In a real app, you'd fetch the lawyer profile from the DB
+            // For now, we'll assume the user object carries the verification status
+            if ((user as any).verificationStatus !== 'verified' && pathname === '/app/lawyers') {
                 router.push('/app/document');
             }
         }
-    }, [pathname, router]);
+    }, [pathname, router, user]);
 
     // Show loading state while verifying auth
-    if (!isVerified) {
+    if (isPending) {
         return (
             <div className="min-h-screen bg-background flex items-center justify-center">
                 <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />

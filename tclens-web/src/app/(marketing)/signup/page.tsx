@@ -1,71 +1,98 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Shield, Mail, Lock, User, ArrowRight, Check, Globe } from 'lucide-react';
+import { useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import {
+    Mail,
+    Lock,
+    User as UserIcon,
+    ArrowRight,
+    Loader2,
+    ChevronLeft,
+    Eye,
+    EyeOff,
+    CheckCircle2,
+    AlertCircle,
+    Sparkles
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import Link from 'next/link';
-import { auth } from '@/lib/auth';
+import { authClient } from '@/lib/auth-client';
+import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Logo } from '@/components/Logo';
+import { Footer } from '@/components/Footer';
+import { AuthAnimation } from '@/components/AuthAnimation';
 
-export default function SignUpPage() {
+function SignUpForm() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [isLoading, setIsLoading] = useState(false);
+    const [step, setStep] = useState(1);
+    const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
+    const [formError, setFormError] = useState("");
 
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
         email: '',
         password: '',
-        jurisdiction: ''
     });
 
-    const validate = () => {
+    const urlError = searchParams.get("error");
+
+    const validateStep1 = () => {
         const newErrors: Record<string, string> = {};
-        if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
-        if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
+        if (!formData.firstName.trim()) newErrors.firstName = "Enter your first name";
+        if (!formData.lastName.trim()) newErrors.lastName = "Enter your last name";
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const validateStep2 = () => {
+        const newErrors: Record<string, string> = {};
         if (!formData.email.trim()) {
             newErrors.email = "Email is required";
         } else if (!formData.email.includes('@')) {
-            newErrors.email = "Invalid email address";
+            newErrors.email = "Please enter a valid email";
         }
         if (!formData.password) {
             newErrors.password = "Password is required";
         } else if (formData.password.length < 8) {
-            newErrors.password = "Password must be at least 8 characters";
+            newErrors.password = "Use at least 8 characters";
         }
-        return newErrors;
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleNext = () => {
+        if (validateStep1()) {
+            setStep(2);
+        }
+    };
+
+    const handleBack = () => {
+        setStep(1);
     };
 
     const handleSignUp = async (e: React.FormEvent) => {
         e.preventDefault();
-        const validationErrors = validate();
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-            return;
-        }
+        if (!validateStep2()) return;
 
         setIsLoading(true);
-        setErrors({});
-
-        try {
-            // Fake delay
-            await new Promise(resolve => setTimeout(resolve, 800));
-
-            auth.signUp({
-                firstName: formData.firstName,
-                lastName: formData.lastName,
-                email: formData.email,
-                jurisdiction: formData.jurisdiction || undefined
-            });
-
+        // Bypassing auth for design
+        setTimeout(() => {
             router.push("/app/document");
-        } catch (err) {
-            setErrors({ form: "Registration failed. Please try again." });
-        } finally {
-            setIsLoading(false);
-        }
+        }, 500);
+    };
+
+    const handleGoogleSignUp = async () => {
+        setIsLoading(true);
+        // Bypassing auth for design
+        setTimeout(() => {
+            router.push("/app/document");
+        }, 500);
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,129 +103,216 @@ export default function SignUpPage() {
     };
 
     return (
-        <div className="relative flex flex-col items-center justify-center p-6 pt-32 overflow-hidden bg-background flex-1">
-            {/* Background Haze Effects */}
-            <div className="bg-haze">
-                <div className="haze-gradient-1" />
-                <div className="haze-gradient-2" />
-            </div>
+        <div className="min-h-screen flex flex-col bg-white font-jakarta pt-14">
+            <div className="flex-1 flex overflow-hidden">
+                {/* Left Side: Friendly Brand Panel */}
+                <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="hidden lg:flex lg:w-[48%] relative overflow-hidden flex-col justify-center p-12 border-r border-slate-100/50"
+                >
+                    <div className="orb-2 opacity-10 -bottom-40 -right-40 scale-150 bg-tclens-100" />
 
-            <div className="max-w-md w-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <div className="text-center space-y-2 mb-4">
-                    <h1 className="text-4xl font-black text-foreground font-playfair tracking-tight mt-6">Create Free Account</h1>
-                    <p className="text-muted-foreground font-medium text-sm">Join 20,000+ users protecting their legal rights.</p>
-                    <div className="pt-2">
-                        <Link href="/signup/lawyer" className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] hover:text-emerald-500 flex items-center justify-center gap-2 group transition-colors">
-                            Professional? Sign up as a Lawyer
-                            <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                        </Link>
+                    <AuthAnimation title="Join the, revolution." />
+                </motion.div>
+
+                {/* Right Side: Modern Form */}
+                <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="w-full lg:w-[52%] flex flex-col justify-center px-6 md:px-20 lg:px-24 bg-white relative"
+                >
+                    <div className="max-w-md w-full mx-auto space-y-8">
+                        <div className="space-y-2">
+                            <h2 className="text-xl font-bold text-slate-900 tracking-tight text-center lg:text-left">Create your account</h2>
+                            <div className="flex items-center gap-3">
+                                <div className={cn("h-1.5 flex-1 rounded-full bg-slate-100 transition-colors", step >= 1 && "bg-tclens-500")} />
+                                <div className={cn("h-1.5 flex-1 rounded-full bg-slate-100 transition-colors", step >= 2 && "bg-tclens-500")} />
+                            </div>
+                        </div>
+
+                        {(formError || urlError) && (
+                            <div className="p-4 bg-red-50 border border-red-100 rounded-2xl flex gap-3 items-center">
+                                <AlertCircle className="w-5 h-5 text-red-500 shrink-0" />
+                                <p className="text-sm font-semibold text-red-700">{formError || urlError}</p>
+                            </div>
+                        )}
+
+                        <AnimatePresence mode="wait">
+                            {step === 1 ? (
+                                <motion.div
+                                    key="step1"
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -20 }}
+                                    className="space-y-6"
+                                >
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={handleGoogleSignUp}
+                                        disabled={isLoading}
+                                        className="w-full h-11 border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl flex items-center justify-center gap-2.5 transition-all"
+                                    >
+                                        <svg className="w-4 h-4" viewBox="0 0 24 24">
+                                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.26.81-.58z" />
+                                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                                        </svg>
+                                        Sign Up with Google
+                                    </Button>
+
+                                    <div className="relative py-2 flex items-center justify-center">
+                                        <span className="absolute w-full h-[1px] bg-slate-100"></span>
+                                        <span className="relative bg-white px-4 text-xs font-bold text-slate-400">OR ENTER DETAILS</span>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-bold text-slate-700 ml-1">First Name</label>
+                                            <div className="relative group">
+                                                <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-tclens-500 transition-colors" />
+                                                <input
+                                                    name="firstName"
+                                                    placeholder="Alex"
+                                                    className={cn(
+                                                        "w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-12 pr-4 focus:ring-4 focus:ring-tclens-500/10 focus:border-tclens-500 outline-none transition-all font-medium text-slate-900 placeholder:text-slate-400",
+                                                        errors.firstName && "border-red-400"
+                                                    )}
+                                                    value={formData.firstName}
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-bold text-slate-700 ml-1">Last Name</label>
+                                            <div className="relative group">
+                                                <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-tclens-500 transition-colors" />
+                                                <input
+                                                    name="lastName"
+                                                    placeholder="Hamilton"
+                                                    className={cn(
+                                                        "w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-12 pr-4 focus:ring-4 focus:ring-tclens-500/10 focus:border-tclens-500 outline-none transition-all font-medium text-slate-900 placeholder:text-slate-400",
+                                                        errors.lastName && "border-red-400"
+                                                    )}
+                                                    value={formData.lastName}
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <Button
+                                        onClick={handleNext}
+                                        className="w-full h-12 bg-tclens-500 hover:bg-tclens-600 text-white rounded-xl font-bold text-base transition-all flex items-center justify-center gap-2 group"
+                                    >
+                                        Continue
+                                        <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                                    </Button>
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="step2"
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -20 }}
+                                    className="space-y-6"
+                                >
+                                    <button
+                                        type="button"
+                                        onClick={handleBack}
+                                        className="flex items-center gap-2 text-sm font-bold text-tclens-500 hover:text-tclens-600 transition-all mb-2"
+                                    >
+                                        <ChevronLeft className="w-4 h-4" />
+                                        Back
+                                    </button>
+
+                                    <form onSubmit={handleSignUp} className="space-y-6">
+                                        <div className="space-y-5">
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
+                                                <div className="relative group">
+                                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-tclens-500 transition-colors" />
+                                                    <input
+                                                        name="email"
+                                                        type="email"
+                                                        placeholder="alex@example.com"
+                                                        className={cn(
+                                                            "w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-12 pr-4 focus:ring-4 focus:ring-tclens-500/10 focus:border-tclens-500 outline-none transition-all font-medium text-slate-900 placeholder:text-slate-400",
+                                                            errors.email && "border-red-400"
+                                                        )}
+                                                        value={formData.email}
+                                                        onChange={handleChange}
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-bold text-slate-700 ml-1">Create Password</label>
+                                                <div className="relative group">
+                                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-tclens-500 transition-colors" />
+                                                    <input
+                                                        name="password"
+                                                        type={showPassword ? "text" : "password"}
+                                                        placeholder="At least 8 characters"
+                                                        className={cn(
+                                                            "w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-12 pr-12 focus:ring-4 focus:ring-tclens-500/10 focus:border-tclens-500 outline-none transition-all font-medium text-slate-900 placeholder:text-slate-400",
+                                                            errors.password && "border-red-400"
+                                                        )}
+                                                        value={formData.password}
+                                                        onChange={handleChange}
+                                                        required
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setShowPassword(!showPassword)}
+                                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-tclens-500 transition-colors"
+                                                    >
+                                                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <Button
+                                            type="submit"
+                                            disabled={isLoading}
+                                            className="w-full h-12 bg-tclens-500 hover:bg-tclens-600 text-white rounded-xl font-bold text-base transition-all flex items-center justify-center gap-2 group"
+                                        >
+                                            {isLoading ? (
+                                                <Loader2 className="w-5 h-5 animate-spin" />
+                                            ) : (
+                                                <>
+                                                    Sign Up
+                                                </>
+                                            )}
+                                        </Button>
+                                    </form>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        <div className="text-center pt-4">
+                            <p className="text-sm font-medium text-slate-500">
+                                Already have an account? <Link href="/signin" className="text-tclens-500 font-bold hover:text-tclens-600 transition-colors ml-1">Login here</Link>
+                            </p>
+                        </div>
                     </div>
-                </div>
-
-                <div className="bg-background rounded-none p-10 shadow-2xl border border-border">
-                    <form onSubmit={handleSignUp} className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-muted-foreground ml-1">First Name</label>
-                                <div className="relative">
-                                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                                    <Input
-                                        name="firstName"
-                                        placeholder="Jane"
-                                        className={`pl-10 h-12 rounded-none transition-all ${errors.firstName ? 'border-red-500 focus-visible:ring-red-500' : 'focus:ring-emerald-500/20 focus:border-emerald-500'}`}
-                                        value={formData.firstName}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                {errors.firstName && <p className="text-xs text-red-500 ml-1 font-medium">{errors.firstName}</p>}
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-muted-foreground ml-1">Last Name</label>
-                                <div className="relative">
-                                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                                    <Input
-                                        name="lastName"
-                                        placeholder="Doe"
-                                        className={`pl-10 h-12 rounded-none transition-all ${errors.lastName ? 'border-red-500 focus-visible:ring-red-500' : 'focus:ring-emerald-500/20 focus:border-emerald-500'}`}
-                                        value={formData.lastName}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                {errors.lastName && <p className="text-xs text-red-500 ml-1 font-medium">{errors.lastName}</p>}
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-muted-foreground ml-1">Jurisdiction (Optional)</label>
-                            <div className="relative">
-                                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                                <Input
-                                    name="jurisdiction"
-                                    placeholder="e.g. London, UK"
-                                    className="pl-10 h-12 rounded-none focus:ring-emerald-500/20 focus:border-emerald-500 bg-muted/50 transition-all font-medium text-sm"
-                                    value={formData.jurisdiction}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-muted-foreground ml-1">Email Address</label>
-                            <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                                <Input
-                                    name="email"
-                                    type="email"
-                                    placeholder="jane@example.com"
-                                    className={`pl-10 h-12 rounded-none transition-all ${errors.email ? 'border-red-500 focus-visible:ring-red-500' : 'focus:ring-emerald-500/20 focus:border-emerald-500'}`}
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            {errors.email && <p className="text-xs text-red-500 ml-1 font-medium">{errors.email}</p>}
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-muted-foreground ml-1">Password</label>
-                            <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                                <Input
-                                    name="password"
-                                    type="password"
-                                    placeholder="••••••••"
-                                    className={`pl-10 h-12 rounded-none transition-all ${errors.password ? 'border-red-500 focus-visible:ring-red-500' : 'focus:ring-emerald-500/20 focus:border-emerald-500'}`}
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            {errors.password && <p className="text-xs text-red-500 ml-1 font-medium">{errors.password}</p>}
-                        </div>
-
-                        <Button
-                            type="submit"
-                            disabled={isLoading}
-                            className="w-full h-14 bg-emerald-600 hover:bg-emerald-500 text-white rounded-none font-bold text-lg shadow-xl transition-all transform hover:translate-y-[-2px] active:translate-y-0 mt-4"
-                        >
-                            {isLoading ? "Provisioning..." : "Commence Free Analysis"}
-                            {!isLoading && <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />}
-                        </Button>
-
-                        {errors.form && <p className="text-sm text-red-500 text-center font-bold">{errors.form}</p>}
-                    </form>
-
-                    <div className="mt-8 pt-6 border-t border-border space-y-4">
-                        <div className="flex items-center gap-3">
-                            <div className="w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                                <Check className="w-3 h-3 text-emerald-600" />
-                            </div>
-                            <span className="text-xs text-muted-foreground font-bold italic">10,000 Free words included</span>
-                        </div>
-                        <p className="text-center text-sm font-bold text-muted-foreground">
-                            Already have an account? <Link href="/signin" className="text-emerald-600 hover:text-emerald-700 transition-colors underline underline-offset-4">Sign In</Link>
-                        </p>
-                    </div>
-                </div>
+                </motion.div>
             </div>
+            <Footer />
         </div>
+    );
+}
+
+export default function SignUpPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-tclens-600 text-white font-bold animate-pulse">Loading...</div>}>
+            <SignUpForm />
+        </Suspense>
     );
 }

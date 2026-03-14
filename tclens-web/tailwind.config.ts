@@ -49,42 +49,28 @@ const config: Config = {
                     DEFAULT: "hsl(var(--card))",
                     foreground: "hsl(var(--card-foreground))",
                 },
-                // Custom Legal Palette
-                legal: {
-                    navy: "#0f172a", // Deep Navy
-                    slate: "#64748b", // Slate
-                    emerald: "#10b981", // Safe
-                    amber: "#f59e0b", // Warning
-                    red: "#ef4444", // Danger
-                },
-                // Redesign Colors
-                brand: {
-                    lavender: {
-                        base: "#FBFAFF",
-                        glow1: "#F3E8FF",
-                        glow2: "#FBE7F2",
-                        text: "#7C3AED", // Accent Purple
-                    },
-                    teal: {
-                        base: "#F6FDFF",
-                        tint: "#E9FBFF",
-                        ctaTop: "#0A9F86",
-                        ctaBottom: "#078A76",
-                    },
-                    cream: {
-                        base: "#FFF8ED",
-                        tint: "#FFF2DE",
-                    },
-                    navy: {
-                        primary: "#081427",
-                        secondary: "#0A1B33",
-                    }
+                // New Vibrant Global Brand Palette (Inspired by image)
+                tclens: {
+                    50: "#f0f9ff",
+                    100: "#e0f2fe",
+                    200: "#bae6fd",
+                    300: "#7dd3fc",
+                    400: "#38bdf8",
+                    500: "#0ea5e9", // Base Blue
+                    600: "#0284c7",
+                    DEFAULT: "#0284c7",
+                    700: "#0369a1",
+                    800: "#075985",
+                    900: "#0c4a6e",
                 }
             },
             borderRadius: {
-                lg: "var(--radius)",
-                md: "calc(var(--radius) - 2px)",
-                sm: "calc(var(--radius) - 4px)",
+                lg: "1rem",
+                md: "0.75rem",
+                sm: "0.5rem",
+                "2xl": "1.5rem",
+                "3xl": "2rem",
+                card: "1.25rem",
             },
             fontFamily: {
                 sans: ["var(--font-inter)"],
@@ -95,9 +81,14 @@ const config: Config = {
                     "0%, 100%": { backgroundPosition: "0% 50%" },
                     "50%": { backgroundPosition: "100% 50%" },
                 },
+                float: {
+                    "0%, 100%": { transform: "translateY(0px)" },
+                    "50%": { transform: "translateY(-10px)" },
+                }
             },
             animation: {
                 gradient: "gradient 6s ease infinite",
+                float: "float 4s ease-in-out infinite",
             },
         },
     },

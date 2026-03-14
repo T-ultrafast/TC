@@ -50,7 +50,8 @@ export function Sidebar({
     const [user, setUser] = useState<any>(null);
 
     useEffect(() => {
-        const currentUser = auth.getUser();
+        // Bypassing auth for design
+        const currentUser = { email: "demo@tclens.com", firstName: "Demo", lastName: "User", plan: "premium" };
         setUser(currentUser);
 
         const saved = localStorage.getItem("sidebar-collapsed");
@@ -69,7 +70,7 @@ export function Sidebar({
     };
 
     const handleSignOut = () => {
-        auth.signOut();
+        // Bypassing auth for design
         router.push("/");
     };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Shield, Zap, Target, Star, ArrowRight, Lock, Sparkles } from "lucide-react";
+import { Check, Shield, Zap, Star, ArrowRight, Lock, Sparkles, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -10,60 +10,61 @@ const tiers = [
     {
         name: "Anonymous",
         price: "$0",
-        desc: "Quick one-off analysis for non-sensitive documents.",
+        desc: "Quick analysis for one-off documents without an account.",
         words: "5,000",
         features: [
             "Basic risk detection",
             "Instant summary",
-            "Standard neural processing",
-            "No data persistence"
+            "Standard analysis engine",
+            "No account needed"
         ],
-        cta: "Start Scanning",
+        cta: "Scan Now",
         href: "/upload",
         popular: false,
         accent: "white"
     },
     {
-        name: "Intelligence Free",
+        name: "Individual Free",
         price: "$0",
-        desc: "Deep analysis for personal contracts & agreements.",
+        desc: "Best for personal contracts and organized history.",
         words: "10,000",
         features: [
-            "Neural risk mapping",
+            "Everything in Anonymous",
             "Saved analysis history",
             "Document export tools",
-            "Priority community support"
+            "Relatable law explanations"
         ],
-        cta: "Create Vault",
+        cta: "Sign Up Free",
         href: "/signup",
         popular: true,
-        accent: "emerald"
+        accent: "tclens"
     },
     {
         name: "Enterprise",
         price: "Custom",
-        desc: "High-volume legal throughput with SOC-2 security.",
+        desc: "For teams and legal firms with high-volume needs.",
         words: "Unlimited",
         features: [
-            "Multi-user team auth",
-            "API Infrastructure access",
-            "Dedicated legal engineer",
-            "On-premise deployment options"
+            "Multi-user team access",
+            "Higher security standards",
+            "Dedicated support person",
+            "On-premise options"
         ],
-        cta: "Neural Demo",
+        cta: "Contact Us",
         href: "#",
         popular: false,
-        accent: "blue"
+        accent: "slate"
     }
 ];
 
 export default function PricingPage() {
     return (
-        <main className="min-h-screen bg-background pt-32 pb-24 px-6 relative overflow-hidden">
-            {/* Background Haze */}
-            <div className="bg-haze">
-                <div className="haze-gradient-1" />
-                <div className="haze-gradient-2" />
+        <main className="min-h-screen bg-white pt-32 pb-24 px-6 relative overflow-hidden font-jakarta">
+            {/* Background Decorations */}
+            <div className="absolute inset-0 z-0 flex flex-col items-center pt-20 pointer-events-none sticky h-screen">
+                <h1 className="bg-text-outline uppercase opacity-50">Pricing</h1>
+                <div className="orb-1 top-40 -left-20" />
+                <div className="orb-2 bottom-40 -right-20" />
             </div>
 
             <div className="max-w-7xl mx-auto relative z-10">
@@ -71,28 +72,28 @@ export default function PricingPage() {
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-muted/50 border border-border text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em] backdrop-blur-md"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-tclens-50 border border-tclens-100 text-tclens-600 font-bold text-xs uppercase tracking-widest"
                     >
-                        <Lock className="w-3 h-3" />
-                        Transparent Pricing
+                        <Sparkles className="w-3.5 h-3.5" />
+                        Fair Plans for Everyone
                     </motion.div>
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-5xl md:text-7xl font-black text-foreground font-playfair tracking-tighter leading-[0.9]"
+                        className="text-5xl md:text-7xl font-bold text-slate-950 tracking-tight leading-[1.1]"
                     >
-                        Intelligence for <br />
-                        <span className="highlight-gradient">Every Scale.</span>
+                        Clarity that fits <br />
+                        <span className="text-tclens-500">Every Need.</span>
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="text-foreground/50 text-xl font-medium"
+                        className="text-slate-600 text-xl font-medium"
                     >
-                        Protect your rights with our standard-setting AI. <br className="hidden md:block" />
-                        Choose the vault that suits your legal workflow.
+                        Choose the plan that matches your document review workflow. <br className="hidden md:block" />
+                        No hidden fees, just pure clarity.
                     </motion.p>
                 </div>
 
@@ -101,53 +102,53 @@ export default function PricingPage() {
                         <motion.div
                             key={i}
                             initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 + (i * 0.1) }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-100px" }}
+                            transition={{ delay: i * 0.1, duration: 0.5 }}
                             className={cn(
-                                "relative group p-10 flex flex-col transition-all h-full",
-                                tier.popular ? "glass-card-glow border-emerald-500/30 scale-105 z-20" : "glass-card border-border hover:border-border"
+                                "relative p-8 md:p-10 flex flex-col transition-all h-full rounded-card",
+                                tier.popular
+                                    ? "bg-white border-2 border-tclens-500 z-20 scale-105 shadow-xl shadow-tclens-500/10"
+                                    : "bg-slate-50 border border-slate-100"
                             )}
                         >
                             {tier.popular && (
-                                <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-emerald-500 text-foreground px-6 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(16,185,129,0.5)]">
-                                    Highly Optimized
+                                <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-tclens-500 text-white px-6 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest shadow-lg shadow-tclens-500/20">
+                                    Highly Recommended
                                 </div>
                             )}
 
                             <div className="space-y-6 mb-10">
                                 <div className="flex items-center justify-between">
-                                    <h3 className="text-xl font-black text-foreground font-playfair uppercase tracking-wider">{tier.name}</h3>
-                                    {tier.accent === "emerald" && <Sparkles className="w-5 h-5 text-emerald-500" />}
-                                    {tier.accent === "blue" && <Zap className="w-5 h-5 text-brand-secondary" />}
+                                    <h3 className="text-xl font-bold text-slate-900">{tier.name}</h3>
+                                    {tier.accent === "tclens" && <Star className="w-5 h-5 fill-tclens-500 text-tclens-500" />}
                                 </div>
                                 <div className="flex items-baseline gap-2">
-                                    <span className="text-5xl font-black text-foreground font-playfair tracking-tighter">{tier.price}</span>
-                                    <span className="text-foreground/30 font-bold uppercase tracking-widest text-[10px]">Per Instance</span>
+                                    <span className="text-5xl font-bold text-slate-950 tracking-tight">{tier.price}</span>
+                                    <span className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Per Month</span>
                                 </div>
-                                <p className="text-foreground/50 font-medium text-sm leading-relaxed">{tier.desc}</p>
+                                <p className="text-slate-600 font-medium text-sm leading-relaxed">{tier.desc}</p>
                             </div>
 
                             <div className="space-y-8 flex-1">
-                                <div className="pt-8 border-t border-border">
-                                    <div className="flex items-center gap-3 mb-6">
+                                <div className="pt-8 border-t border-slate-200">
+                                    <div className="flex items-center gap-3 mb-6 font-bold text-slate-900 uppercase tracking-widest text-[10px]">
                                         <div className={cn(
-                                            "w-2 h-2 rounded-full animate-pulse",
-                                            tier.accent === "emerald" ? "bg-emerald-500" : tier.accent === "blue" ? "bg-blue-600" : "bg-muted/50"
+                                            "w-2 h-2 rounded-full",
+                                            tier.popular ? "bg-tclens-500 animate-pulse" : "bg-slate-300"
                                         )} />
-                                        <span className="text-[10px] font-black text-foreground uppercase tracking-[0.2em]">{tier.words} Words Included</span>
+                                        <span>{tier.words} Words Included</span>
                                     </div>
                                     <ul className="space-y-5">
                                         {tier.features.map((feature, j) => (
-                                            <li key={j} className="flex items-center gap-4 text-sm text-foreground/60 font-medium group/item">
+                                            <li key={j} className="flex items-center gap-4 text-sm text-slate-600 font-medium">
                                                 <div className={cn(
-                                                    "w-5 h-5 rounded-full flex items-center justify-center shrink-0 border transition-all",
-                                                    tier.accent === "emerald" ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500" :
-                                                        tier.accent === "blue" ? "bg-blue-600/10 border-blue-600/20 text-brand-secondary" :
-                                                            "bg-muted/50 border-border text-foreground/40"
+                                                    "w-5 h-5 rounded-full flex items-center justify-center shrink-0 border",
+                                                    tier.popular ? "bg-tclens-500 border-tclens-500 text-white" : "bg-white border-slate-200 text-slate-400"
                                                 )}>
                                                     <Check className="w-3 h-3 stroke-[3]" />
                                                 </div>
-                                                <span className="group-hover/item:text-foreground transition-colors">{feature}</span>
+                                                <span>{feature}</span>
                                             </li>
                                         ))}
                                     </ul>
@@ -156,25 +157,20 @@ export default function PricingPage() {
 
                             <div className="mt-12">
                                 <Button
-                                    size="xl"
+                                    size="lg"
                                     className={cn(
-                                        "w-full transition-all duration-500",
+                                        "w-full h-14 rounded-xl font-bold text-base transition-all duration-300",
                                         tier.popular
-                                            ? "bg-emerald-500 hover:bg-emerald-400 text-foreground shadow-[0_0_30px_rgba(16,185,129,0.3)]"
-                                            : "bg-muted/50 hover:bg-muted/50 text-foreground border border-border"
+                                            ? "bg-tclens-500 hover:bg-tclens-600 text-white shadow-lg shadow-tclens-500/20"
+                                            : "bg-white hover:bg-slate-50 text-slate-900 border border-slate-200"
                                     )}
                                     asChild
                                 >
                                     <Link href={tier.href}>
                                         {tier.cta}
-                                        <ArrowRight className="ml-3 w-5 h-5" />
+                                        <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
                                     </Link>
                                 </Button>
-                                {(tier.name === "Pro" || tier.name === "Enterprise") && (
-                                    <p className="text-[9px] text-center text-foreground/20 mt-4 font-black uppercase tracking-widest italic animate-pulse">
-                                        Neural Link Integration Soon
-                                    </p>
-                                )}
                             </div>
                         </motion.div>
                     ))}
@@ -185,19 +181,19 @@ export default function PricingPage() {
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="mt-32 relative rounded-[4rem] overflow-hidden glass-card-glow border-emerald-500/20 py-24 px-12 text-center"
+                    className="mt-32 relative rounded-card overflow-hidden bg-slate-950 py-20 px-8 text-center text-white"
                 >
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 blur-[120px] rounded-full" />
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-tclens-500/10 blur-[120px] rounded-full" />
                     <div className="relative z-10 max-w-3xl mx-auto space-y-8">
-                        <div className="w-20 h-20 bg-emerald-500/20 rounded-[2rem] flex items-center justify-center mx-auto border border-emerald-500/30">
-                            <Shield className="w-10 h-10 text-emerald-500" />
+                        <div className="w-20 h-20 bg-tclens-500/20 rounded-2xl flex items-center justify-center mx-auto border border-white/10">
+                            <CheckCircle2 className="w-10 h-10 text-tclens-400" />
                         </div>
-                        <h2 className="text-4xl md:text-6xl font-black text-foreground font-playfair tracking-tight">Need Neural Customization?</h2>
-                        <p className="text-foreground/50 text-xl font-medium leading-relaxed">
-                            We provide on-premise deployments and custom neural training for legal firms handling sensitive jurisdictional artifacts.
+                        <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Need something custom?</h2>
+                        <p className="text-slate-400 text-lg font-medium leading-relaxed">
+                            We offer custom deployments and higher word counts for legal firms and growing businesses. Let's talk about your specific needs.
                         </p>
-                        <Button size="xl" className="bg-background text-foreground hover:bg-muted/50 shadow-2xl px-16">
-                            Secure Enterprise Consultation
+                        <Button size="lg" className="h-16 px-12 bg-white text-slate-950 hover:bg-slate-100 rounded-full font-bold text-lg transition-all border border-slate-200">
+                            Talk To Sales
                         </Button>
                     </div>
                 </motion.div>
