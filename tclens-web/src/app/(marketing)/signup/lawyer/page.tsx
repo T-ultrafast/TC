@@ -20,7 +20,6 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { auth } from '@/lib/auth';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -107,11 +106,29 @@ export default function LawyerSignUpPage() {
 
         try {
             await new Promise(resolve => setTimeout(resolve, 1500));
-            auth.signUp({
-                role: 'lawyer',
-                ...formData
-            } as any);
-            router.push('/app/document');
+            const response = await fetch('/api/auth/sign-up', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: formData.email,
+                    password: formData.password,
+                    name: `${formData.firstName} ${formData.lastName}`,
+                    data: {
+                        role: 'lawyer',
+                        firstName: formData.firstName,
+                        lastName: formData.lastName,
+                    }
+                })
+            });
+            
+            if (response.ok) {
+                router.push('/app/document');
+            } else {
+                const error = await response.json();
+                console.error('Signup failed:', error);
+            }
         } catch (error) {
             console.error(error);
         } finally {

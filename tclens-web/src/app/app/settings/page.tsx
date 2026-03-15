@@ -18,7 +18,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { auth, UserProfile } from '@/lib/auth';
+import { auth } from '@/lib/auth-client';
+import { UserProfile } from '@/lib/auth-types';
 import { getUsage, LIMITS } from '@/lib/usage';
 import Link from 'next/link';
 
@@ -91,7 +92,7 @@ export default function SettingsPage() {
         <div className="max-w-[1600px] mx-auto space-y-8 animate-in fade-in duration-500 pb-20">
             {/* Page Header */}
             <div className="border-b border-border pb-8">
-                <h1 className="text-3xl font-black text-foreground font-playfair mb-2">Account Settings</h1>
+                <h1 className="text-3xl font-extrabold text-foreground tracking-tight mb-2">Account Settings</h1>
                 <p className="text-muted-foreground">Manage your profile, preferences, and billing information.</p>
             </div>
 
@@ -104,7 +105,7 @@ export default function SettingsPage() {
                             <div className="w-10 h-10 bg-emerald-50 rounded-none flex items-center justify-center">
                                 <User className="w-5 h-5 text-emerald-600" />
                             </div>
-                            <h2 className="text-xl font-bold text-foreground font-playfair">Personal Profile</h2>
+                            <h2 className="text-xl font-extrabold text-foreground tracking-tight">Personal Profile</h2>
                         </div>
 
                         <div className="grid grid-cols-2 gap-6">
@@ -181,7 +182,7 @@ export default function SettingsPage() {
                             <div className="w-10 h-10 bg-blue-50 rounded-none flex items-center justify-center">
                                 <Zap className="w-5 h-5 text-blue-600" />
                             </div>
-                            <h2 className="text-xl font-bold text-foreground font-playfair">Usage Tracking</h2>
+                            <h2 className="text-xl font-extrabold text-foreground tracking-tight">Usage Tracking</h2>
                         </div>
 
                         <div className="space-y-6">
@@ -218,7 +219,7 @@ export default function SettingsPage() {
                         <div className="relative z-10 space-y-6">
                             <div className="space-y-1">
                                 <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400">Current Plan</p>
-                                <h3 className="text-2xl font-black font-playfair capitalize">{user.plan}</h3>
+                                <h3 className="text-2xl font-extrabold tracking-tight capitalize">{user.plan}</h3>
                             </div>
 
                             <div className="space-y-4 pt-4 border-t border-white/10">

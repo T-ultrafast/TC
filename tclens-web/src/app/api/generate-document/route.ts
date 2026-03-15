@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 import { buildDocumentPrompt } from "@/lib/prompts";
+import { DOCUMENT_PARAMS_MAP, DEFAULT_PARAMS } from "@/lib/document-params";
 
 export const runtime = "nodejs";
 
@@ -14,31 +15,40 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json().catch(() => ({}));
-        const { type, jurisdiction, state, keyDetails, customParams } = body;
+        const { type, jurisdiction, state, keyDetails, customParams, currentDate } = body;
+
+        const actualDate = currentDate || new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
 
         if (!type) {
             return NextResponse.json({ error: "Missing document type" }, { status: 400 });
         }
 
-        if (!keyDetails || !keyDetails.trim()) {
-            return NextResponse.json({ error: "Key details are required for accurate document generation" }, { status: 400 });
-        }
-
         const client = new GoogleGenAI({ apiKey });
 
-        // Convert HTML to plain text for AI processing
-        const plainKeyDetails = keyDetails.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+        // Convert HTML to plain text for AI processing, handle empty keyDetails
+        const plainKeyDetails = (keyDetails || "").replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
 
-        // Format customParams ignoring N/A or empty
+        // Get the fields for this document type to map IDs to Labels
+        const fields = DOCUMENT_PARAMS_MAP[type] || DEFAULT_PARAMS;
+
+        // Format customParams with Labels instead of IDs for better AI context
         let formattedParams = '';
         if (customParams && typeof customParams === 'object') {
             formattedParams = Object.entries(customParams)
                 .filter(([_, value]) => value && String(value).trim().toLowerCase() !== 'na' && String(value).trim().toLowerCase() !== 'n/a')
-                .map(([key, value]) => `• ${key}: ${value}`)
+                .map(([key, value]) => {
+                    const field = fields.find(f => f.id === key);
+                    const label = field ? field.label : key;
+                    return `• ${label}: ${value}`;
+                })
                 .join('\n');
         }
 
-        const prompt = buildDocumentPrompt(type, jurisdiction, state || "", plainKeyDetails, formattedParams);
+        const prompt = buildDocumentPrompt(type, jurisdiction, state || "", plainKeyDetails, formattedParams, actualDate);
 
         const result = await client.models.generateContent({
             model: "gemini-2.0-flash",

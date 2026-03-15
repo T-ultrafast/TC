@@ -5,3 +5,28 @@ export const authClient = createAuthClient({
 });
 
 export const { signIn, signUp, signOut, useSession } = authClient;
+
+// Legacy auth compatibility layer for design mode
+export const auth = {
+    isAuthenticated: () => true,
+    getUser: () => ({
+        firstName: "Demo",
+        lastName: "User",
+        email: "demo@tclens.com",
+        role: "admin" as const,
+        plan: "pro" as const,
+        wordsLimit: 10000,
+        wordsUsed: 1200,
+        createdAt: new Date().toISOString(),
+        jurisdiction: "California, USA"
+    }),
+    updateUser: (data: any) => {
+        console.log("[Mock Auth] Update User:", data);
+    },
+    signOut: () => {
+        console.log("[Mock Auth] Signing out...");
+    },
+    clearAll: () => {
+        console.log("[Mock Auth] Clearing all data...");
+    }
+};

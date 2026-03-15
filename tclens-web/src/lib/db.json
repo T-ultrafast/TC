@@ -181,9 +181,494 @@
         "wordCount": 2975
       },
       "id": "59pzr"
+    },
+    {
+      "userId": "demo@tclens.com",
+      "createdAt": "2026-03-14T22:36:28.167Z",
+      "inputType": "upload",
+      "sourceName": "NDA_(Mutual)_Draft (1).docx",
+      "jurisdiction": "NG (State/Region: LA)",
+      "wordCount": 1329,
+      "summaryTitle": "en Analysis - 3/14/2026",
+      "rawInputReference": "NDA_(Mutual)_Draft (1).docx",
+      "analysisResult": {
+        "risk_score": 23,
+        "risk_level": "Low",
+        "analysis_confidence": 87,
+        "components": {
+          "clause_risk": 5.4,
+          "aggressiveness": 4,
+          "transparency": 14
+        },
+        "breakdown": [
+          {
+            "category": "Jurisdiction lock",
+            "label": "Restricted legal jurisdiction",
+            "points": 5.4,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "...ttorneys' fees and costs. 9. Governing Law This Agreement shall be governed by and construed in accor..."
+            ]
+          }
+        ],
+        "ai_severity": {
+          "rating": 6,
+          "points_added": 4,
+          "reasons": [
+            "The agreement contains standard NDA terms, but the jurisdiction lock and perpetual confidentiality for trade secrets present moderate risks."
+          ]
+        },
+        "languageDetection": {
+          "primary": "en",
+          "secondary": [
+            "en"
+          ]
+        },
+        "summary": "**Overview**\nThis is a Mutual Non-Disclosure Agreement (NDA) between Sckolas Limited and Timilehin Olowolafe. It governs the exchange of confidential information for a potential business relationship, ensuring protection against unauthorized use and disclosure.\n\n**Key Clauses**\n• **Definition of Confidential Information:** Defines what constitutes protected information, including business plans, financial data, and technical specifications.\n• **Exclusions:** Specifies exceptions to confidentiality, such as publicly available information or data rightfully obtained from a third party.\n• **Term:** The agreement lasts for five years, with confidentiality obligations continuing indefinitely for trade secrets and for three years for other confidential information.\n• **Termination:** Allows either party to terminate the agreement for a material breach, with a 30-day cure period.\n• **Governing Law:** The agreement is governed by the laws of Nigeria.\n\n**User Obligations**\n• Protect the other party's confidential information with at least a reasonable degree of care.\n• Use confidential information solely for the stated purpose.\n• Restrict access to confidential information to those with a need to know.\n• Refrain from disclosing confidential information to any third party without prior written consent.\n\n**Platform Powers**\n• Ability to seek injunctive relief for breaches of the agreement.\n• Right to request the return or destruction of confidential information upon written notice.\n\n**Risk Indicators**\n• **Jurisdiction Lock:** The agreement is governed by Nigerian law and requires disputes to be resolved in Nigerian courts, potentially creating challenges for international parties.\n• **Perpetual Confidentiality for Trade Secrets:** The obligation to protect trade secrets continues indefinitely, which could be burdensome.\n• **Unilateral Termination:** While termination is allowed for breach, there is no provision for termination for convenience, potentially locking parties into the agreement even if the business relationship doesn't materialize.",
+        "clauses": [
+          {
+            "type": "Governing law",
+            "summary": "This Agreement shall be governed by and construed in accordance with the laws of Nigeria, without regard to its conflict of laws principles.",
+            "riskLevel": "Medium",
+            "explanation": "Nigerian law governs the agreement. This means that any disputes will be interpreted under Nigerian legal standards, which may be unfamiliar or less favorable depending on the user's location and legal expertise.",
+            "originalExcerpt": "This Agreement shall be governed by and construed in accordance with the laws of Nigeria, without regard to its conflict of laws principles.",
+            "translatedExcerpt": "This Agreement shall be governed by and construed in accordance with the laws of Nigeria, without regard to its conflict of laws principles."
+          },
+          {
+            "type": "Termination",
+            "summary": "Either party may terminate this Agreement upon written notice to the other party if the other party breaches any material provision of this Agreement and fails to cure such breach within thirty (30) days after receiving written notice thereof.",
+            "riskLevel": "Low",
+            "explanation": "The agreement can be terminated if either party materially breaches it, but the breaching party has 30 days to fix the issue. This provides a reasonable opportunity to resolve disputes before termination occurs, protecting both parties from abrupt endings.",
+            "originalExcerpt": "Either party may terminate this Agreement upon written notice to the other party if the other party breaches any material provision of this Agreement and fails to cure such breach within thirty (30) days after receiving written notice thereof.",
+            "translatedExcerpt": "Either party may terminate this Agreement upon written notice to the other party if the other party breaches any material provision of this Agreement and fails to cure such breach within thirty (30) days after receiving written notice thereof."
+          }
+        ],
+        "redFlags": [
+          {
+            "title": "Jurisdiction Lock",
+            "description": "Any legal action or proceeding arising out of or relating to this Agreement shall be brought in the courts of Nigeria, and each party hereby consents to the jurisdiction of such courts.",
+            "implication": "Disputes must be resolved in Nigerian courts, which may be inconvenient and costly for parties not located in Nigeria. It also subjects the user to a legal system they may be unfamiliar with."
+          },
+          {
+            "title": "Perpetual Confidentiality for Trade Secrets",
+            "description": "Upon the expiration of this term, the obligations of confidentiality under this Agreement shall continue in perpetuity with respect to trade secrets",
+            "implication": "The obligation to protect trade secrets lasts forever. This could create a long-term burden on the receiving party to safeguard information indefinitely, even after the business relationship ends."
+          }
+        ],
+        "nextSteps": [
+          "Consider negotiating a more neutral jurisdiction for dispute resolution.",
+          "Evaluate the scope of 'trade secrets' and negotiate a reasonable time limit for confidentiality obligations.",
+          "Ensure adequate security measures are in place to protect confidential information."
+        ],
+        "disclaimer": "Informational only — not legal advice.",
+        "wordCount": 1329
+      },
+      "id": "n2ivip"
+    },
+    {
+      "userId": "demo@tclens.com",
+      "createdAt": "2026-03-14T22:54:08.997Z",
+      "inputType": "upload",
+      "sourceName": "NDA_(Mutual)_Draft (1).docx",
+      "jurisdiction": "NG (State/Region: LA)",
+      "wordCount": 1329,
+      "summaryTitle": "en Analysis - 3/14/2026",
+      "rawInputReference": "NDA_(Mutual)_Draft (1).docx",
+      "analysisResult": {
+        "risk_score": 29,
+        "risk_level": "Moderate",
+        "analysis_confidence": 87,
+        "components": {
+          "clause_risk": 5.4,
+          "aggressiveness": 9.6,
+          "transparency": 14
+        },
+        "breakdown": [
+          {
+            "category": "Jurisdiction lock",
+            "label": "Restricted legal jurisdiction",
+            "points": 5.4,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "...ttorneys' fees and costs. 9. Governing Law This Agreement shall be governed by and construed in accor..."
+            ]
+          }
+        ],
+        "ai_severity": {
+          "rating": 8,
+          "points_added": 9.6,
+          "reasons": [
+            "Unilateral jurisdiction and governing law clauses create a significant power imbalance and potential for unfair legal proceedings."
+          ]
+        },
+        "languageDetection": {
+          "primary": "en",
+          "secondary": []
+        },
+        "summary": "**Executive Audit**\nThis 'Mutual' NDA is a trap. It heavily favors Sckolas Limited by forcing you into Nigerian jurisdiction. The perpetual confidentiality for trade secrets is standard, but the overall imbalance screams unequal bargaining power. Prepare for a fight.\n\n**Predatory Clauses**\n• **Jurisdiction**: Clause 10 forces you to litigate in Nigeria. This is a massive disadvantage, increasing costs and complexity.\n• **Governing Law**: Clause 9 dictates Nigerian law applies. This is problematic if your business operates elsewhere, as Nigerian law may be unfamiliar and less favorable.\n\n**Critical Gaps**\n• **Force Majeure**: Missing. Protect yourself from unforeseen events.\n• **Liability Caps**: Absent. You're exposed to unlimited liability.\n• **Arbitration**: No arbitration clause. Litigation is expensive; arbitration offers a quicker, cheaper alternative.\n\n**Strategic Posture**\nDemand a neutral jurisdiction (e.g., international arbitration in a mutually agreed-upon location) and governing law. Push for liability caps and a robust force majeure clause. Be prepared to walk away.",
+        "clauses": [
+          {
+            "type": "Jurisdiction",
+            "summary": "Forces litigation in Nigeria.",
+            "riskLevel": "Critical",
+            "explanation": "Clause 10 mandates that any legal disputes must be resolved in Nigerian courts. This is a significant disadvantage for Party B (Timilehin Olowolafe) as it requires them to litigate in a foreign jurisdiction, incurring additional costs and facing unfamiliar legal procedures. This clause effectively shields Sckolas Limited from legal challenges outside of Nigeria, creating a power imbalance.",
+            "rebuttal": "Any legal action or proceeding arising out of or relating to this Agreement shall be resolved through binding arbitration in [Neutral Location] under the rules of [Arbitration Organization].",
+            "originalExcerpt": "Any legal action or proceeding arising out of or relating to this Agreement shall be brought in the courts of Nigeria, and each party hereby consents to the jurisdiction of such courts."
+          },
+          {
+            "type": "Governing law",
+            "summary": "Nigerian law governs the agreement.",
+            "riskLevel": "High",
+            "explanation": "Clause 9 specifies that Nigerian law governs the agreement. This means that the agreement will be interpreted and enforced according to Nigerian legal principles, which may be unfamiliar or unfavorable to Party B. This clause can create uncertainty and increase the risk of unfavorable outcomes for Party B in any legal dispute.",
+            "rebuttal": "This Agreement shall be governed by and construed in accordance with the laws of [State/Country], without regard to its conflict of laws principles.",
+            "originalExcerpt": "This Agreement shall be governed by and construed in accordance with the laws of Nigeria, without regard to its conflict of laws principles."
+          }
+        ],
+        "redFlags": [
+          {
+            "title": "Jurisdiction Lock",
+            "description": "Forcing litigation in Nigeria.",
+            "implication": "Increased costs, unfamiliar legal system, potential bias."
+          }
+        ],
+        "nextSteps": [
+          "Negotiate jurisdiction and governing law.",
+          "Add Force Majeure and Liability Caps.",
+          "Consider an Arbitration clause."
+        ],
+        "disclaimer": "Forensic AI analysis. Not legal advice.",
+        "wordCount": 1329
+      },
+      "id": "cprfdg"
+    },
+    {
+      "userId": "demo@tclens.com",
+      "createdAt": "2026-03-14T23:01:07.608Z",
+      "inputType": "upload",
+      "sourceName": "Sckolas_Equity_Revenue_Framework_final.docx",
+      "jurisdiction": "NG (State/Region: LA)",
+      "wordCount": 2975,
+      "summaryTitle": "en Analysis - 3/15/2026",
+      "rawInputReference": "Sckolas_Equity_Revenue_Framework_final.docx",
+      "analysisResult": {
+        "risk_score": 29,
+        "risk_level": "Moderate",
+        "analysis_confidence": 92,
+        "components": {
+          "clause_risk": 6.3,
+          "aggressiveness": 12.2,
+          "transparency": 10
+        },
+        "breakdown": [
+          {
+            "category": "Warranty disclaimer",
+            "label": "Broad warranty disclaimers",
+            "points": 6.3,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "...issued share capital of Sckolas is divided into [10,000,000] ordinary shares of [₦1.00] each,..."
+            ]
+          }
+        ],
+        "ai_severity": {
+          "rating": 9,
+          "points_added": 12.2,
+          "reasons": [
+            "High degree of unilateral control granted to Co-Founders, creating significant risk for partners and investors."
+          ]
+        },
+        "languageDetection": {
+          "primary": "en",
+          "secondary": []
+        },
+        "summary": "**Executive Audit**\nThis document is a loaded gun pointed at partners and future investors. It heavily favors the co-founders, granting them near-absolute control and extracting maximum value. The equity allocation and performance acceleration mechanisms are complex and easily manipulated. Partners are essentially at the mercy of the CEO's discretion. This framework is designed for exploitation, not collaboration.\n\n**Predatory Clauses**\n• Need-based stipend: The CEO unilaterally determines the stipend amount, creating a power imbalance.\n• Unallocated Partners' Pool: Co-Founders control the pool, enabling them to dilute partners at will.\n• Performance Equity Acceleration: Revenue thresholds are set annually by the Co-Founders, creating a moving target.\n\n**Critical Gaps**\n• No Force Majeure clause: Partners bear all risk from external events.\n• No Dispute Resolution Mechanism: Disputes are likely to end up in costly litigation.\n• No Termination for Cause: Partners can be terminated without cause, losing unvested equity.\n\n**Surgical Posture**\nAggressively renegotiate every clause that grants unilateral power to the Co-Founders. Demand objective, measurable criteria for all performance metrics and compensation decisions. Secure independent arbitration for disputes.\n\n**Ambiguity Mapping**\n• 'Need-based': Subjective and open to abuse by the CEO.\n• 'Good standing': Ill-defined and can be used to deny equity acceleration.\n• 'Measurable value': Vague and difficult to quantify objectively.\n• 'Agreed sales OKRs': Can be changed arbitrarily, disadvantaging partners.",
+        "clauses": [
+          {
+            "type": "Fees",
+            "summary": "Need-based stipend is determined solely by the CEO, creating a power imbalance.",
+            "riskLevel": "High",
+            "explanation": "The CEO's unilateral control over the stipend amount allows for arbitrary and potentially discriminatory practices. Partners have no recourse if the stipend is deemed insufficient.",
+            "rebuttal": "The stipend amount shall be determined by a transparent formula based on objective criteria, such as cost of living and operational expenses, subject to independent audit.",
+            "originalExcerpt": "The need-based stipend is not a salary. It is a periodic contribution towards the partner's operational expenses during the Company's pre-profit phase. The amount is determined individually by the CEO based on the partner's circumstances and the Company's financial position."
+          },
+          {
+            "type": "IP rights",
+            "summary": "Unallocated Partners' Pool is controlled by the Co-Founders, enabling them to dilute partners at will.",
+            "riskLevel": "Critical",
+            "explanation": "The Co-Founders' control over the unallocated pool allows them to unilaterally reduce the equity stake of existing partners by allocating additional equity to new partners or investors. This creates a significant risk of dilution.",
+            "rebuttal": "The unallocated Partners' Pool shall be managed by an independent trustee, with allocations subject to a majority vote of all equity partners.",
+            "originalExcerpt": "Each 1% increment awarded to a qualifying partner reduces the unallocated Partners' Pool by 1%."
+          },
+          {
+            "type": "Unilateral changes",
+            "summary": "Revenue thresholds for equity acceleration are set annually by the Co-Founders, creating a moving target.",
+            "riskLevel": "High",
+            "explanation": "The Co-Founders' ability to set revenue thresholds annually allows them to manipulate the criteria for equity acceleration, making it difficult for partners to achieve the required performance levels. This creates a disincentive for partners and undermines the fairness of the acceleration mechanism.",
+            "rebuttal": "Revenue thresholds shall be fixed for the duration of the partnership agreement and shall be based on objective market data and industry benchmarks, subject to independent audit.",
+            "originalExcerpt": "The revenue thresholds in the table above are to be set by the Co-Founders at the beginning of each financial year, based on the Company's revenue targets and market conditions."
+          }
+        ],
+        "redFlags": [
+          {
+            "title": "Confidentiality Clause",
+            "description": "Strict confidentiality requirements limit the partner's ability to seek independent legal advice.",
+            "implication": "Partners may be pressured into accepting unfavorable terms without fully understanding their rights and obligations."
+          },
+          {
+            "title": "Lack of Independent Representation",
+            "description": "The framework is heavily biased towards the Co-Founders, with no independent oversight or representation for partners.",
+            "implication": "Partners are vulnerable to exploitation and unfair treatment."
+          }
+        ],
+        "missingProtections": [
+          {
+            "type": "Force Majeure",
+            "description": "No clause addressing unforeseen events that may impact partner performance.",
+            "fix": "Include a Force Majeure clause that excuses partner performance in the event of unforeseen circumstances beyond their control."
+          },
+          {
+            "type": "Dispute Resolution Mechanism",
+            "description": "No clear process for resolving disputes between partners and the Company.",
+            "fix": "Include a clause requiring mandatory arbitration for all disputes arising under the agreement."
+          },
+          {
+            "type": "Termination for Cause",
+            "description": "No specific grounds for termination of partnership agreements.",
+            "fix": "Include a clause outlining specific grounds for termination, such as breach of contract or misconduct, with a reasonable cure period."
+          }
+        ],
+        "litigation_risk_index": 75,
+        "financial_exposure": "Uncapped Liability due to potential disputes over equity and compensation.",
+        "fairness_metrics": {
+          "privacy": 7,
+          "liability": 3,
+          "transparency": 4,
+          "continuity": 6
+        },
+        "ambiguity_audit": [
+          {
+            "term": "Need-based",
+            "context": "Stipend determination",
+            "risk": "Unilateral control by CEO, potential for unfair or discriminatory practices."
+          },
+          {
+            "term": "Good standing",
+            "context": "Eligibility for equity acceleration",
+            "risk": "Subjective assessment, potential for arbitrary denial of benefits."
+          },
+          {
+            "term": "Measurable value",
+            "context": "Performance equity acceleration",
+            "risk": "Difficult to quantify objectively, potential for manipulation by Co-Founders."
+          },
+          {
+            "term": "Agreed sales OKRs",
+            "context": "Performance Equity Acceleration",
+            "risk": "Can be changed arbitrarily, disadvantaging partners."
+          }
+        ],
+        "user_leverage": [
+          {
+            "point": "Unallocated Partners' Pool",
+            "strategy": "Negotiate for a fixed percentage of the pool to be allocated to existing partners, limiting Co-Founder control."
+          },
+          {
+            "point": "Performance Equity Acceleration thresholds",
+            "strategy": "Demand objective, measurable criteria for revenue contribution, with independent verification."
+          },
+          {
+            "point": "Stipend determination",
+            "strategy": "Require a transparent, formula-based approach to stipend calculation, based on objective criteria."
+          }
+        ],
+        "nextSteps": [
+          "Engage independent legal counsel to review the framework.",
+          "Aggressively renegotiate all clauses that grant unilateral power to the Co-Founders.",
+          "Secure independent arbitration for disputes."
+        ],
+        "disclaimer": "Forensic AI analysis. Not legal advice.",
+        "wordCount": 2975
+      },
+      "id": "ft8n9n"
+    },
+    {
+      "userId": "demo@tclens.com",
+      "createdAt": "2026-03-14T23:16:07.740Z",
+      "inputType": "upload",
+      "sourceName": "Shareholders_Agreement_Draft (2).docx",
+      "jurisdiction": "NG (State / Region: LA)",
+      "wordCount": 740,
+      "summaryTitle": "en Analysis - 3/15/2026 ",
+      "rawInputReference": "Shareholders_Agreement_Draft (2).docx",
+      "analysisResult": {
+        "risk_score": 30,
+        "risk_level": "Moderate",
+        "analysis_confidence": 87,
+        "components": {
+          "clause_risk": 5.4,
+          "aggressiveness": 9.6,
+          "transparency": 15
+        },
+        "breakdown": [
+          {
+            "category": "Jurisdiction lock",
+            "label": "Restricted legal jurisdiction",
+            "points": 5.4,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "...ssolution of the Company. 9. Governing Law This Agreement shall be governed by and construed in accor..."
+            ]
+          }
+        ],
+        "ai_severity": {
+          "rating": 8,
+          "points_added": 9.6,
+          "reasons": [
+            "High risk due to jurisdiction lock, lack of shareholder protections, and vague clauses favoring the Company."
+          ]
+        },
+        "languageDetection": {
+          "primary": "en",
+          "secondary": [
+            "ig",
+            "yo"
+          ]
+        },
+        "summary": "**Executive Audit**\nThis Shareholders Agreement heavily favors the Company (Sckolas Nigeria). The agreement lacks critical protections for the Shareholder (Olowolafe Timilehin), particularly regarding liability, exit strategies, and control over key decisions. The jurisdiction lock to Enugu State, Nigeria, coupled with vague dispute resolution, creates a significant power imbalance. This agreement is a minefield for the Shareholder and requires immediate, aggressive renegotiation.\n\n**Predatory Clauses**\n• **Restriction on Transfer (5.1):** Limits the Shareholder's ability to sell shares without consent, potentially trapping them.\n• **Governing Law (9):** Locks jurisdiction into Enugu State, Nigeria, potentially disadvantaging the Shareholder in disputes.\n• **Dispute Resolution (10):** Vague arbitration/mediation clause without specifying a neutral institution or clear process.\n\n**Critical Gaps**\n• **Liability Caps:** Missing clause to limit the Shareholder's financial exposure for company liabilities.\n• **Force Majeure:** No provision for unforeseen circumstances that could impact the Shareholder's obligations.\n• **Termination for Cause (Shareholder):** The Shareholder lacks a clear right to terminate the agreement if the Company breaches its obligations.\n• **Buy-Sell Agreement:** Absence of a mechanism for the Shareholder to exit the company fairly (e.g., upon disagreement or deadlock).\n\n**Surgical Posture**\nAggressive renegotiation is essential. The Shareholder should demand significant concessions to balance the power dynamic. Focus on securing exit rights, limiting liability, and establishing a fair dispute resolution process. Walk away if the Company is unwilling to negotiate in good faith.\n\n**Ambiguity Mapping**\n• **\"Discretion of the Board\"**: Gives the Board unchecked power over dividend declarations, potentially depriving the Shareholder of returns.\n• **\"Confidential Information\"**: Broad definition with no clear exceptions, potentially stifling the Shareholder's ability to operate independently.\n• **\"Applicable Law\"**: Vague reference that could be interpreted to the Shareholder's disadvantage.\n• **\"Reputable overnight courier service\"**: Subjective and open to interpretation, potentially leading to disputes over notice delivery.",
+        "clauses": [
+          {
+            "type": "Transfer of Shares",
+            "summary": "Restriction on Transfer requires prior written consent, limiting Shareholder's ability to sell.",
+            "riskLevel": "High",
+            "explanation": "This clause gives the other shareholders significant control over the Shareholder's exit strategy. It can trap the Shareholder in the company even if they want to leave. The lack of clear criteria for granting or denying consent creates a power imbalance.",
+            "rebuttal": "Shares may be freely transferred to immediate family members or to a trust for estate planning purposes. Consent shall not be unreasonably withheld, conditioned, or delayed.",
+            "originalExcerpt": "The Shareholder shall not transfer, sell, assign, pledge, or otherwise dispose of any Shares without the prior written consent of the other shareholder(s), except as otherwise provided in this Agreement."
+          },
+          {
+            "type": "Governing Law",
+            "summary": "Governing Law locks jurisdiction into Enugu State, Nigeria.",
+            "riskLevel": "Critical",
+            "explanation": "This clause forces the Shareholder to litigate disputes in a potentially unfavorable jurisdiction. The Shareholder may face logistical and legal disadvantages due to unfamiliarity with the local legal system. This creates a significant power imbalance in favor of the Company.",
+            "rebuttal": "This Agreement shall be governed by and construed in accordance with the laws of [Shareholder's preferred jurisdiction], without regard to its conflict of laws principles.",
+            "originalExcerpt": "This Agreement shall be governed by and construed in accordance with the laws of the Federal Republic of Nigeria, specifically applicable in Enugu State, without regard to its conflict of laws principles."
+          },
+          {
+            "type": "Dispute Resolution",
+            "summary": "Vague dispute resolution clause without specifying a neutral institution.",
+            "riskLevel": "Medium",
+            "explanation": "The lack of a specific arbitration institution and detailed procedures leaves the dispute resolution process open to manipulation. This ambiguity can lead to delays, increased costs, and unfair outcomes for the Shareholder. The Shareholder needs a clear and impartial process.",
+            "rebuttal": "Any dispute arising out of or relating to this Agreement shall be resolved through binding arbitration administered by [Neutral Arbitration Institution] in [Neutral Location] in accordance with its rules.",
+            "originalExcerpt": "Any dispute arising out of or relating to this Agreement shall be resolved through [Arbitration/Mediation] in accordance with the rules of [Relevant Arbitration/Mediation Institution] in Enugu."
+          }
+        ],
+        "redFlags": [
+          {
+            "title": "Jurisdiction Lock",
+            "description": "Governing law clause mandates Enugu State, Nigeria.",
+            "implication": "Potentially unfavorable legal environment for the Shareholder."
+          },
+          {
+            "title": "Unilateral Control",
+            "description": "Board has significant discretion over key decisions (e.g., dividends).",
+            "implication": "Shareholder's investment returns are at risk."
+          },
+          {
+            "title": "Limited Exit Options",
+            "description": "Restrictions on share transfer and lack of buy-sell agreement.",
+            "implication": "Shareholder may be trapped in the company."
+          }
+        ],
+        "missingProtections": [
+          {
+            "type": "Liability Caps",
+            "description": "No limit on the Shareholder's financial exposure for company liabilities.",
+            "fix": "Insert a clause limiting the Shareholder's liability to the extent of their investment."
+          },
+          {
+            "type": "Force Majeure",
+            "description": "No provision for unforeseen circumstances that could impact the Shareholder's obligations.",
+            "fix": "Include a Force Majeure clause excusing performance for events beyond the Shareholder's control."
+          },
+          {
+            "type": "Termination for Cause (Shareholder)",
+            "description": "The Shareholder lacks a clear right to terminate the agreement if the Company breaches its obligations.",
+            "fix": "Add a clause allowing the Shareholder to terminate the agreement for material breach by the Company."
+          },
+          {
+            "type": "Buy-Sell Agreement",
+            "description": "Absence of a mechanism for the Shareholder to exit the company fairly.",
+            "fix": "Incorporate a buy-sell agreement outlining procedures for share valuation and transfer upon specific events (e.g., deadlock, disagreement)."
+          }
+        ],
+        "litigation_risk_index": 75,
+        "financial_exposure": "Uncapped Liability",
+        "fairness_metrics": {
+          "privacy": 5,
+          "liability": 2,
+          "transparency": 3,
+          "continuity": 4
+        },
+        "ambiguity_audit": [
+          {
+            "term": "\"Discretion of the Board\",",
+            "context": "Dividend declaration",
+            "risk": "Board can withhold dividends unfairly."
+          },
+          {
+            "term": "\"Confidential Information\",",
+            "context": "Confidentiality clause",
+            "risk": "Overly broad definition restricts Shareholder's actions."
+          },
+          {
+            "term": "\"Applicable Law\",",
+            "context": "General reference",
+            "risk": "Unclear legal standards can be exploited."
+          },
+          {
+            "term": "\"Reputable overnight courier service\",",
+            "context": "Notices clause",
+            "risk": "Subjective standard for notice delivery."
+          }
+        ],
+        "user_leverage": [
+          {
+            "point": "Appointment of Directors (3.2)",
+            "strategy": "Negotiate for more director appointments to gain greater control."
+          },
+          {
+            "point": "Supermajority (4.2)",
+            "strategy": "Increase the supermajority threshold for critical decisions to protect minority interests."
+          },
+          {
+            "point": "Right of First Refusal (5.2)",
+            "strategy": "Ensure the valuation mechanism for the right of first refusal is fair and transparent."
+          }
+        ],
+        "nextSteps": [
+          "Engage legal counsel experienced in Nigerian corporate law.",
+          "Renegotiate the agreement to address the identified risks and gaps.",
+          "Secure written amendments to the agreement reflecting the negotiated changes."
+        ],
+        "disclaimer": "Forensic AI analysis. Not legal advice.",
+        "wordCount": 740
+      },
+      "id": "pfcqpb"
     }
   ],
-  "messages": [],
+  "messages": [
+    {
+      "analysisId": "n2ivip",
+      "userId": "demo@tclens.com",
+      "role": "user",
+      "content": "hhii",
+      "createdAt": "2026-03-14T22:47:40.882Z",
+      "id": "cq5gbm"
+    }
+  ],
   "cases": [],
   "attachments": [],
   "lawyers": []

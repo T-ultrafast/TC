@@ -162,7 +162,7 @@ export default function TemplatePage() {
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-8">
                 <div>
-                    <h1 className="text-3xl font-black text-foreground font-playfair mb-2">Legal Templates</h1>
+                    <h1 className="text-3xl font-extrabold text-foreground tracking-tight mb-2">Legal Templates</h1>
                     <p className="text-muted-foreground">High-quality, lawyer-reviewed templates to jumpstart your legal needs.</p>
                 </div>
                 <div className="relative md:w-80">

@@ -39,7 +39,7 @@ export default function Home() {
                             <motion.h1
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="text-3xl md:text-5xl lg:text-5xl font-extrabold tracking-tight text-slate-950 leading-tight"
+                                className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-950 leading-[1.1]"
                             >
                                 Analyze Anywhere, <br />
                                 <span className="text-tclens-500">Empower</span> Your Future
@@ -220,25 +220,25 @@ export default function Home() {
                 </section>
 
                 {/* Final CTA */}
-                <section className="py-24 px-6 text-center">
+                <section className="py-20 md:py-32 px-6 text-center">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
-                        className="max-w-4xl mx-auto space-y-10"
+                        className="max-w-4xl mx-auto space-y-8 md:space-y-10"
                     >
-                        <div className="w-20 h-20 bg-tclens-50 rounded-xl flex items-center justify-center mx-auto mb-8 border border-tclens-100">
-                            <CheckCircle2 className="w-10 h-10 text-tclens-500" />
+                        <div className="w-16 h-16 md:w-20 md:h-20 bg-tclens-50 rounded-xl flex items-center justify-center mx-auto mb-6 md:mb-8 border border-tclens-100">
+                            <CheckCircle2 className="w-8 h-8 md:w-10 md:h-10 text-tclens-500" />
                         </div>
-                        <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-950 leading-tight">
+                        <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-950 leading-tight">
                             Ready to take <br /> <span className="text-tclens-500">control</span> of your future?
                         </h2>
-                        <p className="text-xl text-slate-600">
+                        <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">
                             Join thousands of users who have already simplified their legal document review process.
                         </p>
-                        <div className="flex flex-col sm:flex-row justify-center gap-4 pt-6">
-                            <Button size="lg" className="h-16 px-12 bg-tclens-500 hover:bg-tclens-600 text-white rounded-card font-bold text-xl transition-all" asChild>
+                        <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4 md:pt-6 px-4">
+                            <Button size="lg" className="h-16 px-12 bg-tclens-500 hover:bg-tclens-600 text-white rounded-card font-bold text-xl transition-all w-full sm:w-auto" asChild>
                                 <Link href="/signup">Start Free Now</Link>
                             </Button>
                         </div>

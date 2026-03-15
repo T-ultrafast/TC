@@ -25,7 +25,8 @@ export default function AppLayout({
             lastName: "User",
             email: "demo@tclens.com",
             plan: "Premium",
-            role: "user"
+            role: "user",
+            verificationStatus: "verified"
         }
     };
     const session = mockSession;
@@ -107,8 +108,7 @@ export default function AppLayout({
 
             <div
                 className={cn(
-                    "flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out",
-                    isSidebarCollapsed ? "md:pl-[72px]" : "md:pl-72"
+                    "flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out md:pl-48"
                 )}
             >
                 {user?.role === 'lawyer' && user?.verificationStatus === 'pending' && (
@@ -132,39 +132,36 @@ export default function AppLayout({
                         </Button>
                     </div>
                 )}
-                <header className="h-16 border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-30 px-4 md:px-8 flex items-center justify-between">
+                <header className="h-20 border-b border-border bg-white/80 backdrop-blur-xl sticky top-0 z-30 px-6 md:px-10 flex items-center justify-between">
                     {/* Mobile Menu Toggle */}
                     <button
                         onClick={() => setIsMobileMenuOpen(true)}
-                        className="p-2 -ml-2 text-muted-foreground hover:bg-muted/50 rounded-none md:hidden"
+                        className="p-2 -ml-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-xl md:hidden transition-colors"
                     >
-                        <Menu className="w-5 h-5" />
+                        <Menu className="w-6 h-6" />
                     </button>
 
-                    <h2 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] font-playfair hidden lg:block">
-                        Dashboard Workspace
-                    </h2>
-                    <div className="flex items-center gap-3 md:gap-6 ml-auto">
-                        {mounted && (
-                            <div className="hidden md:flex">
-                                <button
-                                    onClick={() => setTheme(theme === "dark" ? "light" : theme === "light" ? "system" : "dark")}
-                                    className="w-9 h-9 rounded-none flex items-center justify-center border border-border text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all focus:outline-none"
-                                    aria-label="Toggle theme"
-                                >
-                                    {theme === "dark" ? <Moon className="w-4 h-4" /> : theme === "light" ? <Sun className="w-4 h-4" /> : <Laptop className="w-4 h-4" />}
-                                </button>
-                            </div>
-                        )}
-                        <div className="h-4 w-[1px] bg-border mx-2 hidden md:block" />
+                    <div className="flex flex-col hidden lg:block">
+                        <h2 className="text-lg font-bold text-slate-900 leading-none tracking-tight">
+                            Welcome back, <span className="text-tclens-600">{user?.firstName || 'Counsel'}</span>
+                        </h2>
+                        <p className="text-[10px] font-black text-slate-400 mt-1.5 uppercase tracking-[0.2em] flex items-center gap-2">
+                            Workspace <span className="text-slate-200">/</span> Overview
+                        </p>
+                    </div>
+
+                    <div className="flex items-center gap-4 md:gap-8 ml-auto">
                         <div className="hidden md:flex flex-col items-end text-right">
-                            <span className="text-sm font-bold text-foreground font-playfair tracking-tight">
-                                {user ? `${user.firstName} ${user.lastName}` : "User"}
+                            <span className="text-sm font-bold text-slate-900 leading-none">
+                                {user ? `${user.firstName} ${user.lastName}` : "TCLens User"}
                             </span>
-                            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">{user?.plan || "Free"} Member</span>
+                            <span className="text-[11px] font-bold text-tclens-600 mt-1 uppercase tracking-wide">
+                                {user?.plan || "Free"} Account
+                            </span>
                         </div>
-                        <div className="w-10 h-10 rounded-none bg-emerald-600 flex items-center justify-center text-white font-black border border-emerald-500 shadow-lg shadow-emerald-600/10 transition-transform hover:scale-105">
-                            {user ? `${user.firstName[0]}${user.lastName[0]}` : "U"}
+
+                        <div className="w-10 h-10 rounded-xl bg-tclens-500 flex items-center justify-center text-white text-xs font-bold border border-tclens-400 shadow-xl shadow-tclens-500/10 transition-transform hover:scale-105 cursor-pointer">
+                            {user ? `${user.firstName[0]}${user.lastName[0]}` : "TL"}
                         </div>
                     </div>
                 </header>

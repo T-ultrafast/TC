@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/Logo";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function Navbar() {
     const pathname = usePathname();
@@ -95,34 +96,71 @@ export function Navbar() {
             </div>
 
             {/* Mobile Menu Overlay */}
-            {mobileMenuOpen && (
-                <div className="md:hidden fixed inset-0 top-0 left-0 w-full h-screen bg-white z-[60] p-8 flex flex-col space-y-6 animate-in slide-in-from-top duration-300">
-                    <div className="flex justify-between items-center mb-8">
-                        <Logo />
-                        <button onClick={() => setMobileMenuOpen(false)}>
-                            <X className="w-8 h-8 text-slate-600" />
-                        </button>
-                    </div>
+            <AnimatePresence>
+                {mobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        className="md:hidden fixed inset-0 top-0 left-0 w-full h-screen bg-white/95 backdrop-blur-xl z-[60] p-8 flex flex-col space-y-6"
+                    >
+                        <div className="flex justify-between items-center mb-8">
+                            <Logo />
+                            <button
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="p-2 -mr-2 bg-slate-50 rounded-full text-slate-900 border border-slate-200"
+                            >
+                                <X className="w-6 h-6" />
+                            </button>
+                        </div>
 
-                    {navLinks.map((item) => (
-                        <Link
-                            key={item.name}
-                            href={item.href}
-                            className="text-2xl font-bold text-slate-800"
-                            onClick={() => setMobileMenuOpen(false)}
-                        >
-                            {item.name}
-                        </Link>
-                    ))}
+                        <div className="flex flex-col gap-1">
+                            {navLinks.map((item, idx) => (
+                                <motion.div
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: idx * 0.05 + 0.1 }}
+                                    key={item.name}
+                                >
+                                    <Link
+                                        href={item.href}
+                                        className="text-3xl font-bold text-slate-900 py-3 block border-b border-slate-50"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                    >
+                                        {item.name}
+                                    </Link>
+                                </motion.div>
+                            ))}
+                        </div>
 
-                    <div className="pt-8 border-t border-slate-100 flex flex-col gap-4">
-                        <Link href="/signin" className="text-lg font-bold text-slate-600" onClick={() => setMobileMenuOpen(false)}>Login</Link>
-                        <Button size="lg" className="w-full bg-tclens-500 text-white rounded-card font-bold" asChild>
-                            <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>Sign Up Free</Link>
-                        </Button>
-                    </div>
-                </div>
-            )}
+                        <div className="pt-8 flex flex-col gap-4 mt-auto">
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.35 }}
+                            >
+                                <Link
+                                    href="/signin"
+                                    className="text-lg font-bold text-slate-600 px-2 py-4 block hover:text-tclens-500 transition-colors"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    Login to Account
+                                </Link>
+                            </motion.div>
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                            >
+                                <Button size="lg" className="w-full h-16 bg-tclens-500 text-white rounded-card font-bold text-lg shadow-xl shadow-tclens-500/20" asChild>
+                                    <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>Create Free Account</Link>
+                                </Button>
+                            </motion.div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </header>
     );
 }

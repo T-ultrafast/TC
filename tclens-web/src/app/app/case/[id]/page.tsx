@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth-client";
 
 interface Attachment {
     id: string;
@@ -165,7 +165,7 @@ export default function CaseDetailsPage() {
                 <div className="flex items-start justify-between border-b border-border pb-8">
                     <div className="space-y-2">
                         <div className="flex items-center gap-3">
-                            <h1 className="text-3xl font-black text-foreground font-playfair">{caseData.title}</h1>
+                            <h1 className="text-3xl font-extrabold text-foreground tracking-tight">{caseData.title}</h1>
                             <span className={cn(
                                 "px-3 py-1 rounded-full text-[10px] font-black tracking-tight uppercase",
                                 caseData.status === "Active" ? "bg-emerald-100 text-emerald-700" :
@@ -194,7 +194,7 @@ export default function CaseDetailsPage() {
             {/* Attachments Section */}
             <div className="space-y-6">
                 <div className="flex items-center justify-between px-1">
-                    <h3 className="text-lg font-bold text-foreground font-playfair uppercase tracking-tighter flex items-center gap-2">
+                    <h3 className="text-lg font-extrabold text-foreground uppercase tracking-tight flex items-center gap-2">
                         <FileText className="w-5 h-5" />
                         Attachments
                         <span className="bg-muted/50 text-muted-foreground text-xs px-2 py-0.5 rounded-full ml-1">{caseData.attachments.length}</span>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans, Playfair_Display, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -17,6 +17,11 @@ const jakarta = Plus_Jakarta_Sans({
 const playfair = Playfair_Display({
     subsets: ["latin"],
     variable: "--font-playfair",
+});
+
+const sourceSans = Source_Sans_3({
+    subsets: ["latin"],
+    variable: "--font-source-sans",
 });
 
 export const metadata: Metadata = {
@@ -38,7 +43,8 @@ export default function RootLayout({
                 "min-h-screen bg-background font-sans antialiased text-foreground",
                 inter.variable,
                 jakarta.variable,
-                playfair.variable
+                playfair.variable,
+                sourceSans.variable
             )}>
                 <ThemeProvider
                     attribute="class"

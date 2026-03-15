@@ -19,7 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth-client";
 
 interface Case {
     id: string;
@@ -66,12 +66,50 @@ export default function CasePage() {
                 }
             });
             const data = await res.json();
-            if (data.ok) {
-                setCases(data.data.map((c: any) => ({
-                    ...c,
-                    updatedAt: new Date(c.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                })));
+
+            let finalCases = [];
+
+            // Add Dummy Cases for display if none exist or just to show
+            const dummyCases: Case[] = [
+                {
+                    id: "dummy-1",
+                    title: "Corporate Services Agreement - Q1 Review",
+                    description: "Annual review of master services agreement for software vendors.",
+                    status: "Active",
+                    updatedAt: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                    attachmentCount: 4
+                },
+                {
+                    id: "dummy-2",
+                    title: "Employment Contract - Senior Counsel",
+                    description: "Standard executive employment agreement with NDAs and non-compete clauses.",
+                    status: "Pending",
+                    updatedAt: new Date(Date.now() - 86400000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                    attachmentCount: 2
+                },
+                {
+                    id: "dummy-3",
+                    title: "Strategic Partnership MOU",
+                    description: "Memorandum of Understanding for the upcoming joint venture in tech-law integration.",
+                    status: "Completed",
+                    updatedAt: new Date(Date.now() - 172800000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                    attachmentCount: 7
+                }
+            ];
+
+            if (data.ok && data.data.length > 0) {
+                finalCases = [
+                    ...data.data.map((c: any) => ({
+                        ...c,
+                        updatedAt: new Date(c.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                    })),
+                    ...dummyCases
+                ];
+            } else {
+                finalCases = dummyCases;
             }
+
+            setCases(finalCases);
         } catch (error) {
             console.error("Failed to fetch cases", error);
         } finally {
@@ -174,7 +212,7 @@ export default function CasePage() {
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-8 tracking-tight">
                 <div>
-                    <h1 className="text-3xl font-black text-foreground font-playfair mb-2">Cases</h1>
+                    <h1 className="text-3xl font-extrabold text-foreground tracking-tight mb-2">Cases</h1>
                     <p className="text-muted-foreground">Manage your legal matters and organize related documents.</p>
                 </div>
                 <Button
@@ -189,7 +227,7 @@ export default function CasePage() {
             {/* List */}
             <div className="space-y-4">
                 <div className="flex items-center justify-between px-2">
-                    <h3 className="text-lg font-bold text-foreground font-playfair uppercase tracking-tighter">Your Matters</h3>
+                    <h3 className="text-lg font-extrabold text-foreground uppercase tracking-tight">Your Matters</h3>
                     <div className="flex items-center gap-2">
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -214,7 +252,7 @@ export default function CasePage() {
                             <Briefcase className="w-8 h-8" />
                         </div>
                         <div className="space-y-1">
-                            <h3 className="text-xl font-bold text-foreground font-playfair">No cases found</h3>
+                            <h3 className="text-xl font-extrabold text-foreground tracking-tight">No cases found</h3>
                             <p className="text-muted-foreground max-w-xs mx-auto text-sm">Create your first legal matter to start organizing your documents.</p>
                         </div>
                         <Button
@@ -226,42 +264,59 @@ export default function CasePage() {
                         </Button>
                     </div>
                 ) : (
-                    <div className="bg-background rounded-none border border-border overflow-hidden shadow-sm">
-                        {filteredCases.map((c, i) => (
+                    <div className="grid gap-6">
+                        {filteredCases.map((c) => (
                             <div key={c.id}
                                 onClick={() => router.push(`/app/case/${c.id}`)}
-                                className={cn(
-                                    "group flex items-center justify-between p-6 hover:bg-muted/30/50 transition-all cursor-pointer",
-                                    i !== filteredCases.length - 1 && "border-b border-border"
-                                )}>
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-none bg-muted/30 flex items-center justify-center text-muted-foreground group-hover:bg-emerald-600 group-hover:text-emerald-400 transition-all">
-                                        <Briefcase className="w-6 h-6" />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-bold text-foreground group-hover:text-foreground">{c.title}</h4>
-                                        <div className="flex items-center gap-3 mt-1">
-                                            <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
-                                                <Clock className="w-3 h-3" />
-                                                Updated {c.updatedAt}
-                                            </span>
-                                            <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
-                                                <FileText className="w-3 h-3" />
-                                                {c.attachmentCount} Documents
-                                            </span>
+                                className="group relative bg-background border border-border rounded-[2rem] p-8 hover:border-emerald-500/30 hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500 cursor-pointer overflow-hidden"
+                            >
+                                {/* Glassy accent */}
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-emerald-500/10 transition-colors" />
+
+                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                                    <div className="flex items-start md:items-center gap-6">
+                                        <div className="w-16 h-16 rounded-[1.25rem] bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shadow-sm transition-transform group-hover:scale-110 duration-500">
+                                            <Briefcase className="w-8 h-8" />
+                                        </div>
+                                        <div className="space-y-1.5">
+                                            <h4 className="text-xl font-extrabold text-slate-900 tracking-tight group-hover:text-emerald-700 transition-colors">
+                                                {c.title}
+                                            </h4>
+                                            <p className="text-xs text-slate-500 font-medium line-clamp-1 max-w-xl">
+                                                {c.description || "No description provided for this legal matter."}
+                                            </p>
+                                            <div className="flex flex-wrap items-center gap-4 mt-3">
+                                                <span className="flex items-center gap-1.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">
+                                                    <Clock className="w-3.5 h-3.5" />
+                                                    Updated {c.updatedAt}
+                                                </span>
+                                                <div className="w-1 h-1 bg-slate-200 rounded-full" />
+                                                <span className="flex items-center gap-1.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">
+                                                    <FileText className="w-3.5 h-3.5" />
+                                                    {c.attachmentCount} Forensic Documents
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="flex items-center gap-4">
-                                    <span className={cn(
-                                        "px-3 py-1 rounded-full text-[10px] font-black tracking-tight uppercase",
-                                        c.status === "Active" ? "bg-emerald-100 text-emerald-700" :
-                                            c.status === "Pending" ? "bg-amber-100 text-amber-700" : "bg-muted/50 text-muted-foreground"
-                                    )}>
-                                        {c.status}
-                                    </span>
-                                    <Button variant="ghost" size="icon" className="text-muted-foreground"><MoreVertical className="w-4 h-4" /></Button>
-                                    <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-foreground transition-all" />
+
+                                    <div className="flex items-center gap-6 self-end md:self-center">
+                                        <span className={cn(
+                                            "px-4 py-1.5 rounded-full text-[10px] font-black tracking-[0.1em] uppercase border shadow-sm",
+                                            c.status === "Active" ? "bg-emerald-50 text-emerald-700 border-emerald-100" :
+                                                c.status === "Pending" ? "bg-amber-50 text-amber-700 border-amber-100" :
+                                                    "bg-slate-50 text-slate-500 border-slate-100"
+                                        )}>
+                                            {c.status}
+                                        </span>
+                                        <div className="flex items-center gap-2">
+                                            <Button variant="ghost" size="icon" className="h-10 w-10 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+                                                < MoreVertical className="w-5 h-5" />
+                                            </Button>
+                                            <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white scale-90 group-hover:scale-100 group-hover:bg-emerald-600 transition-all duration-500 shadow-lg shadow-slate-900/10 group-hover:shadow-emerald-500/20">
+                                                <ChevronRight className="w-6 h-6" />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         ))}
@@ -282,7 +337,7 @@ export default function CasePage() {
 
                         <div className="space-y-6">
                             <div className="space-y-2">
-                                <h2 className="text-2xl font-black text-foreground font-playfair">New Legal Matter</h2>
+                                <h2 className="text-2xl font-extrabold text-foreground tracking-tight">New Legal Matter</h2>
                                 <p className="text-sm text-muted-foreground">Provide a title and optional description for your case.</p>
                             </div>
 
@@ -378,7 +433,8 @@ export default function CasePage() {
                         </div>
                     </div>
                 </div>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 }

@@ -17,7 +17,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { auth, LawyerProfile } from '@/lib/auth';
+import { auth } from '@/lib/auth-client';
+import { LawyerProfile } from '@/lib/auth-types';
 import { cn } from '@/lib/utils';
 
 export default function AdminDashboard() {
@@ -59,7 +60,7 @@ export default function AdminDashboard() {
         <div className="max-w-[1600px] mx-auto space-y-8 animate-in fade-in duration-500">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-black text-foreground font-playfair uppercase tracking-tight">
+                    <h1 className="text-3xl font-extrabold text-foreground uppercase tracking-tight">
                         Compliance Dashboard
                     </h1>
                     <p className="text-muted-foreground font-medium tracking-tight">Review and verify legal practitioner applications.</p>
@@ -86,7 +87,7 @@ export default function AdminDashboard() {
                     <div key={i} className="bg-background p-6 rounded-none border border-border shadow-sm flex items-center justify-between">
                         <div>
                             <p className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-1">{stat.label}</p>
-                            <p className="text-3xl font-black text-foreground font-playfair">{stat.value}</p>
+                            <p className="text-3xl font-extrabold text-foreground tracking-tight">{stat.value}</p>
                         </div>
                         <div className={cn("w-12 h-12 rounded-none flex items-center justify-center text-white shadow-lg shadow-opacity-20", stat.color)}>
                             <stat.icon className="w-6 h-6" />
@@ -103,7 +104,7 @@ export default function AdminDashboard() {
                             <User className="w-8 h-8" />
                         </div>
                         <div>
-                            <h3 className="text-xl font-black text-foreground font-playfair uppercase tracking-tight">
+                            <h3 className="text-xl font-extrabold text-foreground uppercase tracking-tight">
                                 {user?.firstName} {user?.lastName}
                             </h3>
                             <div className="flex items-center gap-2 mt-0.5">

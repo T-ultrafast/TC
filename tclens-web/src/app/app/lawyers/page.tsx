@@ -59,7 +59,7 @@ export default function LawyerPage() {
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-8">
                 <div>
-                    <h1 className="text-3xl font-black text-foreground font-playfair mb-2">Lawyer Network</h1>
+                    <h1 className="text-3xl font-extrabold text-foreground tracking-tight mb-2">Lawyer Network</h1>
                     <p className="text-muted-foreground">Connect with vetted legal professionals for expert consultation.</p>
                 </div>
             </div>
@@ -116,7 +116,7 @@ export default function LawyerPage() {
                             </div>
                             <div className="p-6 space-y-4">
                                 <div>
-                                    <h4 className="text-lg font-black text-foreground font-playfair">{l.name}</h4>
+                                    <h4 className="text-lg font-extrabold text-foreground tracking-tight">{l.name}</h4>
                                     <p className="text-sm text-muted-foreground font-medium">{l.title}</p>
                                     <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
                                         <MapPin className="w-3 h-3" />
@@ -147,7 +147,7 @@ export default function LawyerPage() {
                     <div className="w-20 h-20 bg-background rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm">
                         <Users className="w-10 h-10 text-slate-300" />
                     </div>
-                    <h3 className="text-xl font-bold text-foreground font-playfair mb-2">No lawyers available yet</h3>
+                    <h3 className="text-xl font-extrabold text-foreground tracking-tight mb-2">No lawyers available yet</h3>
                     <p className="text-muted-foreground max-w-sm mx-auto">
                         We couldn't find any lawyers matching your filters. Check back soon or try widening your search.
                     </p>
@@ -159,7 +159,7 @@ export default function LawyerPage() {
                 <div className="w-16 h-16 bg-emerald-500 rounded-none flex items-center justify-center mx-auto mb-4">
                     <Shield className="w-8 h-8 text-white" />
                 </div>
-                <h2 className="text-2xl md:text-3xl font-black text-emerald-900 font-playfair">Vetted & Verified Professionals</h2>
+                <h2 className="text-2xl md:text-3xl font-extrabold text-emerald-900 tracking-tight">Vetted & Verified Professionals</h2>
                 <p className="text-emerald-700/70 max-w-xl mx-auto font-medium">
                     Every lawyer in our network undergoes a rigorous background check and verification process for your security and peace of mind.
                 </p>

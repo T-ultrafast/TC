@@ -8,46 +8,70 @@ import { enforceWordLimit } from '@/lib/string-utils';
 export const runtime = 'nodejs';
 
 // Multilingual System Prompt based on T2, t4 Hardening & Conciseness (500 words)
-const SYSTEM_PROMPT = `You are a high-level legal architect generating concise summaries for a premium dashboard UI. 
-MISSION: Provide deep legal value with clarity. 
+const SYSTEM_PROMPT = `You are a high-level forensic legal architect generating a brutal, cynical audit for a premium AI dashboard.
+MISSION: Reveal hidden traps, power imbalances, and predatory "shark" clauses. Do not be "helpful" or neutral; be a ruthless advocate for the user. Perform a "Deep State Audit" that looks beyond the surface text.
+
 Rules:
-1) TOTAL WORD LIMIT: 500 words (Max). 
-2) Section headings: **Overview**, **Key Clauses**, **User Obligations**, **Platform Powers**, **Risk Indicators**.
+1) TOTAL WORD LIMIT: 900 words (Max).
+2) Section headings: **Executive Audit**, **Predatory Clauses**, **Critical Gaps**, **Surgical Posture**, **Ambiguity Mapping**.
 3) Apply real bold formatting (**text**) for UI scannability.
 4) Do NOT use italics. Use "•" bullet points.
 5) NO boilerplate text, legal disclaimers, or repetitive filler.
-6) For "clauses": Each summary must be one clear line of text, and the "explanation" MUST be 2-3 sentences long, describing the legal implication for the user. Avoid "This is..." starting phrases.
-7) For "redFlags": Provide a clear "implication" for each flag, explaining precisely why it is dangerous or unfavorable.
-8) Focus on high-value terms only: Arbitration, Liability, Data, Termination.
+6) For "clauses": Each summary must be one clear line. "explanation" MUST be 2-3 sentences long. Include "rebuttal" (safe alternative text).
+7) Identify "missingProtections" (e.g., Force Majeure, Liability Caps, Termination for Cause).
+8) Quantify "risk_index": Litigation Probability (1-100%).
+9) Quantify "financial_exposure": Estimated liability (e.g., "$5,000 - $50,000" or "Uncapped").
+10) "ambiguity_audit": List 3-4 vague terms (e.g., "reasonable", "sole discretion") and why they are traps.
+11) "user_leverage": Identify 2-3 points where the user has negotiation power.
+12) "fairness_metrics": Rating (1-10) for Privacy, Liability, Continuity, and Transparency.
 
-REQUIRED SUMMARY STRUCTURE (The "summary" field in JSON must follow this exactly):
-**Overview**
-Briefly state what the document is and what it governs.
+REQUIRED SUMMARY STRUCTURE:
+**Executive Audit**
+Brutally honest top-level assessment of the document's fairness.
 
-**Key Clauses**
-• Bullet points of the most essential contractual terms.
+**Predatory Clauses**
+• Highlight clauses designed to lock in or exploit the user.
 
-**User Obligations**
-• What users must do or avoid.
+**Critical Gaps**
+• List what is missing that leaves the user exposed.
 
-**Platform Powers**
-• Rights regarding suspension, termination, or modification.
+**Surgical Posture**
+• Overall negotiation stance recommended.
 
-**Risk Indicators**
-• Critical risks: termination, data use, jurisdiction, etc.
+**Ambiguity Mapping**
+• Identify vague "snake words" that give the other party total power.
 
 TAXONOMY: Arbitration, Governing law, Liability limits, Indemnification, Auto-renewal, Termination, Data sharing, Unilateral changes, IP rights, Fees, Dispute timelines, Consent clauses.
 
-Return the response in strictly valid JSON format. {
-  "languageDetection": { "primary": "string", "secondary": ["string"] },
-  "summary": "string (Strictly 500-word max, 5-section structure)",
-  "ai_severity": { "rating": number (1-10), "reason": "string" },
-  "confidence": number,
-  "clauses": [{ "type": "string", "summary": "string", "riskLevel": "Low" | "Medium" | "High" | "Critical", "explanation": "string", "originalExcerpt": "string", "translatedExcerpt": "string" }],
-  "redFlags": [{ "title": "string", "description": "string", "implication": "string (Why this is a red flag & how it affects the user)" }],
-  "nextSteps": ["string"],
-  "disclaimer": "Informational only — not legal advice."
-}`;
+Return response in STRICTLY VALID JSON format ONLY. Do NOT include markdown code blocks or JSON fences, conversational text, or any characters outside of the JSON structure. Failure to comply with strict JSON formatting will break the intelligence pipeline.
+{
+    "languageDetection": { "primary": "string", "secondary": ["string"] },
+    "summary": "string (Strictly 800-word max, 5-section structure)",
+        "ai_severity": { "rating": "number (1-10)", "reason": "string" },
+    "confidence": "number",
+        "litigation_risk_index": "number (1-100)",
+            "financial_exposure": "string (e.g., Uncapped Liability, $20k Loss Potential)",
+                "fairness_metrics": {
+        "privacy": "number",
+            "liability": "number",
+                "transparency": "number",
+                    "continuity": "number"
+    },
+    "ambiguity_audit": [{ "term": "string", "context": "string", "risk": "string" }],
+        "user_leverage": [{ "point": "string", "strategy": "string" }],
+            "clauses": [{
+                "type": "string",
+                "summary": "string",
+                "riskLevel": "Low | Medium | High | Critical",
+                "explanation": "string",
+                "rebuttal": "string (the exact legal text to request as a fix)",
+                "originalExcerpt": "string"
+            }],
+                "missingProtections": [{ "type": "string", "description": "string", "fix": "string" }],
+                    "redFlags": [{ "title": "string", "description": "string", "implication": "string" }],
+                        "nextSteps": ["string"],
+                            "disclaimer": "Forensic AI analysis. Not legal advice."
+} `;
 
 async function isPrivateIP(ip: string): Promise<boolean> {
     const parts = ip.split('.').map(Number);
@@ -70,25 +94,55 @@ async function isPrivateIP(ip: string): Promise<boolean> {
 }
 
 /**
- * Sanitizes the AI's response by stripping markdown fences and whitespace.
- * Repairs common small formatting errors like trailing commas.
+ * Sanitizes the AI's response with a high-resilience parser.
+ * This handles markdown blocks, conversational filler, and structural truncation.
  */
 function sanitizeJsonResponse(text: string): string {
-    let sanitized = text.trim();
+    if (!text) return "{}";
 
-    // Remove markdown code fences if present (```json or```)
-    if (sanitized.startsWith('```')) {
-        const lines = sanitized.split('\n');
-        if (lines[0].includes('```')) lines.shift();
-        if (lines[lines.length - 1].includes('```')) lines.pop();
-        sanitized = lines.join('\n').trim();
+    try {
+        // 1. Precise Markdown Block Extraction (Fixing the previous fragile regex)
+        const jsonBlockMatch = text.match(/```json\s*([\s\S]*?)\s*```/);
+        let extracted = jsonBlockMatch ? jsonBlockMatch[1] : text;
+
+        // 2. Structural Recovery (Find the outermost braces)
+        const startIdx = extracted.indexOf('{');
+        const endIdx = extracted.lastIndexOf('}');
+
+        if (startIdx !== -1) {
+            // Truncate to the actual JSON boundaries
+            extracted = extracted.substring(startIdx, (endIdx !== -1 && endIdx > startIdx) ? endIdx + 1 : extracted.length);
+        }
+
+        // 3. Structural Repair (Fix common AI formatting hiccups)
+        extracted = extracted
+            .trim()
+            .replace(/,\s*([}\]])/g, '$1') // Remove trailing commas
+            .replace(/}\s*{/g, '},{')      // Fix missing object separators
+            .replace(/]\s*\[/g, '],[')     // Fix missing array separators
+            .replace(/"\s*"/g, '","');   // Fix missing property separators
+
+        // 4. Truncation Healing (If the JSON is cut off, attempt to close it)
+        let openBraces = (extracted.match(/{/g) || []).length;
+        let closeBraces = (extracted.match(/}/g) || []).length;
+        let openBrackets = (extracted.match(/\[/g) || []).length;
+        let closeBrackets = (extracted.match(/]/g) || []).length;
+
+        // Append missing closing symbols
+        while (openBraces > closeBraces) {
+            extracted += '}';
+            closeBraces++;
+        }
+        while (openBrackets > closeBrackets) {
+            extracted += ']';
+            closeBrackets++;
+        }
+
+        return extracted;
+    } catch (e) {
+        console.error("[API_ANALYZE] Sanitization internal failure:", e);
+        return text;
     }
-
-    // Attempt to fix trailing commas before closing braces/brackets
-    // e.g., "key": "value", } -> "key": "value" }
-    sanitized = sanitized.replace(/,\s*([\}\]])/g, '$1');
-
-    return sanitized;
 }
 
 async function fetchExternalUrl(url: string): Promise<string> {
@@ -118,7 +172,7 @@ async function fetchExternalUrl(url: string): Promise<string> {
         clearTimeout(timeout);
 
         if (!response.ok) {
-            throw new Error(`Failed to fetch URL: ${response.statusText}`);
+            throw new Error(`Failed to fetch URL: ${response.statusText} `);
         }
 
         const contentType = response.headers.get('content-type') || '';
@@ -151,7 +205,7 @@ async function fetchExternalUrl(url: string): Promise<string> {
         return cleanText;
     } catch (error) {
         const err = error as any;
-        console.error(`[API_ANALYZE] URL fetch failed (${url}):`, err.message);
+        console.error(`[API_ANALYZE] URL fetch failed(${url}): `, err.message);
         throw error;
     }
 }
@@ -183,7 +237,7 @@ export async function POST(req: NextRequest) {
         const jurisdiction = formData.get('jurisdiction') as string || 'General';
         const state = formData.get('state') as string || '';
 
-        console.log(`[API_ANALYZE] Request - Mode: ${mode}, Jurisdiction: ${jurisdiction}, State: ${state}`);
+        console.log(`[API_ANALYZE] Request - Mode: ${mode}, Jurisdiction: ${jurisdiction}, State: ${state} `);
 
         if (!file && !textInput) {
             return NextResponse.json({ ok: false, error: 'No file or text provided', code: "ERR_NO_INPUT" }, { status: 400 });
@@ -232,7 +286,7 @@ export async function POST(req: NextRequest) {
                     return NextResponse.json({
                         ok: false,
                         error: 'Unsupported file type',
-                        details: `File type '${file.type}' is not recognized. Please use PDF, DOCX, TXT, or Image files.`,
+                        details: `File type '${file.type}' is not recognized.Please use PDF, DOCX, TXT, or Image files.`,
                         code: "ERR_UNSUPPORTED_TYPE"
                     }, { status: 400 });
                 }
@@ -283,18 +337,18 @@ export async function POST(req: NextRequest) {
         const plan = req.headers.get('x-plan') || 'free';
         const userId = req.headers.get('x-user-id') || 'anonymous';
 
-        let limit = 5000;
+        let limit = 25000; // Increased base limit for forensic audits
         if (isLoggedIn) {
-            if (plan === 'pro') limit = 100000;
-            else if (plan === 'business') limit = 500000;
-            else limit = 10000;
+            if (plan === 'pro') limit = 250000;
+            else if (plan === 'business') limit = 1000000;
+            else limit = 50000;
         }
 
         if (!(isLoggedIn && plan === 'unlimited') && (currentUsage + wordCount > limit)) {
             return NextResponse.json({
                 ok: false,
-                error: 'Word limit reached',
-                details: `Your current plan (${plan}) limit is ${limit.toLocaleString()} words.`,
+                error: 'Analysis Limit Reached',
+                details: `Your current tier(${plan}) limit is ${limit.toLocaleString()} words for forensic auditing.Please upgrade for industrial - scale documents.`,
                 code: "ERR_QUOTA_EXCEEDED"
             }, { status: 403 });
         }
@@ -324,7 +378,7 @@ export async function POST(req: NextRequest) {
         const maxRetries = 3;
 
         // Construct location context for AI
-        const locationContext = state ? `${jurisdiction} (State/Region: ${state})` : jurisdiction;
+        const locationContext = state ? `${jurisdiction} (State / Region: ${state})` : jurisdiction;
 
         while (retryCount < maxRetries) {
             try {
@@ -339,9 +393,9 @@ export async function POST(req: NextRequest) {
                             mimeType: file.type
                         }
                     });
-                    parts.push({ text: `SYSTEM INSTRUCTION:\n${SYSTEM_PROMPT}\n\nTASK: ANALYZE THE ATTACHED ${isPdfFallback ? 'SCANNED PDF' : 'IMAGE'}. Perform OCR first, then generate the legal analysis in JSON as instructed. Use the prompt rules for rating. JURISDICTION: ${locationContext}` });
+                    parts.push({ text: `SYSTEM INSTRUCTION: \n${SYSTEM_PROMPT} \n\nTASK: ANALYZE THE ATTACHED ${isPdfFallback ? 'SCANNED PDF' : 'IMAGE'}. Perform OCR first, then generate the legal analysis in JSON as instructed.Use the prompt rules for rating.JURISDICTION: ${locationContext} ` });
                 } else {
-                    parts.push({ text: `SYSTEM INSTRUCTION:\n${SYSTEM_PROMPT}\n\nJURISDICTION: ${locationContext}\n\nBASE CLAUSE RISK: ${clauseRisk}\nDETECTED RISKS: ${JSON.stringify(breakdown.map((b: any) => b.category))}\n\nDOCUMENT TEXT:\n${finalInputText}` });
+                    parts.push({ text: `SYSTEM INSTRUCTION: \n${SYSTEM_PROMPT} \n\nJURISDICTION: ${locationContext} \n\nBASE CLAUSE RISK: ${clauseRisk} \nDETECTED RISKS: ${JSON.stringify(breakdown.map((b: any) => b.category))} \n\nDOCUMENT TEXT: \n${finalInputText} ` });
                 }
 
                 const result = await client.models.generateContent({
@@ -367,7 +421,7 @@ export async function POST(req: NextRequest) {
                 if (isRetryable && retryCount < maxRetries - 1) {
                     retryCount++;
                     const delay = Math.pow(2, retryCount) * 1000 + Math.random() * 1000;
-                    console.warn(`[API_ANALYZE] Gemini retry ${retryCount}: ${error.message}`);
+                    console.warn(`[API_ANALYZE] Gemini retry ${retryCount}: ${error.message} `);
                     await new Promise(resolve => setTimeout(resolve, delay));
                     continue;
                 }
@@ -379,11 +433,13 @@ export async function POST(req: NextRequest) {
         let aiResult;
         try {
             aiResult = JSON.parse(sanitizedText);
-        } catch (e) {
+        } catch (e: any) {
+            console.error("[API_ANALYZE] JSON Parse Error:", e, "Raw Text:", responseText.substring(0, 500));
             return NextResponse.json({
                 ok: false,
-                error: "AI Formatting Error",
-                details: "The AI service returned a response that could not be parsed.",
+                error: "Forensic Formatting Error",
+                details: "The Document Analysis Engine encountered a structural limit due to high legal complexity. This usually happens when a document has non-standard nesting or exceeded the intelligence buffer. PROVISION: Please try analyzing a specific section or re-extracting with a smaller snippet for high-precision results.",
+                raw: e.message,
                 code: "ERR_AI_JSON"
             }, { status: 500 });
         }
@@ -407,9 +463,15 @@ export async function POST(req: NextRequest) {
         const responsePayload = {
             ...finalAnalysis,
             languageDetection: aiResult.languageDetection,
-            summary: enforceWordLimit(aiResult.summary, 500),
+            summary: enforceWordLimit(aiResult.summary, 800),
             clauses: aiResult.clauses,
             redFlags: aiResult.redFlags,
+            missingProtections: aiResult.missingProtections,
+            litigation_risk_index: aiResult.litigation_risk_index,
+            financial_exposure: aiResult.financial_exposure,
+            fairness_metrics: aiResult.fairness_metrics,
+            ambiguity_audit: aiResult.ambiguity_audit,
+            user_leverage: aiResult.user_leverage,
             nextSteps: aiResult.nextSteps,
             disclaimer: aiResult.disclaimer,
             wordCount: wordCount
@@ -425,7 +487,7 @@ export async function POST(req: NextRequest) {
                     sourceName: file ? file.name : mode === 'link' ? new URL(urlInput!).hostname : "Pasted text",
                     jurisdiction: locationContext,
                     wordCount: wordCount,
-                    summaryTitle: `${responsePayload.languageDetection?.primary || 'Legal'} Analysis - ${new Date().toLocaleDateString()}`,
+                    summaryTitle: `${responsePayload.languageDetection?.primary || 'Legal'} Analysis - ${new Date().toLocaleDateString()} `,
                     rawInputReference: mode === 'paste' ? { preview: textToAnalyze.substring(0, 1000), hash: 'N/A' } : (urlInput || file?.name || 'unknown'),
                     analysisResult: responsePayload as any
                 });
@@ -469,3 +531,5 @@ export async function POST(req: NextRequest) {
         }, { status: 500 });
     }
 }
+
+

@@ -1,0 +1,169 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto:wght@400;700&family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&family=Lora:wght@400;700&display=swap');
+
+/* Quill Editor Fixes for Flexbox layout */
+.quill-custom-height {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.quill-custom-height .ql-container {
+    flex: 1;
+    overflow-y: auto;
+    font-family: 'Times New Roman', Times, serif !important;
+    font-size: 16px;
+    min-height: 0;
+}
+
+.ql-editor {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+    padding: 35px 50px !important;
+}
+
+/* Custom Font Styles */
+.ql-font-serif {
+    font-family: 'Times New Roman', Times, serif !important;
+}
+
+.ql-font-monospace {
+    font-family: 'Courier New', Courier, monospace !important;
+}
+
+.ql-font-roboto {
+    font-family: 'Roboto', sans-serif !important;
+}
+
+.ql-font-montserrat {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.ql-font-playfair {
+    font-family: 'Playfair Display', serif !important;
+}
+
+.ql-font-lora {
+    font-family: 'Lora', serif !important;
+}
+
+.ql-font-arial {
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+
+.ql-container.ql-snow {
+    border: none !important;
+}
+
+.ql-toolbar.ql-snow {
+    border: none !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    /* slate-100 */
+    padding: 12px 20px !important;
+    background: #ffffff !important;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* Toolbar Picker Labels */
+.ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="serif"]::before,
+.ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="serif"]::before {
+    content: "Times New Roman";
+    font-family: serif;
+}
+
+.ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="monospace"]::before,
+.ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="monospace"]::before {
+    content: "Monospace";
+    font-family: monospace;
+}
+
+.ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="roboto"]::before,
+.ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="roboto"]::before {
+    content: "Roboto";
+    font-family: 'Roboto';
+}
+
+.ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="montserrat"]::before,
+.ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="montserrat"]::before {
+    content: "Montserrat";
+    font-family: 'Montserrat';
+}
+
+.ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="playfair"]::before,
+.ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="playfair"]::before {
+    content: "Playfair Display";
+    font-family: 'Playfair Display';
+}
+
+.ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="lora"]::before,
+.ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="lora"]::before {
+    content: "Lora";
+    font-family: 'Lora';
+}
+
+.ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="arial"]::before,
+.ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="arial"]::before {
+    content: "Arial";
+    font-family: Arial, sans-serif;
+}
+
+.ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-label::before,
+.ql-toolbar.ql-snow .ql-picker.ql-font .ql-picker-item::before {
+    content: "Inter (Default)";
+    font-family: 'Inter';
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    /* slate-200 */
+    border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+    /* slate-300 */
+}
+
+@keyframes progress-in {
+    0% {
+        width: 0%;
+        transform: translateX(-100%);
+    }
+
+    50% {
+        width: 50%;
+        transform: translateX(0);
+    }
+
+    100% {
+        width: 100%;
+        transform: translateX(100%);
+    }
+}
+
+.animate-progress-indeterminate {
+    animation: progress-in 1.5s infinite linear;
+    transform-origin: left;
+}
+
+.analysis-summary-content strong {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    color: #0f172a;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1em;
+}
+
+.analysis-summary-content strong:first-child {
+    margin-top: 0;
+}
