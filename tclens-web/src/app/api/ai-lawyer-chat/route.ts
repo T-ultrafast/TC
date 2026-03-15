@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
+import { storage } from '@/lib/storage';
 
 export const runtime = "nodejs";
 
@@ -13,23 +14,42 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json().catch(() => ({}));
-        const { messages } = body;
+        const { messages, analysisId } = body;
 
         if (!messages || !Array.isArray(messages)) {
             return NextResponse.json({ error: "Invalid messages format" }, { status: 400 });
         }
 
         const client = new GoogleGenAI({ apiKey });
+        const geminiModel = process.env.GEMINI_MODEL || "gemini-2.0-flash";
+
+        // Fetch analysis context if analysisId is provided
+        let contextBlock = "";
+        if (analysisId) {
+            try {
+                const analysis = await storage.getAnalysisByIdOnly(analysisId);
+                if (analysis) {
+                    const result = analysis.analysisResult;
+                    contextBlock = `
+CURRENT DOCUMENT CONTEXT:
+Summary: ${result.summary || 'No summary available'}
+Risk Score: ${result.risk_score || 'N/A'}
+Key Clauses: ${(result.clauses || []).map((c: any) => `${c.type}: ${c.summary}`).join('. ')}
+                    `;
+                }
+            } catch (err) {
+                console.error("Context fetch failed in chat:", err);
+            }
+        }
 
         const lastMessage = messages[messages.length - 1]?.content;
         if (!lastMessage) {
             return NextResponse.json({ error: "No message content found" }, { status: 400 });
         }
 
-        // The @google/genai Node SDK handles sessions via generateContent or chat.
-        // For efficiency in a stateless API, we'll use generateContent with context included.
-        // Multilingual Analysis Assistant from T2
         const systemPrompt = `You are TCLens, a multilingual Terms & Conditions and policy analysis assistant.
+
+${contextBlock ? `YOU ARE CHATTING ABOUT THIS SPECIFIC DOCUMENT:\n${contextBlock}\n` : ''}
 
 MISSION: Read, detect, and understand T&Cs, Privacy Policies, and legally binding documents. Provide clause identification, risk scoring, and plain-language summaries.
 
@@ -44,10 +64,10 @@ IDENTITY & SAFETY
 - END EVERY RESPONSE WITH: “Informational only — not legal advice.”`;
 
         const result = await client.models.generateContent({
-            model: "gemini-2.0-flash",
+            model: geminiModel,
             contents: [
                 { role: 'user', parts: [{ text: systemPrompt }] },
-                { role: 'model', parts: [{ text: "Understood. I am TCLens, the multilingual analysis assistant. I will follow the diagnostic structure and disclaimers." }] },
+                { role: 'model', parts: [{ text: "Understood. I am TCLens, the context-aware analysis assistant. I will follow the diagnostic structure and disclaimers using any provided document context." }] },
                 ...messages.map(m => ({
                     role: m.role === 'assistant' ? 'model' : 'user',
                     parts: [{ text: m.content }]

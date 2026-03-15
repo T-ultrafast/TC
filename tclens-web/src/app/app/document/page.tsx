@@ -202,9 +202,8 @@ function DocumentPage() {
     };
 
     const fetchChatMessages = async (id: string) => {
-        const loggedInUser = { email: "demo@tclens.com", firstName: "Demo", lastName: "User", plan: "premium" };
-        const userId = loggedInUser?.email || 'anonymous';
-        const isLoggedInVal = !!loggedInUser;
+        const userId = user?.email || 'anonymous';
+        const isLoggedInVal = !!user;
 
         try {
             const response = await fetch(`/api/analysis/${id}/chat`, {
@@ -430,12 +429,17 @@ function DocumentPage() {
         const form = e.currentTarget;
         const input = form.elements.namedItem('question') as HTMLInputElement;
         const question = input.value;
-        if (!question.trim() || !analysisId) return;
+        
+        if (!question.trim()) return;
+        
+        if (!analysisId) {
+            setError("Analysis context missing. Please wait for the scan to complete or try re-analyzing.");
+            return;
+        }
 
         setChatLoading(true);
-        const loggedInUser = { email: "demo@tclens.com", firstName: "Demo", lastName: "User", plan: "premium" };
-        const userId = loggedInUser?.email || 'anonymous';
-        const isLoggedInVal = !!loggedInUser;
+        const userId = user?.email || 'anonymous';
+        const isLoggedInVal = !!user;
 
         try {
             // Optimistic update
@@ -452,17 +456,21 @@ function DocumentPage() {
                 },
                 body: JSON.stringify({ question })
             });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Failed to reach intelligence hub");
+            }
+
             const data = await response.json();
             if (data.ok) {
                 setChatMessages(prev => [...prev.filter(m => m.id !== tempUserMsg.id), tempUserMsg, data.data]);
-
-                // Auto-scroll logic happens via useEffect on chatMessages
             } else {
                 setError(data.error || "Failed to get AI response");
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error("Chat error:", err);
-            setError("The check service is currently unavailable.");
+            setError(err.message || "The intelligence service is currently unavailable.");
         } finally {
             setChatLoading(false);
         }
@@ -937,7 +945,7 @@ function DocumentPage() {
     };
 
     return (
-        <div className="max-w-[1400px] mx-auto space-y-10 animate-in fade-in duration-700">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 lg:px-10 space-y-6 animate-in fade-in duration-700">
             {/* Workspace Row: Usage & Switcher */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pt-2">
                 <div className="flex items-center gap-4">
@@ -1057,6 +1065,7 @@ function DocumentPage() {
                                 chatLoading={chatLoading}
                                 handleChatSubmit={sendChatMessage}
                                 handleDownloadAnalysisPdf={handleDownloadAnalysisPdf}
+                                analysisId={analysisId}
                             />
                         )}
                     </div>

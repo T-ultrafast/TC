@@ -12,41 +12,25 @@ const SYSTEM_PROMPT = `You are a high-level forensic legal architect generating 
 MISSION: Reveal hidden traps, power imbalances, and predatory "shark" clauses. Do not be "helpful" or neutral; be a ruthless advocate for the user. Perform a "Deep State Audit" that looks beyond the surface text.
 
 Rules:
-1) TOTAL WORD LIMIT: 900 words (Max).
-2) Section headings: **Executive Audit**, **Predatory Clauses**, **Critical Gaps**, **Surgical Posture**, **Ambiguity Mapping**.
-3) Apply real bold formatting (**text**) for UI scannability.
-4) Do NOT use italics. Use "•" bullet points.
+1) TOTAL WORD LIMIT: 300 words (Strict).
+2) Section headings: **Executive Summary**, **Risk Analysis**, **Strategic Posture**. 
+3) Apply bold formatting (**text**) ONLY for these 3 section headings.
+4) Do NOT use bolding within the paragraphs. Use "•" bullet points for lists.
 5) NO boilerplate text, legal disclaimers, or repetitive filler.
-6) For "clauses": Each summary must be one clear line. "explanation" MUST be 2-3 sentences long. Include "rebuttal" (safe alternative text).
-7) Identify "missingProtections" (e.g., Force Majeure, Liability Caps, Termination for Cause).
-8) Quantify "risk_index": Litigation Probability (1-100%).
-9) Quantify "financial_exposure": Estimated liability (e.g., "$5,000 - $50,000" or "Uncapped").
-10) "ambiguity_audit": List 3-4 vague terms (e.g., "reasonable", "sole discretion") and why they are traps.
-11) "user_leverage": Identify 2-3 points where the user has negotiation power.
-12) "fairness_metrics": Rating (1-10) for Privacy, Liability, Continuity, and Transparency.
+6) REQUIRED SUMMARY STRUCTURE:
+**Executive Summary** (1-2 sentences)
+**Risk Analysis** (3-4 concise bullets)
+**Strategic Posture** (1 sentence advice)
+7) Quantify "risk_index": Litigation Probability (1-100%).
+8) Quantify "financial_exposure": Estimated liability (e.g., "$10k" or "Uncapped").
+9) "fairness_metrics": Rating (1-10) for Privacy, Liability, Continuity, and Transparency.
 
-REQUIRED SUMMARY STRUCTURE:
-**Executive Audit**
-Brutally honest top-level assessment of the document's fairness.
-
-**Predatory Clauses**
-• Highlight clauses designed to lock in or exploit the user.
-
-**Critical Gaps**
-• List what is missing that leaves the user exposed.
-
-**Surgical Posture**
-• Overall negotiation stance recommended.
-
-**Ambiguity Mapping**
-• Identify vague "snake words" that give the other party total power.
-
-TAXONOMY: Arbitration, Governing law, Liability limits, Indemnification, Auto-renewal, Termination, Data sharing, Unilateral changes, IP rights, Fees, Dispute timelines, Consent clauses.
-
+10) Return response in STRICTLY VALID JSON format. No markdown blocks.
+11) TAXONOMY: Arbitration, Liability, Data, Termination.
 Return response in STRICTLY VALID JSON format ONLY. Do NOT include markdown code blocks or JSON fences, conversational text, or any characters outside of the JSON structure. Failure to comply with strict JSON formatting will break the intelligence pipeline.
 {
     "languageDetection": { "primary": "string", "secondary": ["string"] },
-    "summary": "string (Strictly 800-word max, 5-section structure)",
+    "summary": "string (Strictly 300-word max, 3-section structure)",
         "ai_severity": { "rating": "number (1-10)", "reason": "string" },
     "confidence": "number",
         "litigation_risk_index": "number (1-100)",
@@ -212,6 +196,10 @@ async function fetchExternalUrl(url: string): Promise<string> {
 
 export async function POST(req: NextRequest) {
     const apiKey = process.env.GEMINI_API_KEY;
+    const geminiModel = process.env.GEMINI_MODEL || "gemini-1.5-flash";
+    const apiVersion = process.env.GEMINI_API_VERSION || 'v1beta';
+    
+    console.log(`[API_ANALYZE] Using Model: ${geminiModel} (${apiVersion})`);
 
     try {
         if (!apiKey) {
@@ -372,7 +360,7 @@ export async function POST(req: NextRequest) {
 
         const transparencyRisk = isMultimodal ? 0 : calculateTransparency(finalInputText);
 
-        const client = new GoogleGenAI({ apiKey });
+        const client = new GoogleGenAI({ apiKey, apiVersion });
         let responseText = "";
         let retryCount = 0;
         const maxRetries = 3;
@@ -399,7 +387,7 @@ export async function POST(req: NextRequest) {
                 }
 
                 const result = await client.models.generateContent({
-                    model: "gemini-2.0-flash",
+                    model: geminiModel,
                     contents: [{
                         role: 'user',
                         parts: parts

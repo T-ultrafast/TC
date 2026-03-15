@@ -657,6 +657,1109 @@
         "wordCount": 740
       },
       "id": "pfcqpb"
+    },
+    {
+      "userId": "demo@tclens.com",
+      "createdAt": "2026-03-15T11:16:29.714Z",
+      "inputType": "upload",
+      "sourceName": "NYSC _ Read About NYSC BYE LAWS.pdf",
+      "jurisdiction": "MD (State / Region: BS)",
+      "wordCount": 4922,
+      "summaryTitle": "en Analysis - 3/15/2026 ",
+      "rawInputReference": "NYSC _ Read About NYSC BYE LAWS.pdf",
+      "analysisResult": {
+        "risk_score": 25,
+        "risk_level": "Low",
+        "analysis_confidence": 92,
+        "components": {
+          "clause_risk": 0,
+          "aggressiveness": 12.2,
+          "transparency": 13
+        },
+        "breakdown": [],
+        "ai_severity": {
+          "rating": 9,
+          "points_added": 12.2,
+          "reasons": [
+            "The document exhibits a high degree of control and punitive measures against members, with minimal protections for their rights and well-being. The lack of due process and the potential for arbitrary enforcement create a significant risk of abuse."
+          ]
+        },
+        "languageDetection": {
+          "primary": "en",
+          "secondary": []
+        },
+        "summary": "**Executive Audit**\nThis document, the NYSC Bye-Laws (Revised 2011), outlines a rigid and punitive system of rules and regulations for members of the National Youth Service Corps. It emphasizes obedience and conformity, with severe penalties for even minor infractions. The document lacks balance, prioritizing institutional control over the well-being and rights of its members. It is a one-sided agreement with minimal protections for the individual.\n\n**Predatory Clauses**\n• Clause 2: Requires signing pledges under threat of expulsion, forcing ideological compliance.\n• Clause 3(I)(1): Lateness to any official engagement results in decampment, a disproportionate penalty.\n• Clause 3(III)(13): Prevents legal action against the NYSC without prior consent, obstructing access to justice.\n\n**Critical Gaps**\n• **Force Majeure:** No provisions for excusable delays or non-performance due to unforeseen circumstances.\n• **Liability Caps:** No limits on the financial or other liabilities that members may incur.\n• **Termination for Cause (by Member):** No mechanism for a member to terminate their service due to breach by the NYSC.\n\n**Surgical Posture**\nDemand a complete overhaul of the disciplinary procedures, focusing on fairness, proportionality, and due process. Insist on the inclusion of clauses protecting members' rights and limiting their liabilities. Reject the current system as oppressive and unacceptable.\n\n**Ambiguity Mapping**\n• \"Official engagements\": This term is undefined, granting broad discretion to authorities to punish any perceived deviation.\n• \"Rude to constituted authority\": Subjective and open to abuse, potentially silencing legitimate complaints.\n• \"Immoral practice\": Vague and culturally dependent, creating opportunities for discriminatory enforcement.\n• \"Diligently\": The term is undefined, granting broad discretion to authorities to punish any perceived deviation.\n",
+        "clauses": [
+          {
+            "type": "Pledge",
+            "summary": "Mandatory signing of National and NYSC pledges under threat of expulsion.",
+            "riskLevel": "Critical",
+            "explanation": "This clause forces ideological compliance and suppresses freedom of thought. Refusal to sign results in immediate expulsion, a severe penalty for exercising freedom of conscience.",
+            "rebuttal": "Remove the mandatory pledge requirement. Participation should be voluntary, and refusal should not result in punitive action.",
+            "originalExcerpt": "Every member of the Service Corps (hereinafter referred to as “member”) shall subscribe to and sign a copy of the National pledge and NYSC pledge before the Chief Judge during Swearing-in Ceremony at the orientation camp. Any member who fails or refuses to subscribe to and sign the National and the NYSC pledges shall be tried by the Camp Court and, if found guilty, be liable to be decamped and sent out of the orientation camp."
+          },
+          {
+            "type": "Disciplinary Action",
+            "summary": "Lateness to any official engagement results in decampment.",
+            "riskLevel": "High",
+            "explanation": "This clause imposes a disproportionate penalty for a minor infraction. Decampment disrupts the entire service year and carries significant personal and professional consequences.",
+            "rebuttal": "Replace decampment with a more reasonable penalty, such as a written warning or community service.",
+            "originalExcerpt": "Any member who comes late to any official engagement on the field, at lectures or places of work shall be tried by the Camp Court and, if found guilty, be liable to be decamped and sent out of the camp"
+          },
+          {
+            "type": "Legal Action Restriction",
+            "summary": "Prohibition of legal action against the NYSC without prior consent from the Director-General.",
+            "riskLevel": "Critical",
+            "explanation": "This clause obstructs access to justice and shields the NYSC from accountability. It creates a power imbalance and prevents members from seeking legal redress for legitimate grievances.",
+            "rebuttal": "Remove the requirement for prior consent to legal action. Members should have the right to pursue legal remedies without interference.",
+            "originalExcerpt": "Not take legal action against a fellow Corps Member, official of the scheme or employer without first informing the Director-General for an amicable settlement of the matter and also complying with S.20 of the NYSC Act."
+          }
+        ],
+        "redFlags": [
+          {
+            "title": "Overly Punitive Measures",
+            "description": "The Bye-Laws rely heavily on severe penalties for minor infractions, creating a climate of fear and discouraging initiative.",
+            "implication": "Increased risk of arbitrary enforcement and abuse of power."
+          },
+          {
+            "title": "Lack of Due Process",
+            "description": "The Camp Court and Corps Disciplinary Committee lack transparency and impartiality, raising concerns about fairness.",
+            "implication": "Potential for biased decisions and unjust outcomes."
+          },
+          {
+            "title": "Suppression of Dissent",
+            "description": "Restrictions on freedom of speech and association stifle critical thinking and prevent members from advocating for their rights.",
+            "implication": "Erosion of trust and increased risk of conflict."
+          }
+        ],
+        "missingProtections": [
+          {
+            "type": "Force Majeure",
+            "description": "No provision for excusable delays or non-performance due to unforeseen circumstances (e.g., natural disasters, pandemics).",
+            "fix": "Include a Force Majeure clause that excuses performance when events beyond the member's control prevent compliance."
+          },
+          {
+            "type": "Liability Caps",
+            "description": "No limits on the financial or other liabilities that members may incur as a result of their service.",
+            "fix": "Establish clear limits on the financial and other liabilities that members may face."
+          },
+          {
+            "type": "Termination for Cause (by Member)",
+            "description": "No mechanism for a member to terminate their service due to breach by the NYSC or other compelling reasons.",
+            "fix": "Create a process for members to terminate their service for cause, with appropriate due process protections."
+          }
+        ],
+        "litigation_risk_index": 75,
+        "financial_exposure": "Uncapped Liability for various infractions, potential loss of allowance and extension of service.",
+        "fairness_metrics": {
+          "privacy": 2,
+          "liability": 1,
+          "transparency": 3,
+          "continuity": 6
+        },
+        "ambiguity_audit": [
+          {
+            "term": "Official engagements",
+            "context": "Clause 3(I)(1): Attendance at 'official engagements' is mandatory, but the term is not defined.",
+            "risk": "High: Allows for arbitrary enforcement and punishment for activities not clearly defined as mandatory."
+          },
+          {
+            "term": "Rude to constituted authority",
+            "context": "Clause 3(III)(8): Being 'rude to constituted authority' is a punishable offense.",
+            "risk": "High: Subjective and open to abuse, potentially silencing legitimate complaints or dissent."
+          },
+          {
+            "term": "Immoral practice",
+            "context": "Clause 3(III)(9): Engaging in 'immoral practices' is prohibited.",
+            "risk": "High: Vague and culturally dependent, creating opportunities for discriminatory enforcement based on personal biases."
+          },
+          {
+            "term": "Diligently",
+            "context": "Clause 3(III)(5): Members must carry out duties 'diligently'.",
+            "risk": "High: Allows for arbitrary enforcement and punishment for activities not clearly defined as mandatory."
+          }
+        ],
+        "user_leverage": [
+          {
+            "point": "Public Relations Risk",
+            "strategy": "Highlight the potential for negative publicity if the NYSC is perceived as oppressive or unfair."
+          },
+          {
+            "point": "Negotiating Block",
+            "strategy": "Refuse to sign the pledge until significant revisions are made to the Bye-Laws."
+          }
+        ],
+        "nextSteps": [
+          "Demand a complete review and revision of the NYSC Bye-Laws.",
+          "Seek legal counsel to assess the enforceability of the Bye-Laws and protect members' rights.",
+          "Organize a collective action to advocate for fairer and more reasonable regulations."
+        ],
+        "disclaimer": "Forensic AI analysis. Not legal advice.",
+        "wordCount": 4922
+      },
+      "id": "tbryua"
+    },
+    {
+      "userId": "demo@tclens.com",
+      "createdAt": "2026-03-15T11:30:28.675Z",
+      "inputType": "upload",
+      "sourceName": "CapCut-Terms-of-Service.pdf",
+      "jurisdiction": "MD (State / Region: BS)",
+      "wordCount": 1482,
+      "summaryTitle": "en Analysis - 3/15/2026 ",
+      "rawInputReference": "CapCut-Terms-of-Service.pdf",
+      "analysisResult": {
+        "risk_score": 53,
+        "risk_level": "High",
+        "analysis_confidence": 84,
+        "components": {
+          "clause_risk": 36,
+          "aggressiveness": 12.2,
+          "transparency": 5
+        },
+        "breakdown": [
+          {
+            "category": "Liability limitation",
+            "label": "Severe limitation of liability",
+            "points": 10.8,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "...OBLIGATION\u0001OR\u0001COMMITMENT.\u0001 15.LIMITATION\u0001OF\u0001LIABILITY\u0001 NOTHING\u0001IN\u0001THESE\u0001TERMS\u0001SHALL\u0001EXCLUDE\u0001OR\u0001LIMIT\u0001OUR\u0001LIABILIT..."
+            ]
+          },
+          {
+            "category": "Broad indemnity",
+            "label": "Broad user indemnification",
+            "points": 9,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "....INDEMNITY\u0001 YOU\u0001SHALL\u0001DEFEND,\u0001INDEMNIFY\u0001AND\u0001HOLD\u0001HARMLESS\u0001COMPANY,\u0001ITS\u0001PARENTS,\u0001SUBSIDIARIES,\u0001 AND\u0001AFFILIATES,\u0001AND\u0001EA..."
+            ]
+          },
+          {
+            "category": "Auto-renewal",
+            "label": "Automatic subscription renewal",
+            "points": 7.2,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "...a\u0001fixed\u0001billing\u0001period\u0001or\u0001an\u0001 automatic\u0001renewal\u0001subscription\u0001fee\u0001in\u0001advance\u0001on\u0001a\u0001monthly\u0001basis\u0001or\u0001another...",
+              "...tform,\u0001and\u0001your\u0001payment\u0001will\u0001 automatically\u0001be\u0001charged\u0001at\u0001the\u0001start\u0001of\u0001each\u0001new\u0001subscription\u0001period\u0001for\u0001the\u0001fees\u0001..."
+            ]
+          },
+          {
+            "category": "Broad content license",
+            "label": "Broad license to user content",
+            "points": 9,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "...\u0001(including\u0001sub- licensable),\u0001perpetual,\u0001worldwide\u0001license\u0001to\u0001use,\u0001modify,\u0001adapt,\u0001reproduce,\u0001make\u0001derivative\u0001 works\u0001of..."
+            ]
+          }
+        ],
+        "ai_severity": {
+          "rating": 9,
+          "points_added": 12.2,
+          "reasons": [
+            "The terms heavily favor the service provider, with broad rights over user content, minimal liability, and unilateral change provisions."
+          ]
+        },
+        "languageDetection": {
+          "primary": "en",
+          "secondary": []
+        },
+        "summary": "**Executive Audit**\nThis CapCut Terms of Service document is aggressively skewed in favor of Bytedance. It grants them sweeping rights over user-generated content, limits their liability to a pittance, and reserves the right to change the terms at any time. The arbitration clause forces users into a costly and inconvenient process in Singapore. This document is designed to protect Bytedance at the expense of its users.\n\n**Predatory Clauses**\n• **Broad Content License:** Grants Bytedance an unconditional, irrevocable, royalty-free license to use user content.\n• **Unilateral Changes:** Bytedance can amend the terms at any time, and continued use constitutes acceptance.\n• **Liability Limitation:** Bytedance's liability is capped at the higher of $50 or the amount paid in the last 12 months.\n• **Indemnification:** Users must indemnify Bytedance against any losses arising from their use of the service.\n\n**Critical Gaps**\n• **No Force Majeure Clause:** The document lacks a standard Force Majeure clause, leaving the user vulnerable to liability even in unforeseeable circumstances.\n• **Lack of Service Level Agreement (SLA):** There is no guarantee of service uptime or performance.\n• **No Data Portability Provision:** No clear mechanism for users to export their data if they decide to leave the platform.\n\n**Surgical Posture**\nAggressive renegotiation is essential. The user should demand significant changes to the content license, liability limitations, and dispute resolution process. If Bytedance is unwilling to negotiate, the user should seek alternative solutions.\n\n**Ambiguity Mapping**\n• **\"Commercially reasonable efforts\":** This term is vague and subjective, providing no concrete standard for Bytedance's actions.\n• **\"Sole discretion\":** Used repeatedly, this phrase gives Bytedance unchecked power to make decisions that affect users.\n• **\"Applicable laws\":** The definition is broad and could be interpreted to include laws that are unfavorable to the user.\n• **\"Any or no reason\":** This phrase, used in the context of account suspension, gives Bytedance arbitrary power over user accounts.",
+        "clauses": [
+          {
+            "type": "IP rights",
+            "summary": "Grants Bytedance an unconditional, irrevocable, royalty-free license to use user content.",
+            "riskLevel": "Critical",
+            "explanation": "This clause allows Bytedance to use user-generated content for any purpose, including commercial use, without compensation or attribution. It effectively strips users of their intellectual property rights.",
+            "rebuttal": "User retains ownership of their content. Company is granted a non-exclusive license solely for the purpose of providing the Services.",
+            "originalExcerpt": "Except as expressly provided otherwise in these Terms, you or the owner of your User Content still own the copyright and any other intellectual property rights in User Content submitted to us, but by submitting User Content via the Services, you hereby grant us and our affiliates, agents, services providers, partners and other connected third parties an unconditional, irrevocable, non-exclusive, royalty-free, fully transferable (including sub-licensable), perpetual, worldwide license to use, modify, adapt, reproduce, make derivative works of, display, publish, transmit, distribute and/or store your User Content for providing the Services for you."
+          },
+          {
+            "type": "Liability limits",
+            "summary": "Bytedance's liability is capped at the higher of $50 or the amount paid in the last 12 months.",
+            "riskLevel": "Critical",
+            "explanation": "This clause severely limits Bytedance's financial responsibility for any damages or losses incurred by users, even in cases of gross negligence. It effectively shields Bytedance from accountability.",
+            "rebuttal": "Company's liability shall be limited to the extent permitted by applicable law and shall not exclude liability for gross negligence or willful misconduct.",
+            "originalExcerpt": "TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE COMPANY’S MAXIMUM AGGREGATE LIABILITY TO YOU WHETHER IN CONTRACT, TORT (INCLUDING NEGLIGENCE), UNDER ANY STATUTE OR OTHERWISE ARISING OUT OF OR RELATING IN ANY WAY TO YOUR USE OF THE PLATFORM OR SERVICES SHALL BE LIMITED TO THE HIGHER OF (A) THE AMOUNT YOU HAVE PAID TO US WITHIN TWELVE (12) MONTHS PERIOD IMMEDIATELY PRECEDING SUCH CLAIM OR (B) FIFTY US DOLLARS (USD $50) OR THE EQUIVALENT AMOUNT IN YOUR LOCAL CURRENCY."
+          },
+          {
+            "type": "Indemnification",
+            "summary": "Users must indemnify Bytedance against any losses arising from their use of the service.",
+            "riskLevel": "High",
+            "explanation": "This clause forces users to cover Bytedance's legal costs and damages, even if the issue is partially or entirely Bytedance's fault. This creates a significant financial risk for users.",
+            "rebuttal": "User shall indemnify Company only for losses directly caused by the User's gross negligence or willful misconduct.",
+            "originalExcerpt": "YOU SHALL DEFEND, INDEMNIFY AND HOLD HARMLESS COMPANY, ITS PARENTS, SUBSIDIARIES, AND AFFILIATES, AND EACH OF THEIR RESPECTIVE OFFICERS, DIRECTORS, EMPLOYEES,SUBLICENSEES, AGENTS AND ADVISORS AND CREATORS AND THEIR ASSIGNS AND SUCCESSORS (EACH AN “INDEMNIFIED PARTY”) FROM AND AGAINST ANY AND ALL DIRECT AND INDIRECT LOSSES, CLAIMS, LIABILITIES, DAMAGES, COSTS, AND EXPENSES, INCLUDING, BUT NOT LIMITED TO, ATTORNEYS’ FEES AND EXPENSES, WHICH MAY BE SUFFERED OR INCURRED BY AN INDEMNIFIED PARTY OR ASSERTED AGAINST AN INDEMNIFIED PARTY ARISING OUT OF A BREACH BY YOU OR ANY USER OF YOUR ACCOUNT OF THESE TERMS OR APPLICABLE LAWS OR ARISING OUT OF A BREACH OF YOUR OBLIGATIONS, REPRESENTATION OR WARRANTIES UNDER THESE TERMS."
+          },
+          {
+            "type": "Arbitration",
+            "summary": "Any dispute shall be resolved by arbitration in Singapore.",
+            "riskLevel": "High",
+            "explanation": "This clause forces users to resolve disputes through a costly and inconvenient arbitration process in Singapore, effectively deterring many users from pursuing legitimate claims.",
+            "rebuttal": "Disputes shall be resolved in the user's local jurisdiction, and the company agrees to binding arbitration in the user's local jurisdiction.",
+            "originalExcerpt": "Any dispute arising out of or in connection with these Terms, including any question regarding existence, validity or termination of these Terms, shall be referred to and finally resolved by arbitration administered by the Singapore International Arbitration Centre in accordance with the Arbitration Rules of the Singapore International Arbitration Centre for the time being in force, which rules are deemed to be incorporated by reference in this clause. The seat of the arbitration shall be Singapore. The Tribunal shall consist of three (3) arbitrators. The language of the arbitration shall be English."
+          }
+        ],
+        "redFlags": [
+          {
+            "title": "Unilateral Changes to Terms",
+            "description": "Bytedance reserves the right to change the terms at any time, and continued use constitutes acceptance.",
+            "implication": "Users are bound by changes they may not be aware of or agree with."
+          },
+          {
+            "title": "Broad Indemnification Clause",
+            "description": "Users must indemnify Bytedance against any losses arising from their use of the service.",
+            "implication": "Users could be held liable for Bytedance's mistakes."
+          },
+          {
+            "title": "Limited Liability",
+            "description": "Bytedance's liability is capped at the higher of $50 or the amount paid in the last 12 months.",
+            "implication": "Bytedance is not financially accountable for significant damages."
+          }
+        ],
+        "missingProtections": [
+          {
+            "type": "Force Majeure",
+            "description": "The agreement lacks a standard Force Majeure clause, which would excuse performance in the event of unforeseen circumstances.",
+            "fix": "Include a standard Force Majeure clause that excuses performance in the event of unforeseen circumstances, such as natural disasters, war, or government regulations."
+          },
+          {
+            "type": "Service Level Agreement (SLA)",
+            "description": "There is no guarantee of service uptime or performance.",
+            "fix": "Include a Service Level Agreement (SLA) that guarantees a certain level of service uptime and performance."
+          },
+          {
+            "type": "Data Portability",
+            "description": "No clear mechanism for users to export their data if they decide to leave the platform.",
+            "fix": "Include a data portability provision that allows users to easily export their data in a standard format."
+          }
+        ],
+        "litigation_risk_index": 75,
+        "financial_exposure": "Uncapped Liability due to broad indemnification clause.",
+        "fairness_metrics": {
+          "privacy": 3,
+          "liability": 1,
+          "transparency": 4,
+          "continuity": 2
+        },
+        "ambiguity_audit": [
+          {
+            "term": "Commercially reasonable efforts",
+            "context": "Notification of changes to terms.",
+            "risk": "Subjective standard, easily manipulated by Bytedance."
+          },
+          {
+            "term": "Sole discretion",
+            "context": "Account suspension, content removal.",
+            "risk": "Gives Bytedance unchecked power over user accounts and content."
+          },
+          {
+            "term": "Applicable laws",
+            "context": "Compliance with laws.",
+            "risk": "Broad definition, could include laws unfavorable to the user."
+          },
+          {
+            "term": "Any or no reason",
+            "context": "Account suspension.",
+            "risk": "Arbitrary power over user accounts."
+          }
+        ],
+        "user_leverage": [
+          {
+            "point": "Content Creation",
+            "strategy": "Highlight the value of user-generated content to the platform and demand a fairer license."
+          },
+          {
+            "point": "Market Competition",
+            "strategy": "Point out the availability of alternative video editing platforms with more user-friendly terms."
+          }
+        ],
+        "nextSteps": [
+          "Renegotiate the terms of service, focusing on content license, liability limitations, and dispute resolution.",
+          "Seek legal counsel to review the terms and advise on potential risks.",
+          "Consider alternative video editing platforms with more user-friendly terms."
+        ],
+        "disclaimer": "Forensic AI analysis. Not legal advice.",
+        "wordCount": 1482
+      },
+      "id": "z5eyoc"
+    },
+    {
+      "userId": "demo@tclens.com",
+      "createdAt": "2026-03-15T11:35:24.504Z",
+      "inputType": "upload",
+      "sourceName": "CapCut-Terms-of-Service.pdf",
+      "jurisdiction": "MD (State / Region: BS)",
+      "wordCount": 1482,
+      "summaryTitle": "en Analysis - 3/15/2026 ",
+      "rawInputReference": "CapCut-Terms-of-Service.pdf",
+      "analysisResult": {
+        "risk_score": 51,
+        "risk_level": "High",
+        "analysis_confidence": 87,
+        "components": {
+          "clause_risk": 36,
+          "aggressiveness": 9.6,
+          "transparency": 5
+        },
+        "breakdown": [
+          {
+            "category": "Liability limitation",
+            "label": "Severe limitation of liability",
+            "points": 10.8,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "...OBLIGATION\u0001OR\u0001COMMITMENT.\u0001 15.LIMITATION\u0001OF\u0001LIABILITY\u0001 NOTHING\u0001IN\u0001THESE\u0001TERMS\u0001SHALL\u0001EXCLUDE\u0001OR\u0001LIMIT\u0001OUR\u0001LIABILIT..."
+            ]
+          },
+          {
+            "category": "Broad indemnity",
+            "label": "Broad user indemnification",
+            "points": 9,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "....INDEMNITY\u0001 YOU\u0001SHALL\u0001DEFEND,\u0001INDEMNIFY\u0001AND\u0001HOLD\u0001HARMLESS\u0001COMPANY,\u0001ITS\u0001PARENTS,\u0001SUBSIDIARIES,\u0001 AND\u0001AFFILIATES,\u0001AND\u0001EA..."
+            ]
+          },
+          {
+            "category": "Auto-renewal",
+            "label": "Automatic subscription renewal",
+            "points": 7.2,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "...a\u0001fixed\u0001billing\u0001period\u0001or\u0001an\u0001 automatic\u0001renewal\u0001subscription\u0001fee\u0001in\u0001advance\u0001on\u0001a\u0001monthly\u0001basis\u0001or\u0001another...",
+              "...tform,\u0001and\u0001your\u0001payment\u0001will\u0001 automatically\u0001be\u0001charged\u0001at\u0001the\u0001start\u0001of\u0001each\u0001new\u0001subscription\u0001period\u0001for\u0001the\u0001fees\u0001..."
+            ]
+          },
+          {
+            "category": "Broad content license",
+            "label": "Broad license to user content",
+            "points": 9,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "...\u0001(including\u0001sub- licensable),\u0001perpetual,\u0001worldwide\u0001license\u0001to\u0001use,\u0001modify,\u0001adapt,\u0001reproduce,\u0001make\u0001derivative\u0001 works\u0001of..."
+            ]
+          }
+        ],
+        "ai_severity": {
+          "rating": 8,
+          "points_added": 9.6,
+          "reasons": [
+            "High risk due to uncapped liability and limited legal recourse."
+          ]
+        },
+        "languageDetection": {
+          "primary": "en",
+          "secondary": []
+        },
+        "summary": "**Executive Summary**: CapCut's Terms of Service present significant risks due to broad indemnification, liability limitations, and mandatory arbitration in Singapore. Users face potential uncapped financial exposure and limited recourse in case of disputes. \n\n**Risk Analysis**: \n• Unilateral Termination: CapCut reserves the right to terminate accounts for any reason, potentially disrupting user access and content.\n• Broad Indemnification: Users indemnify CapCut against all losses, including attorney's fees, arising from their use of the service.\n• Mandatory Arbitration: Disputes are resolved through arbitration in Singapore, limiting legal options and increasing costs.\n• Content License: Users grant CapCut a broad, irrevocable license to use their content.\n\n**Strategic Posture**: Negotiate for balanced liability and dispute resolution terms, or seek alternative platforms with fairer user protections.",
+        "clauses": [
+          {
+            "type": "Liability",
+            "summary": "Limits CapCut's liability for various losses.",
+            "riskLevel": "High",
+            "explanation": "CapCut disclaims liability for loss of profit, goodwill, data, and indirect damages.",
+            "rebuttal": "Request mutual limitation of liability, capping damages at a reasonable amount.",
+            "originalExcerpt": "SUBJECT TO THE PARAGRAPH ABOVE, WE SHALL NOT BE LIABLE TO YOU FOR:\n•\t(I) ANY LOSS OF PROFIT (WHETHER INCURRED DIRECTLY OR INDIRECTLY); (II) ANY LOSS OF GOODWILL; (III) ANY LOSS OF OPPORTUNITY; (IV) ANY LOSS, CORRUPTION, DISCLOSURE, ACCESS, ALTERATION, MISUSE, MANIPULATION OR OTHER UTILIZATION OF DATA SUFFERED BY YOU; OR (V) ANY INDIRECT, SPECIAL, INCIDENTAL, CONSEQUENTIAL OR PUNITIVE DAMAGES WHATSOEVER WHICH MAY BE INCURRED BY YOU; AND/OR"
+          },
+          {
+            "type": "Arbitration",
+            "summary": "Mandatory arbitration in Singapore.",
+            "riskLevel": "Critical",
+            "explanation": "Requires disputes to be resolved through arbitration in Singapore, limiting legal recourse.",
+            "rebuttal": "Request a more accessible arbitration venue or the option for small claims court.",
+            "originalExcerpt": "Any dispute arising out of or in connection with these Terms, including any question regarding existence, validity or termination of these Terms, shall be referred to and finally resolved by arbitration administered by the Singapore International Arbitration Centre"
+          },
+          {
+            "type": "Data",
+            "summary": "Grants CapCut a broad license to user-generated content.",
+            "riskLevel": "High",
+            "explanation": "Users grant CapCut an unconditional, irrevocable license to use their content for any purpose.",
+            "rebuttal": "Request a more limited license, restricting use to platform operation and promotion only.",
+            "originalExcerpt": "you hereby grant us and our affiliates, agents, services providers, partners and other connected third parties an unconditional, irrevocable, non-exclusive, royalty-free, fully transferable (including sub-licensable), perpetual, worldwide license to use, modify, adapt, reproduce, make derivative works of, display, publish, transmit, distribute and/or store your User Content for providing the Services for you."
+          },
+          {
+            "type": "Termination",
+            "summary": "CapCut can terminate accounts for any reason.",
+            "riskLevel": "Medium",
+            "explanation": "CapCut reserves the right to suspend or terminate accounts with or without notice.",
+            "rebuttal": "Request a clause requiring reasonable cause and prior notice for termination.",
+            "originalExcerpt": "We reserve the right to temporarily or permanently suspend or terminate your account or impose limits on or restrict your access to parts or all of the Services with or without notice at any time for any or no reason"
+          }
+        ],
+        "redFlags": [
+          {
+            "title": "Unilateral Changes",
+            "description": "CapCut can unilaterally change the terms of service.",
+            "implication": "Users are bound by future changes without explicit consent."
+          },
+          {
+            "title": "Broad Indemnification",
+            "description": "Users indemnify CapCut against all losses.",
+            "implication": "Users bear significant financial risk for platform-related issues."
+          }
+        ],
+        "missingProtections": [
+          {
+            "type": "Data Security",
+            "description": "Lack of specific data security measures.",
+            "fix": "Request inclusion of data encryption and security protocols."
+          },
+          {
+            "type": "Service Level Agreement",
+            "description": "No guaranteed uptime or service availability.",
+            "fix": "Negotiate a service level agreement with uptime guarantees."
+          }
+        ],
+        "litigation_risk_index": 78,
+        "financial_exposure": "Uncapped Liability",
+        "fairness_metrics": {
+          "privacy": 6,
+          "liability": 2,
+          "transparency": 5,
+          "continuity": 4
+        },
+        "ambiguity_audit": [
+          {
+            "term": "Services",
+            "context": "Definition of Services is broad and subject to change.",
+            "risk": "Scope Creep"
+          },
+          {
+            "term": "Harmful Code",
+            "context": "Broad definition of prohibited content.",
+            "risk": "Content Removal"
+          }
+        ],
+        "user_leverage": [
+          {
+            "point": "Negotiate liability limitations.",
+            "strategy": "Request a cap on financial exposure."
+          },
+          {
+            "point": "Seek alternative dispute resolution.",
+            "strategy": "Propose mediation or local jurisdiction arbitration."
+          }
+        ],
+        "nextSteps": [
+          "Negotiate key clauses.",
+          "Seek legal counsel.",
+          "Consider alternative platforms."
+        ],
+        "disclaimer": "Forensic AI analysis. Not legal advice.",
+        "wordCount": 1482
+      },
+      "id": "s2v1dh"
+    },
+    {
+      "userId": "demo@tclens.com",
+      "createdAt": "2026-03-15T11:39:38.350Z",
+      "inputType": "upload",
+      "sourceName": "CapCut-Terms-of-Service.pdf",
+      "jurisdiction": "MD (State / Region: BS)",
+      "wordCount": 1482,
+      "summaryTitle": "en Analysis - 3/15/2026 ",
+      "rawInputReference": "CapCut-Terms-of-Service.pdf",
+      "analysisResult": {
+        "risk_score": 51,
+        "risk_level": "High",
+        "analysis_confidence": 84,
+        "components": {
+          "clause_risk": 36,
+          "aggressiveness": 9.6,
+          "transparency": 5
+        },
+        "breakdown": [
+          {
+            "category": "Liability limitation",
+            "label": "Severe limitation of liability",
+            "points": 10.8,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "...OBLIGATION\u0001OR\u0001COMMITMENT.\u0001 15.LIMITATION\u0001OF\u0001LIABILITY\u0001 NOTHING\u0001IN\u0001THESE\u0001TERMS\u0001SHALL\u0001EXCLUDE\u0001OR\u0001LIMIT\u0001OUR\u0001LIABILIT..."
+            ]
+          },
+          {
+            "category": "Broad indemnity",
+            "label": "Broad user indemnification",
+            "points": 9,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "....INDEMNITY\u0001 YOU\u0001SHALL\u0001DEFEND,\u0001INDEMNIFY\u0001AND\u0001HOLD\u0001HARMLESS\u0001COMPANY,\u0001ITS\u0001PARENTS,\u0001SUBSIDIARIES,\u0001 AND\u0001AFFILIATES,\u0001AND\u0001EA..."
+            ]
+          },
+          {
+            "category": "Auto-renewal",
+            "label": "Automatic subscription renewal",
+            "points": 7.2,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "...a\u0001fixed\u0001billing\u0001period\u0001or\u0001an\u0001 automatic\u0001renewal\u0001subscription\u0001fee\u0001in\u0001advance\u0001on\u0001a\u0001monthly\u0001basis\u0001or\u0001another...",
+              "...tform,\u0001and\u0001your\u0001payment\u0001will\u0001 automatically\u0001be\u0001charged\u0001at\u0001the\u0001start\u0001of\u0001each\u0001new\u0001subscription\u0001period\u0001for\u0001the\u0001fees\u0001..."
+            ]
+          },
+          {
+            "category": "Broad content license",
+            "label": "Broad license to user content",
+            "points": 9,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "...\u0001(including\u0001sub- licensable),\u0001perpetual,\u0001worldwide\u0001license\u0001to\u0001use,\u0001modify,\u0001adapt,\u0001reproduce,\u0001make\u0001derivative\u0001 works\u0001of..."
+            ]
+          }
+        ],
+        "ai_severity": {
+          "rating": 8,
+          "points_added": 9.6,
+          "reasons": [
+            "High risk due to uncapped liability and mandatory arbitration."
+          ]
+        },
+        "languageDetection": {
+          "primary": "en",
+          "secondary": []
+        },
+        "summary": "**Executive Summary**: CapCut's Terms of Service present significant risks to users, particularly regarding liability, content ownership, and dispute resolution. The arbitration clause and broad indemnity provisions are especially concerning. \n\n**Risk Analysis**: \n• Unilateral Termination: CapCut reserves the right to terminate accounts for any reason, potentially disrupting user access and content.\n• Broad Content License: Users grant CapCut an irrevocable, royalty-free license to use their content, impacting ownership rights.\n• Indemnification: Users indemnify CapCut against all losses, including attorney's fees, creating uncapped financial exposure.\n• Mandatory Arbitration: Disputes are resolved through binding arbitration in Singapore, limiting legal recourse.\n\n**Strategic Posture**: Negotiate for fairer terms, especially regarding liability and content usage; otherwise, seek alternative platforms.",
+        "clauses": [
+          {
+            "type": "Liability",
+            "summary": "CapCut limits its liability for various losses.",
+            "riskLevel": "High",
+            "explanation": "CapCut disclaims liability for loss of profit, goodwill, data, and indirect damages, significantly limiting user recourse.",
+            "rebuttal": "Request a reciprocal limitation of liability or a cap on CapCut's liability.",
+            "originalExcerpt": "SUBJECT TO THE PARAGRAPH ABOVE, WE SHALL NOT BE LIABLE TO YOU FOR: (I) ANY LOSS OF PROFIT (WHETHER INCURRED DIRECTLY OR INDIRECTLY); (II) ANY LOSS OF GOODWILL; (III) ANY LOSS OF OPPORTUNITY; (IV) ANY LOSS, CORRUPTION, DISCLOSURE, ACCESS, ALTERATION, MISUSE, MANIPULATION OR OTHER UTILIZATION OF DATA SUFFERED BY YOU; OR (V) ANY INDIRECT, SPECIAL, INCIDENTAL, CONSEQUENTIAL OR PUNITIVE DAMAGES WHATSOEVER WHICH MAY BE INCURRED BY YOU; AND/OR"
+          },
+          {
+            "type": "Indemnity",
+            "summary": "Users indemnify CapCut against all losses.",
+            "riskLevel": "Critical",
+            "explanation": "The indemnity clause requires users to defend and hold CapCut harmless against all losses, including attorney's fees, creating uncapped financial exposure.",
+            "rebuttal": "Limit the indemnity to direct damages caused by user negligence or willful misconduct.",
+            "originalExcerpt": "YOU SHALL DEFEND, INDEMNIFY AND HOLD HARMLESS COMPANY, ITS PARENTS, SUBSIDIARIES, AND AFFILIATES, AND EACH OF THEIR RESPECTIVE OFFICERS, DIRECTORS, EMPLOYEES,SUBLICENSEES, AGENTS AND ADVISORS AND CREATORS AND THEIR ASSIGNS AND SUCCESSORS (EACH AN “INDEMNIFIED PARTY”) FROM AND AGAINST ANY AND ALL DIRECT AND INDIRECT LOSSES, CLAIMS, LIABILITIES, DAMAGES, COSTS, AND EXPENSES, INCLUDING, BUT NOT LIMITED TO, ATTORNEYS’ FEES AND EXPENSES, WHICH MAY BE SUFFERED OR INCURRED BY AN INDEMNIFIED PARTY OR ASSERTED AGAINST AN INDEMNIFIED PARTY ARISING OUT OF A BREACH BY YOU OR ANY USER OF YOUR ACCOUNT OF THESE TERMS OR APPLICABLE LAWS OR ARISING OUT OF A BREACH OF YOUR OBLIGATIONS, REPRESENTATION OR WARRANTIES UNDER THESE TERMS."
+          },
+          {
+            "type": "Arbitration",
+            "summary": "Disputes are resolved through binding arbitration in Singapore.",
+            "riskLevel": "High",
+            "explanation": "Mandatory arbitration in Singapore limits legal recourse and increases costs for users.",
+            "rebuttal": "Request a more accessible arbitration location or the option of small claims court.",
+            "originalExcerpt": "Any dispute arising out of or in connection with these Terms, including any question regarding existence, validity or termination of these Terms, shall be referred to and finally resolved by arbitration administered by the Singapore International Arbitration Centre in accordance with the Arbitration Rules of the Singapore International Arbitration Centre for the time being in force, which rules are deemed to be incorporated by reference in this clause. The seat of the arbitration shall be Singapore. The Tribunal shall consist of three (3) arbitrators. The language of the arbitration shall be English."
+          }
+        ],
+        "redFlags": [
+          {
+            "title": "Unilateral Changes",
+            "description": "CapCut can change the terms at any time.",
+            "implication": "Terms can be changed without user consent."
+          },
+          {
+            "title": "Content Ownership",
+            "description": "User content license is broad and irrevocable.",
+            "implication": "Loss of control over user-generated content."
+          }
+        ],
+        "missingProtections": [
+          {
+            "type": "Data Portability",
+            "description": "Lack of clear mechanism for users to export their data.",
+            "fix": "Request a provision allowing users to download their content in a standard format."
+          }
+        ],
+        "litigation_risk_index": 75,
+        "financial_exposure": "Uncapped Liability",
+        "fairness_metrics": {
+          "privacy": 4,
+          "liability": 2,
+          "transparency": 5,
+          "continuity": 3
+        },
+        "ambiguity_audit": [
+          {
+            "term": "Services",
+            "context": "Definition of Services is broad and subject to change.",
+            "risk": "Scope creep, potential for inclusion of unfavorable features."
+          },
+          {
+            "term": "Commercial reasonable efforts",
+            "context": "Notification of changes to terms.",
+            "risk": "Vague standard, potentially inadequate notice."
+          }
+        ],
+        "user_leverage": [
+          {
+            "point": "Market competition",
+            "strategy": "Highlight alternative platforms with fairer terms."
+          },
+          {
+            "point": "Negotiation of specific clauses",
+            "strategy": "Request modifications to indemnity and liability limitations."
+          }
+        ],
+        "nextSteps": [
+          "Consult with legal counsel.",
+          "Negotiate specific clauses with CapCut.",
+          "Evaluate alternative video editing platforms."
+        ],
+        "disclaimer": "Forensic AI analysis. Not legal advice.",
+        "wordCount": 1482
+      },
+      "id": "thvrau"
+    },
+    {
+      "userId": "demo@tclens.com",
+      "createdAt": "2026-03-15T11:54:26.811Z",
+      "inputType": "upload",
+      "sourceName": "Sckolas_Equity_Revenue_Framework_final.docx",
+      "jurisdiction": "MD (State / Region: BS)",
+      "wordCount": 2975,
+      "summaryTitle": "English Analysis - 3/15/2026 ",
+      "rawInputReference": "Sckolas_Equity_Revenue_Framework_final.docx",
+      "analysisResult": {
+        "risk_score": 29,
+        "risk_level": "Moderate",
+        "analysis_confidence": 90,
+        "components": {
+          "clause_risk": 6.3,
+          "aggressiveness": 12.2,
+          "transparency": 10
+        },
+        "breakdown": [
+          {
+            "category": "Warranty disclaimer",
+            "label": "Broad warranty disclaimers",
+            "points": 6.3,
+            "confidence": 0.9,
+            "magnitude": 1,
+            "evidence": [
+              "...issued share capital of Sckolas is divided into [10,000,000] ordinary shares of [₦1.00] each,..."
+            ]
+          }
+        ],
+        "ai_severity": {
+          "rating": 9,
+          "points_added": 12.2,
+          "reasons": [
+            "The document establishes a severe power imbalance, granting Co-Founders unilateral control over critical partner compensation and equity decisions, with minimal transparency or recourse for partners."
+          ]
+        },
+        "languageDetection": {
+          "primary": "English",
+          "secondary": []
+        },
+        "summary": "**Executive Summary**\nThis framework is a predatory instrument designed to consolidate Co-Founder power and minimize partner leverage, presenting a veneer of opportunity while embedding significant control mechanisms and subjective decision points. It systematically protects the Co-Founders' equity and discretion at the expense of partner security and autonomy.\n\n**Risk Analysis**\n• Unilateral Co-Founder control over critical financial and equity decisions, including \"need-based\" stipends and equity acceleration, creates extreme partner vulnerability.\n• Absence of a defined dispute resolution mechanism leaves partners without recourse against arbitrary Co-Founder decisions or interpretations.\n• The \"unallocated Partners' Pool\" for acceleration is a finite, controlled resource, ensuring Co-Founder stakes remain insulated from dilution.\n• Strict confidentiality clauses, coupled with undefined \"material breach\" in a referenced but unseen Shareholders' Agreement, expose partners to significant, undefined liability.\n\n**Strategic Posture**\nDemand immediate, non-negotiable amendments establishing independent arbitration, objective performance metrics, and clear partner exit provisions, or walk away.",
+        "clauses": [
+          {
+            "type": "Liability",
+            "summary": "Partners are exposed to undefined 'material breach' consequences, while Co-Founders retain broad discretion.",
+            "riskLevel": "Critical",
+            "explanation": "Section 6.2 references 'material misrepresentation, or breach of the Shareholders' Agreement' as grounds for unilateral equity revocation, but the Shareholders' Agreement is unseen. Section 8.4 makes breach of confidentiality a 'material breach.' This creates an open-ended liability for partners based on undefined terms and an undisclosed document.",
+            "rebuttal": "All grounds for equity revocation or material breach must be explicitly defined within this Framework or a fully disclosed, mutually agreed Shareholders' Agreement, with a clear, independent dispute resolution process.",
+            "originalExcerpt": "Vested equity is the permanent property of the holder and cannot be unilaterally revoked by the Company except in cases of proven fraud, material misrepresentation, or breach of the Shareholders' Agreement. (6.2) and Breach of this obligation constitutes a material breach of the relevant partnership or employment agreement. (8.4)"
+          },
+          {
+            "type": "Termination",
+            "summary": "Early exit before cliff results in total forfeiture, with no compensation.",
+            "riskLevel": "High",
+            "explanation": "Section 6.1 dictates that if a partner leaves before the 12-month cliff, all equity is forfeited with no compensation. This creates a significant lock-in period where a partner's effort yields no return if they depart early, regardless of contribution.",
+            "rebuttal": "In the event of early exit before cliff, a pro-rata compensation for services rendered, based on fair market value, shall be paid, or a mechanism for partial equity buy-back at a pre-agreed valuation.",
+            "originalExcerpt": "Early Exit (before cliff) All equity forfeited — no compensation payable (6.1)"
+          },
+          {
+            "type": "Data",
+            "summary": "Company CRM data is the sole arbiter of partner performance and attribution, without independent verification or appeal.",
+            "riskLevel": "Medium",
+            "explanation": "Sections 4.2.3 and 5.4 state that CRM data is used for commission attribution and equity acceleration reports. This grants the Company (specifically the CEO in 5.4) unilateral control over the data that directly impacts partner compensation and equity, without any audit or appeal mechanism for partners.",
+            "rebuttal": "All CRM and financial data used for partner compensation or equity decisions shall be subject to independent audit upon partner request, and a clear dispute resolution process for attribution discrepancies shall be established.",
+            "originalExcerpt": "Attribution Tracked via Company CRM system (4.2) and The CEO compiles a revenue attribution report for each equity partner using CRM and financial data. (5.4)"
+          },
+          {
+            "type": "Arbitration",
+            "summary": "No formal dispute resolution mechanism is provided for any disagreements arising from this Framework.",
+            "riskLevel": "Critical",
+            "explanation": "The absence of an arbitration or mediation clause means any dispute, from stipend amounts to equity acceleration, would likely escalate to costly and time-consuming litigation, heavily favoring the party with greater resources (the Company/Co-Founders).",
+            "rebuttal": "All disputes, controversies, or claims arising out of or relating to this Framework, or the breach, termination, or invalidity thereof, shall be settled by binding arbitration in [Jurisdiction, e.g., Lagos, Nigeria] in accordance with the rules of [e.g., Lagos Court of Arbitration].",
+            "originalExcerpt": "N/A - This clause is entirely missing."
+          }
+        ],
+        "redFlags": [
+          {
+            "title": "Unilateral Co-Founder Power",
+            "description": "Co-Founders retain absolute control over critical decisions: stipend amounts, equity acceleration thresholds, framework amendments, and protection of their own equity pool from dilution.",
+            "implication": "Partners are effectively indentured, with their financial and equity upside entirely at the discretion of the Co-Founders, creating a master-servant dynamic."
+          },
+          {
+            "title": "'Need-Based Stipend' as a Discretionary Tool",
+            "description": "The stipend for equity partners is explicitly 'need-based' and determined 'individually by the CEO' (4.1.1), not a guaranteed compensation.",
+            "implication": "This is not a salary but a precarious handout, allowing the CEO to exert financial pressure and control over partners, especially during the 'pre-profit phase'."
+          },
+          {
+            "title": "Protected Co-Founder Equity Pool",
+            "description": "Section 5.3 explicitly states that accelerated partner equity is drawn 'exclusively from the unallocated Partners' Pool' and 'The Co-Founders' stakes are not affected by partner equity acceleration under any circumstance.'",
+            "implication": "This ensures Co-Founders' 80% stake is sacrosanct, while partners compete for a limited, depletable pool, highlighting a fundamental power imbalance and lack of shared risk."
+          }
+        ],
+        "missingProtections": [
+          {
+            "type": "Independent Dispute Resolution",
+            "description": "No mechanism for partners to challenge Co-Founder decisions or interpretations of subjective clauses (e.g., 'need-based stipend,' 'good standing,' revenue attribution).",
+            "fix": "Implement mandatory, binding arbitration with an independent third-party arbitrator for all disputes."
+          },
+          {
+            "type": "Equity Valuation & Exit Strategy",
+            "description": "No clear process or valuation methodology for a partner's vested equity upon their exit, company sale, or Co-Founder buy-out.",
+            "fix": "Include a pre-defined valuation formula (e.g., 409A valuation, multiple of revenue/EBITDA) and clear buy-back/liquidity provisions in a comprehensive Shareholders' Agreement."
+          },
+          {
+            "type": "Protection Against Co-Founder Self-Dealing",
+            "description": "The 'Revenue Waterfall' (1.1) allows 'Operating Expenses' (Item 2) to be deducted before distributable profit, without clear limits or oversight, potentially allowing Co-Founders to inflate expenses to reduce partner profit share.",
+            "fix": "Establish an independent audit committee or require external auditor review of operating expenses, especially those related to Co-Founder compensation or related-party transactions, before profit distribution."
+          }
+        ],
+        "litigation_risk_index": 85,
+        "financial_exposure": "Uncapped for partners' time, effort, and potential lost opportunity; significant legal costs in dispute.",
+        "fairness_metrics": {
+          "privacy": 3,
+          "liability": 1,
+          "transparency": 2,
+          "continuity": 4
+        },
+        "ambiguity_audit": [
+          {
+            "term": "Need-based stipend",
+            "context": "Section 4.1.1, 'The amount is determined individually by the CEO based on the partner's circumstances and the Company's financial position.'",
+            "risk": "Grants the CEO absolute, unchecked power to deny or reduce stipends, creating financial precarity for partners. No objective criteria or appeal process."
+          },
+          {
+            "term": "Good standing",
+            "context": "Section 5.1, 'They are in good standing with no unresolved performance concerns, conduct issues, or breaches of their Partnership Agreement.'",
+            "risk": "Subjective term allowing Co-Founders to arbitrarily disqualify partners from equity acceleration based on undefined 'concerns' or 'issues' without clear criteria or an appeal process."
+          },
+          {
+            "term": "Shareholders' Agreement",
+            "context": "Section 6.2, 'The treatment of vested equity upon exit... shall be governed by the Company's Shareholders' Agreement, which all equity holders are required to sign.'",
+            "risk": "A critical, unseen document that dictates fundamental rights and obligations post-vesting. It's a black box that could contain further predatory clauses, binding partners to unknown, potentially detrimental terms."
+          }
+        ],
+        "user_leverage": [
+          {
+            "point": "The company needs partners to grow and achieve revenue targets.",
+            "strategy": "Demand a fully transparent, legally reviewed Shareholders' Agreement *before* signing anything. Insist on objective, measurable criteria for all discretionary decisions (stipends, acceleration)."
+          },
+          {
+            "point": "The current framework is inherently unstable and prone to disputes.",
+            "strategy": "Propose an independent, binding arbitration clause for all disputes arising from this Framework or the Shareholders' Agreement, protecting against costly litigation."
+          },
+          {
+            "point": "The 'unallocated Partners' Pool' is finite and can be depleted.",
+            "strategy": "Negotiate a guaranteed minimum percentage of the Founders' Pool to be allocated for partner acceleration *if* the Partners' Pool is exhausted, ensuring a clear path to higher equity."
+          }
+        ],
+        "nextSteps": [
+          "Demand a comprehensive, legally reviewed Shareholders' Agreement that explicitly defines all terms, rights, and obligations, and includes robust partner protections.",
+          "Insist on the inclusion of a binding, independent arbitration clause for all disputes.",
+          "Negotiate objective, measurable criteria and an appeal process for all discretionary decisions affecting partner compensation and equity (e.g., stipends, performance reviews, attribution).",
+          "Seek independent legal counsel to review the entire framework and any associated documents before signing."
+        ],
+        "disclaimer": "Forensic AI analysis. Not legal advice.",
+        "wordCount": 2975
+      },
+      "id": "77447p"
+    },
+    {
+      "userId": "demo@tclens.com",
+      "createdAt": "2026-03-15T12:03:57.435Z",
+      "inputType": "upload",
+      "sourceName": "Scanned Document_compressed.pdf",
+      "jurisdiction": "NG (State / Region: LA)",
+      "wordCount": 500,
+      "summaryTitle": "en Analysis - 3/15/2026 ",
+      "rawInputReference": "Scanned Document_compressed.pdf",
+      "analysisResult": {
+        "risk_score": 10,
+        "risk_level": "Low",
+        "analysis_confidence": 76,
+        "components": {
+          "clause_risk": 0,
+          "aggressiveness": 9.6,
+          "transparency": 0
+        },
+        "breakdown": [],
+        "ai_severity": {
+          "rating": 8,
+          "points_added": 9.6,
+          "reasons": [
+            "The agreement contains numerous one-sided clauses, broad indemnities, and vague terms that heavily favor the Landlord, exposing the Tenant to significant financial and legal risks with minimal security of tenure."
+          ]
+        },
+        "languageDetection": {
+          "primary": "en",
+          "secondary": []
+        },
+        "summary": "**Executive Summary**: The agreement heavily favors the Landlord, presenting numerous clauses that grant unilateral power, impose broad liabilities on the Tenant, and offer minimal security of tenure. The Tenant faces significant financial and operational risks due to vague terms and stringent breach conditions. **Risk Analysis**: • Uncapped liability for indemnification and Landlord's repair-related damages. • No guaranteed renewal, with rent subject to unilateral review. • Immediate termination for any covenant breach, regardless of materiality. • Ambiguous \"share\" for utility/service payments, open to arbitrary charges. **Strategic Posture**: Demand specific amendments to balance liabilities, clarify costs, and secure renewal terms before signing.",
+        "clauses": [
+          {
+            "type": "Liability/Indemnification",
+            "summary": "Tenant broadly indemnifies the Landlord against all damages from Tenant's acts/negligence and all costs/expenses from any breach enforcement.",
+            "riskLevel": "Critical",
+            "explanation": "This clause imposes an extremely wide and potentially uncapped financial liability on the Tenant for a vast range of incidents, including those that may be minor or not directly attributable to gross negligence, and for all costs incurred by the Landlord in enforcing any breach, however minor.",
+            "rebuttal": "The Tenant shall indemnify the Landlord against direct damages caused by the Tenant's proven gross negligence or willful misconduct, excluding normal wear and tear, and not for any costs arising from the Landlord's own negligence or breach of this agreement. The Tenant's liability for enforcement costs shall be limited to proven material breaches.",
+            "originalExcerpt": "(vii) To indemnify the Landlord against all damages to the demised premises or any adjacent or neighboring premises belonging to the Landlord or any person occasioned by act, default or negligence of the Tenant, its servant or Agents."
+          },
+          {
+            "type": "Renewal/Rent Review",
+            "summary": "Tenancy renewal is at the Landlord's sole discretion, and any future rent is subject to review based on 'prevailing economic value' without a defined cap.",
+            "riskLevel": "High",
+            "explanation": "The Tenant has no guaranteed right to renew the tenancy beyond the initial one-year term. The vague 'prevailing economic value' clause grants the Landlord unilateral power to impose arbitrary and potentially exorbitant rent increases, undermining tenure security and financial predictability.",
+            "rebuttal": "The Tenant shall have the option to renew this Tenancy for a further term of one (1) year, provided written notice is given three months prior to expiration. Any rent increase shall not exceed [X]% of the previous year's rent or the prevailing market rate, whichever is lower, and shall be mutually agreed upon, failing which, an independent valuer shall determine the rate.",
+            "originalExcerpt": "(xvii) Renewal of Tenancy Agreement is at the discretion of the Landlord. The Tenant wishing to renew his Tenancy shall give notice of such intention in writing to the Landlord at least three months prior to the expiration of the term hereby created for further term at a rent to be agreed upon. All such to be payable in advance, PROVIDED ALWAYS THAT, in the event that the parties are unable to agree on a rent to be attached to the option to renew, the term hereby lapsed by effluxion of time on the last day of the term certain."
+          },
+          {
+            "type": "Termination/Re-Entry",
+            "summary": "The Landlord can re-enter and terminate the agreement for any breach of covenants or conditions after 30 days' notice, or for rent unpaid for 21 days (whether demanded or not).",
+            "riskLevel": "High",
+            "explanation": "This clause allows the Landlord to terminate the tenancy for even minor, non-material breaches of the agreement, or for relatively short delays in rent payment, creating an extremely precarious and unstable living situation for the Tenant.",
+            "rebuttal": "The Landlord may re-enter the premises only for material breaches of covenant that remain unremedied after sixty (60) days written notice, or for rent unpaid for sixty (60) days after the due date, provided a formal demand for payment has been issued.",
+            "originalExcerpt": "(vi) Where the Tenant at any time fail, neglect to perform or observe any of the covenants or conditions contained in this Agreement and such breach shall continue for more than thirty(30) days after the Landlord shall have given a written notice to the Tenant requesting the Tenant to remedy such a breach, then and in any such case, it shall be lawful for the Landlord or any person(s) duly authorized by him for the purpose to peaceably repossess and enjoy the Rented Apartment as if this Agreement had not been made."
+          }
+        ],
+        "redFlags": [
+          {
+            "title": "Unilateral Rent Review",
+            "description": "The rent is 'subject to review at the expiration of the said one year in line with the prevailing economic value' without any defined cap or negotiation process.",
+            "implication": "The Landlord holds absolute power to impose significant, arbitrary rent increases at the end of the term, effectively forcing the Tenant to accept unfavorable terms or vacate the property."
+          },
+          {
+            "title": "Broad Indemnification & No Compensation for Landlord's Repairs",
+            "description": "The Tenant indemnifies the Landlord for 'all damages' and 'all cost, damage and expenses' from any breach, and must permit Landlord's repairs without compensation for 'nuisance, annoyance, inconvenience, or damage'.",
+            "implication": "The Tenant faces uncapped financial exposure for a wide range of incidents and bears the full burden of disruption and potential loss of amenity during Landlord-initiated repairs, with no recourse or protection."
+          },
+          {
+            "title": "Termination for 'Any' Breach",
+            "description": "The Landlord can re-enter and terminate the agreement if the Tenant fails to perform 'any of the covenants or conditions' after 30 days' notice, or for rent unpaid for 21 days.",
+            "implication": "This clause creates an extremely unstable tenancy, allowing the Landlord to evict the Tenant for even minor infractions or short delays, giving the Tenant minimal security of tenure."
+          }
+        ],
+        "missingProtections": [
+          {
+            "type": "Rent Increase Cap",
+            "description": "The agreement lacks a clear cap or formula for rent increases upon renewal, leaving the Tenant vulnerable to arbitrary hikes.",
+            "fix": "Include a clause specifying a maximum percentage increase (e.g., linked to inflation or a fixed percentage) or a clear, objective formula for rent adjustments upon renewal."
+          },
+          {
+            "type": "Dispute Resolution Mechanism",
+            "description": "There is no specified mechanism for resolving disputes between the parties outside of potential litigation, which can be costly and time-consuming.",
+            "fix": "Add a clause mandating mediation or arbitration as the primary method for resolving disputes arising from the agreement, before resorting to court action."
+          },
+          {
+            "type": "Landlord's Liability for Negligence",
+            "description": "While the Tenant broadly indemnifies the Landlord, there is no reciprocal clause holding the Landlord liable for damages caused by their own negligence or failure to maintain the property.",
+            "fix": "Include a clause stating that the Landlord shall be liable for damages or losses incurred by the Tenant due to the Landlord's gross negligence, willful misconduct, or failure to fulfill their covenants under this agreement."
+          }
+        ],
+        "litigation_risk_index": 75,
+        "financial_exposure": "Uncapped Liability",
+        "fairness_metrics": {
+          "privacy": 5,
+          "liability": 2,
+          "transparency": 4,
+          "continuity": 1
+        },
+        "ambiguity_audit": [
+          {
+            "term": "prevailing economic value",
+            "context": "Rent review at expiration of term.",
+            "risk": "Landlord can arbitrarily increase rent without a clear, objective metric or cap, leading to potential exploitation."
+          },
+          {
+            "term": "his/her share",
+            "context": "Payment for electric, water, security, sanitation/waste removal etc.",
+            "risk": "The method for determining the Tenant's 'share' is undefined, allowing for arbitrary allocation and potential overcharging by the Landlord."
+          },
+          {
+            "term": "any condition herein contain",
+            "context": "Landlord's right to eject the Tenant.",
+            "risk": "Allows the Landlord to terminate the tenancy for even minor, non-material breaches, creating an unstable and precarious tenancy for the Tenant."
+          },
+          {
+            "term": "reasonable nuisance, annoyance, inconvenience, or damage",
+            "context": "Landlord's right to carry out repairs without compensation to Tenant.",
+            "risk": "Tenant bears the full burden of disruption, inconvenience, and potential damage during Landlord-initiated repairs, with no recourse for compensation."
+          }
+        ],
+        "user_leverage": [
+          {
+            "point": "Advance payment of N1,500,000 for the full year.",
+            "strategy": "Use this significant upfront commitment as leverage to negotiate specific amendments, particularly regarding renewal terms, rent increase caps, and liability limitations."
+          },
+          {
+            "point": "Landlord's desire for a stable and responsible tenant.",
+            "strategy": "Propose a longer initial term (e.g., 2 years) or a clear, defined renewal option with a pre-agreed rent increase formula to ensure tenure security."
+          }
+        ],
+        "nextSteps": [
+          "Consult with an independent legal counsel specializing in property law in Lagos State, Nigeria, to review these findings and advise on local tenancy laws.",
+          "Draft specific counter-proposals for the identified problematic clauses, focusing on balancing liabilities, clarifying ambiguous terms, and securing tenure.",
+          "Negotiate all terms with the Landlord or their representative before signing the agreement, ensuring all agreed-upon changes are incorporated in writing."
+        ],
+        "disclaimer": "Forensic AI analysis. Not legal advice.",
+        "wordCount": 500
+      },
+      "id": "jox89p"
+    },
+    {
+      "userId": "demo@tclens.com",
+      "createdAt": "2026-03-15T12:06:53.337Z",
+      "inputType": "upload",
+      "sourceName": "Scanned Document_compressed.pdf",
+      "jurisdiction": "NG (State / Region: LA)",
+      "wordCount": 500,
+      "summaryTitle": "en Analysis - 3/15/2026 ",
+      "rawInputReference": "Scanned Document_compressed.pdf",
+      "analysisResult": {
+        "risk_score": 10,
+        "risk_level": "Low",
+        "analysis_confidence": 74,
+        "components": {
+          "clause_risk": 0,
+          "aggressiveness": 9.6,
+          "transparency": 0
+        },
+        "breakdown": [],
+        "ai_severity": {
+          "rating": 8,
+          "points_added": 9.6,
+          "reasons": [
+            "The agreement contains numerous one-sided clauses, broad indemnities, and vague terms that heavily favor the Landlord, exposing the Tenant to significant financial and legal risks with minimal security of tenure."
+          ]
+        },
+        "languageDetection": {
+          "primary": "en",
+          "secondary": []
+        },
+        "summary": "**Executive Summary**: The agreement heavily favors the Landlord, presenting numerous clauses that grant unilateral power, impose broad liabilities on the Tenant, and offer minimal security of tenure. The Tenant faces significant financial and operational risks due to vague terms and stringent breach conditions. **Risk Analysis**: • Uncapped liability for indemnification and Landlord's repair-related damages. • No guaranteed renewal, with rent subject to unilateral review. • Immediate termination for any covenant breach, regardless of materiality. • Ambiguous \"share\" for utility/service payments, open to arbitrary charges. **Strategic Posture**: Demand specific amendments to balance liabilities, clarify costs, and secure renewal terms before signing.",
+        "clauses": [
+          {
+            "type": "Liability/Indemnification",
+            "summary": "Tenant broadly indemnifies the Landlord against all damages from Tenant's acts/negligence and all costs/expenses from any breach enforcement.",
+            "riskLevel": "Critical",
+            "explanation": "This clause imposes an extremely wide and potentially uncapped financial liability on the Tenant for a vast range of incidents, including those that may be minor or not directly attributable to gross negligence, and for all costs incurred by the Landlord in enforcing any breach, however minor.",
+            "rebuttal": "The Tenant shall indemnify the Landlord against direct damages caused by the Tenant's proven gross negligence or willful misconduct, excluding normal wear and tear, and not for any costs arising from the Landlord's own negligence or breach of this agreement. The Tenant's liability for enforcement costs shall be limited to proven material breaches.",
+            "originalExcerpt": "(vii) To indemnify the Landlord against all damages to the demised premises or any adjacent or neighboring premises belonging to the Landlord or any person occasioned by act, default or negligence of the Tenant, its servant or Agents."
+          },
+          {
+            "type": "Renewal/Rent Review",
+            "summary": "Tenancy renewal is at the Landlord's sole discretion, and any future rent is subject to review based on 'prevailing economic value' without a defined cap.",
+            "riskLevel": "High",
+            "explanation": "The Tenant has no guaranteed right to renew the tenancy beyond the initial one-year term. The vague 'prevailing economic value' clause grants the Landlord unilateral power to impose arbitrary and potentially exorbitant rent increases, undermining tenure security and financial predictability.",
+            "rebuttal": "The Tenant shall have the option to renew this Tenancy for a further term of one (1) year, provided written notice is given three months prior to expiration. Any rent increase shall not exceed [X]% of the previous year's rent or the prevailing market rate, whichever is lower, and shall be mutually agreed upon, failing which, an independent valuer shall determine the rate.",
+            "originalExcerpt": "(xvii) Renewal of Tenancy Agreement is at the discretion of the Landlord. The Tenant wishing to renew his Tenancy shall give notice of such intention in writing to the Landlord at least three months prior to the expiration of the term hereby created for further term at a rent to be agreed upon. All such to be payable in advance, PROVIDED ALWAYS THAT, in the event that the parties are unable to agree on a rent to be attached to the option to renew, the term hereby lapsed by effluxion of time on the last day of the term certain."
+          },
+          {
+            "type": "Termination/Re-Entry",
+            "summary": "The Landlord can re-enter and terminate the agreement for any breach of covenants or conditions after 30 days' notice, or for rent unpaid for 21 days (whether demanded or not).",
+            "riskLevel": "High",
+            "explanation": "This clause allows the Landlord to terminate the tenancy for even minor, non-material breaches of the agreement, or for relatively short delays in rent payment, creating an extremely precarious and unstable living situation for the Tenant.",
+            "rebuttal": "The Landlord may re-enter the premises only for material breaches of covenant that remain unremedied after sixty (60) days written notice, or for rent unpaid for sixty (60) days after the due date, provided a formal demand for payment has been issued.",
+            "originalExcerpt": "(vi) Where the Tenant at any time fail, neglect to perform or observe any of the covenants or conditions contained in this Agreement and such breach shall continue for more than thirty(30) days after the Landlord shall have given a written notice to the Tenant requesting the Tenant to remedy such a breach, then and in any such case, it shall be lawful for the Landlord or any person(s) duly authorized by him for the purpose to peaceably repossess and enjoy the Rented Apartment as if this Agreement had not been made."
+          }
+        ],
+        "redFlags": [
+          {
+            "title": "Unilateral Rent Review",
+            "description": "The rent is 'subject to review at the expiration of the said one year in line with the prevailing economic value' without any defined cap or negotiation process.",
+            "implication": "The Landlord holds absolute power to impose significant, arbitrary rent increases at the end of the term, effectively forcing the Tenant to accept unfavorable terms or vacate the property."
+          },
+          {
+            "title": "Broad Indemnification & No Compensation for Landlord's Repairs",
+            "description": "The Tenant indemnifies the Landlord for 'all damages' and 'all cost, damage and expenses' from any breach, and must permit Landlord's repairs without compensation for 'nuisance, annoyance, inconvenience, or damage'.",
+            "implication": "The Tenant faces uncapped financial exposure for a wide range of incidents and bears the full burden of disruption and potential loss of amenity during Landlord-initiated repairs, with no recourse or protection."
+          },
+          {
+            "title": "Termination for 'Any' Breach",
+            "description": "The Landlord can re-enter and terminate the agreement if the Tenant fails to perform 'any of the covenants or conditions' after 30 days' notice, or for rent unpaid for 21 days.",
+            "implication": "This clause creates an extremely unstable tenancy, allowing the Landlord to evict the Tenant for even minor infractions or short delays, giving the Tenant minimal security of tenure."
+          }
+        ],
+        "missingProtections": [
+          {
+            "type": "Rent Increase Cap",
+            "description": "The agreement lacks a clear cap or formula for rent increases upon renewal, leaving the Tenant vulnerable to arbitrary hikes.",
+            "fix": "Include a clause specifying a maximum percentage increase (e.g., linked to inflation or a fixed percentage) or a clear, objective formula for rent adjustments upon renewal."
+          },
+          {
+            "type": "Dispute Resolution Mechanism",
+            "description": "There is no specified mechanism for resolving disputes between the parties outside of potential litigation, which can be costly and time-consuming.",
+            "fix": "Add a clause mandating mediation or arbitration as the primary method for resolving disputes arising from the agreement, before resorting to court action."
+          },
+          {
+            "type": "Landlord's Liability for Negligence",
+            "description": "While the Tenant broadly indemnifies the Landlord, there is no reciprocal clause holding the Landlord liable for damages caused by their own negligence or failure to maintain the property.",
+            "fix": "Include a clause stating that the Landlord shall be liable for damages or losses incurred by the Tenant due to the Landlord's gross negligence, willful misconduct, or failure to fulfill their covenants under this agreement."
+          }
+        ],
+        "litigation_risk_index": 75,
+        "financial_exposure": "Uncapped Liability",
+        "fairness_metrics": {
+          "privacy": 5,
+          "liability": 2,
+          "transparency": 4,
+          "continuity": 1
+        },
+        "ambiguity_audit": [
+          {
+            "term": "prevailing economic value",
+            "context": "Rent review at expiration of term.",
+            "risk": "Landlord can arbitrarily increase rent without a clear, objective metric or cap, leading to potential exploitation."
+          },
+          {
+            "term": "his/her share",
+            "context": "Payment for electric, water, security, sanitation/waste removal etc.",
+            "risk": "The method for determining the Tenant's 'share' is undefined, allowing for arbitrary allocation and potential overcharging by the Landlord."
+          },
+          {
+            "term": "any condition herein contain",
+            "context": "Landlord's right to eject the Tenant.",
+            "risk": "Allows the Landlord to terminate the tenancy for even minor, non-material breaches, creating an unstable and precarious tenancy for the Tenant."
+          },
+          {
+            "term": "reasonable nuisance, annoyance, inconvenience, or damage",
+            "context": "Landlord's right to carry out repairs without compensation to Tenant.",
+            "risk": "Tenant bears the full burden of disruption, inconvenience, and potential damage during Landlord-initiated repairs, with no recourse for compensation."
+          }
+        ],
+        "user_leverage": [
+          {
+            "point": "Advance payment of N1,500,000 for the full year.",
+            "strategy": "Use this significant upfront commitment as leverage to negotiate specific amendments, particularly regarding renewal terms, rent increase caps, and liability limitations."
+          },
+          {
+            "point": "Landlord's desire for a stable and responsible tenant.",
+            "strategy": "Propose a longer initial term (e.g., 2 years) or a clear, defined renewal option with a pre-agreed rent increase formula to ensure tenure security."
+          }
+        ],
+        "nextSteps": [
+          "Consult with an independent legal counsel specializing in property law in Lagos State, Nigeria, to review these findings and advise on local tenancy laws.",
+          "Draft specific counter-proposals for the identified problematic clauses, focusing on balancing liabilities, clarifying ambiguous terms, and securing tenure.",
+          "Negotiate all terms with the Landlord or their representative before signing the agreement, ensuring all agreed-upon changes are incorporated in writing."
+        ],
+        "disclaimer": "Forensic AI analysis. Not legal advice.",
+        "wordCount": 500
+      },
+      "id": "eze3ho"
     }
   ],
   "messages": [
@@ -667,6 +1770,46 @@
       "content": "hhii",
       "createdAt": "2026-03-14T22:47:40.882Z",
       "id": "cq5gbm"
+    },
+    {
+      "analysisId": "s2v1dh",
+      "userId": "demo@tclens.com",
+      "role": "user",
+      "content": "Hello",
+      "createdAt": "2026-03-15T11:37:41.231Z",
+      "id": "sxftmd"
+    },
+    {
+      "analysisId": "77447p",
+      "userId": "demo@tclens.com",
+      "role": "user",
+      "content": "Can this contract land one in jail?",
+      "createdAt": "2026-03-15T11:57:00.293Z",
+      "id": "lh1ptr"
+    },
+    {
+      "analysisId": "77447p",
+      "userId": "demo@tclens.com",
+      "role": "assistant",
+      "content": "No, the provided analysis indicates no provisions within this framework that could directly lead to criminal charges or **incarceration** for a partner.\n\nThe identified risks primarily concern **civil liability**, **contractual breaches**, **equity revocation**, and **financial forfeiture**. These issues typically result in monetary damages or loss of contractual rights, not criminal penalties.",
+      "createdAt": "2026-03-15T11:57:04.945Z",
+      "id": "64tkxk"
+    },
+    {
+      "analysisId": "eze3ho",
+      "userId": "demo@tclens.com",
+      "role": "user",
+      "content": "What did they sayabout the funitures i bring to the house? and this contract is btwn who and who?  mean thier names",
+      "createdAt": "2026-03-15T12:09:50.116Z",
+      "id": "hll6fs"
+    },
+    {
+      "analysisId": "eze3ho",
+      "userId": "demo@tclens.com",
+      "role": "assistant",
+      "content": "The provided document **context does not mention** any specific clauses regarding **furniture** or personal belongings the Tenant brings to the property.\n\nThe contract is between the **Landlord** and the **Tenant**. The provided summary **does not specify their names**, referring to them only by these roles.",
+      "createdAt": "2026-03-15T12:09:55.266Z",
+      "id": "2sruf"
     }
   ],
   "cases": [],

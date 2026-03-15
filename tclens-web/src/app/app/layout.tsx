@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import { Sun, Moon, Laptop, Loader2, AlertCircle, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 export default function AppLayout({
     children,
@@ -132,7 +133,7 @@ export default function AppLayout({
                         </Button>
                     </div>
                 )}
-                <header className="h-20 border-b border-border bg-white/80 backdrop-blur-xl sticky top-0 z-30 px-6 md:px-10 flex items-center justify-between">
+                <header className="h-16 md:h-20 border-b border-border bg-white/80 backdrop-blur-xl sticky top-0 z-30 px-4 md:px-10 flex items-center justify-between">
                     {/* Mobile Menu Toggle */}
                     <button
                         onClick={() => setIsMobileMenuOpen(true)}
@@ -141,16 +142,30 @@ export default function AppLayout({
                         <Menu className="w-6 h-6" />
                     </button>
 
-                    <div className="flex flex-col hidden lg:block">
-                        <h2 className="text-lg font-bold text-slate-900 leading-none tracking-tight">
-                            Welcome back, <span className="text-tclens-600">{user?.firstName || 'Counsel'}</span>
-                        </h2>
-                        <p className="text-[10px] font-black text-slate-400 mt-1.5 uppercase tracking-[0.2em] flex items-center gap-2">
-                            Workspace <span className="text-slate-200">/</span> Overview
-                        </p>
+                    <div className="flex flex-col">
+                        <motion.h2 
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.5, ease: "easeOut" }}
+                            className="text-sm md:text-lg font-bold text-slate-900 leading-none tracking-tight flex items-center gap-2"
+                        >
+                            {pathname === '/app/ai-lawyer' ? (
+                                "AI Legal Assistant"
+                            ) : (
+                                <>
+                                    Welcome back, <span className="text-tclens-600 truncate max-w-[100px] md:max-w-none">{user?.firstName || 'Counsel'}</span>
+                                    <span className="animate-waving-hand inline-block">👋</span>
+                                </>
+                            )}
+                        </motion.h2>
                     </div>
 
-                    <div className="flex items-center gap-4 md:gap-8 ml-auto">
+                    <motion.div 
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+                        className="flex items-center gap-4 md:gap-8 ml-auto"
+                    >
                         <div className="hidden md:flex flex-col items-end text-right">
                             <span className="text-sm font-bold text-slate-900 leading-none">
                                 {user ? `${user.firstName} ${user.lastName}` : "TCLens User"}
@@ -163,9 +178,9 @@ export default function AppLayout({
                         <div className="w-10 h-10 rounded-xl bg-tclens-500 flex items-center justify-center text-white text-xs font-bold border border-tclens-400 shadow-xl shadow-tclens-500/10 transition-transform hover:scale-105 cursor-pointer">
                             {user ? `${user.firstName[0]}${user.lastName[0]}` : "TL"}
                         </div>
-                    </div>
+                    </motion.div>
                 </header>
-                <main className="flex-1 p-6 md:p-8">
+                <main className="flex-1 p-4 md:p-8 lg:p-10">
                     {children}
                 </main>
             </div>

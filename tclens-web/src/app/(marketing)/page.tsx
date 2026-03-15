@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -34,22 +34,22 @@ export default function Home() {
             <main className="relative z-10">
                 {/* Hero Section */}
                 <section className="relative px-6 py-12 md:py-20 lg:py-24 overflow-hidden">
-                    <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start gap-16">
+                    <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center lg:items-start gap-16">
                         <div className="flex-1 text-center lg:text-left space-y-8">
                             <motion.h1
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-950 leading-[1.1]"
+                                className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.1]"
                             >
                                 Analyze Anywhere, <br />
-                                <span className="text-tclens-500">Empower</span> Your Future
+                                <span className="bg-gradient-to-r from-tclens-500 to-tclens-800 bg-clip-text text-transparent">Empower</span> Your Future
                             </motion.h1>
 
                             <motion.p
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.1 }}
-                                className="text-base text-slate-500 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium"
+                                className="text-base text-slate-500 max-w-xl mx-auto lg:mx-0 leading-snug font-medium"
                             >
                                 Join thousands of professionals gaining instant clarity on complex contracts and legal documents—one clause at a time. No jargon, just insights.
                             </motion.p>
@@ -70,7 +70,7 @@ export default function Home() {
                         </div>
 
                         {/* AI Workflow Animation */}
-                        <div className="flex-1 relative lg:-mt-8 overflow-visible">
+                        <div className="flex-1 relative overflow-visible">
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
@@ -96,8 +96,8 @@ export default function Home() {
                             className="text-center max-w-3xl mx-auto mb-12 space-y-4"
                         >
                             <h2 className="text-sm font-bold text-tclens-500 uppercase tracking-widest">Built for humans</h2>
-                            <h3 className="text-2xl md:text-4xl font-extrabold text-slate-950">Professional insights, no law degree required.</h3>
-                            <p className="text-slate-500 font-medium leading-relaxed">We simplify complex legal terms into actionable insights you can actually use.</p>
+                            <h3 className="text-2xl md:text-4xl font-extrabold text-slate-900">Professional insights, no law degree required.</h3>
+                            <p className="text-slate-500 font-medium leading-snug">We simplify complex legal terms into actionable insights you can actually use.</p>
                         </motion.div>
 
                         <motion.div
@@ -159,7 +159,7 @@ export default function Home() {
                                         {feature.icon}
                                     </div>
                                     <h4 className="text-xl font-bold mb-3 text-slate-900">{feature.title}</h4>
-                                    <p className="text-slate-600 leading-relaxed text-sm">{feature.desc}</p>
+                                    <p className="text-slate-600 leading-snug text-sm">{feature.desc}</p>
                                 </motion.div>
                             ))}
                         </motion.div>
@@ -178,7 +178,7 @@ export default function Home() {
                         >
                             <div className="space-y-4">
                                 <h2 className="text-sm font-bold text-tclens-500 uppercase tracking-widest">How it works</h2>
-                                <h3 className="text-2xl md:text-5xl font-extrabold leading-tight text-slate-950">Simplify Your Workflow in Seconds</h3>
+                                <h3 className="text-2xl md:text-5xl font-extrabold leading-tight text-slate-900">Simplify Your Workflow in Seconds</h3>
                             </div>
 
                             <div className="space-y-8">
@@ -195,12 +195,12 @@ export default function Home() {
                                         transition={{ delay: 0.1 * (i + 1) }}
                                         className="flex gap-6 group"
                                     >
-                                        <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-center text-slate-950 font-black text-lg group-hover:bg-tclens-500 group-hover:text-white transition-all shrink-0">
+                                        <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-center text-slate-900 font-black text-lg group-hover:bg-tclens-500 group-hover:text-white transition-all shrink-0">
                                             {step.step}
                                         </div>
                                         <div className="space-y-2">
                                             <h4 className="text-xl font-bold text-slate-900">{step.title}</h4>
-                                            <p className="text-slate-500 leading-relaxed text-sm font-medium">{step.desc}</p>
+                                            <p className="text-slate-500 leading-snug text-sm font-medium">{step.desc}</p>
                                         </div>
                                     </motion.div>
                                 ))}
@@ -231,7 +231,7 @@ export default function Home() {
                         <div className="w-16 h-16 md:w-20 md:h-20 bg-tclens-50 rounded-xl flex items-center justify-center mx-auto mb-6 md:mb-8 border border-tclens-100">
                             <CheckCircle2 className="w-8 h-8 md:w-10 md:h-10 text-tclens-500" />
                         </div>
-                        <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-950 leading-tight">
+                        <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
                             Ready to take <br /> <span className="text-tclens-500">control</span> of your future?
                         </h2>
                         <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">

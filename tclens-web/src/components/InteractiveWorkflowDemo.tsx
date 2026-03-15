@@ -27,19 +27,20 @@ export function InteractiveWorkflowDemo() {
         <div className="w-full relative group">
             {/* Browser Header / Container */}
             <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200">
-                <div className="bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center gap-4">
+                <div className="bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center justify-between md:justify-start gap-4">
                     <div className="flex gap-1.5">
                         <div className="w-2.5 h-2.5 rounded-full bg-red-400/50" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-amber-400/50" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-400/50" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-amber-400/50 hidden sm:block" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-400/50 hidden sm:block" />
                     </div>
-                    <div className="flex-1 max-w-sm h-6 bg-white rounded-md border border-slate-200 flex items-center px-3 gap-2">
+                    <div className="flex-1 max-w-[200px] sm:max-w-sm h-6 bg-white rounded-md border border-slate-200 flex items-center px-3 gap-2 mx-auto">
                         <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        <div className="text-[9px] font-bold text-slate-400 tracking-tight uppercase">app.tclens.io/analysis</div>
+                        <div className="text-[9px] font-bold text-slate-400 tracking-tight uppercase truncate">app.tclens.io/analysis</div>
                     </div>
+                    <div className="w-6 md:hidden" /> {/* Spacer for centering on mobile */}
                 </div>
 
-                <div className="aspect-[16/10] bg-slate-50 p-6 flex gap-6 overflow-hidden relative">
+                <div className="h-[550px] md:h-auto md:aspect-[16/10] bg-slate-50 p-4 md:p-6 flex flex-col md:flex-row gap-4 md:gap-6 overflow-hidden relative">
                     {/* Left: Document View */}
                     <div className="flex-1 bg-white rounded-xl shadow-sm border border-slate-100 p-6 relative overflow-hidden">
                         <div className="flex items-center gap-3 mb-6 border-b border-slate-50 pb-4">
@@ -90,12 +91,12 @@ export function InteractiveWorkflowDemo() {
                             }}
                             className="absolute z-20 pointer-events-none"
                         >
-                            <MousePointer2 className="w-4 h-4 text-slate-950 fill-white" />
+                            <MousePointer2 className="w-4 h-4 text-slate-900 fill-white" />
                         </motion.div>
                     </div>
 
                     {/* Right: AI Panel */}
-                    <div className="w-56 space-y-4 relative">
+                    <div className="w-full md:w-56 space-y-4 relative shrink-0">
                         <AnimatePresence mode="wait">
                             {activeStep === 0 && (
                                 <motion.div
@@ -128,7 +129,7 @@ export function InteractiveWorkflowDemo() {
                                 >
                                     <div className="flex items-center gap-2 mb-2 pb-2 border-b border-slate-50">
                                         <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                                        <div className="text-[9px] font-black text-slate-950 uppercase tracking-tight">Active Analysis</div>
+                                        <div className="text-[9px] font-black text-slate-900 uppercase tracking-tight">Active Analysis</div>
                                     </div>
 
                                     <div className="space-y-3">

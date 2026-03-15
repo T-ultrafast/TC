@@ -40,7 +40,7 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <body className={cn(
-                "min-h-screen bg-background font-sans antialiased text-foreground",
+                "min-h-screen bg-background font-sans antialiased text-foreground overflow-x-hidden relative",
                 inter.variable,
                 jakarta.variable,
                 playfair.variable,
@@ -48,8 +48,9 @@ export default function RootLayout({
             )}>
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="system"
-                    enableSystem
+                    defaultTheme="light"
+                    enableSystem={false}
+                    forcedTheme="light"
                     disableTransitionOnChange
                 >
                     {children}

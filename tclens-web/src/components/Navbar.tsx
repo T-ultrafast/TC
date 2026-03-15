@@ -59,22 +59,7 @@ export function Navbar() {
                 </div>
 
                 <div className="flex items-center gap-6">
-                    {!isLoggedIn ? (
-                        <>
-                            <Link href="/signin" className="text-[13px] font-bold text-slate-500 hover:text-tclens-500 transition-colors hidden sm:block">
-                                Login
-                            </Link>
-                            <Button
-                                className="bg-tclens-500 hover:bg-tclens-600 text-white rounded-card px-5 h-10 font-bold text-sm transition-all border border-tclens-400"
-                                asChild
-                            >
-                                <Link href="/signup">
-                                    Sign Up
-                                    <ArrowRight className="ml-2 w-3.5 h-3.5" />
-                                </Link>
-                            </Button>
-                        </>
-                    ) : (
+                    {!isLoggedIn ? null : (
                         <Button
                             className="bg-tclens-500 hover:bg-tclens-600 text-white rounded-card px-6 font-bold text-sm"
                             asChild
@@ -125,7 +110,7 @@ export function Navbar() {
                                 >
                                     <Link
                                         href={item.href}
-                                        className="text-3xl font-bold text-slate-900 py-3 block border-b border-slate-50"
+                                        className="text-2xl font-medium text-slate-900 py-3 block border-b border-slate-50 tracking-tight"
                                         onClick={() => setMobileMenuOpen(false)}
                                     >
                                         {item.name}
@@ -142,7 +127,7 @@ export function Navbar() {
                             >
                                 <Link
                                     href="/signin"
-                                    className="text-lg font-bold text-slate-600 px-2 py-4 block hover:text-tclens-500 transition-colors"
+                                    className="text-lg font-medium text-slate-500 px-2 py-4 block hover:text-tclens-500 transition-colors"
                                     onClick={() => setMobileMenuOpen(false)}
                                 >
                                     Login to Account
@@ -153,7 +138,7 @@ export function Navbar() {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.4 }}
                             >
-                                <Button size="lg" className="w-full h-16 bg-tclens-500 text-white rounded-card font-bold text-lg shadow-xl shadow-tclens-500/20" asChild>
+                                <Button size="lg" className="w-full h-16 bg-tclens-500 text-white rounded-card font-bold text-lg shadow-none" asChild>
                                     <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>Create Free Account</Link>
                                 </Button>
                             </motion.div>

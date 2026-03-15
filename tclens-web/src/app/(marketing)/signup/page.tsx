@@ -103,7 +103,7 @@ function SignUpForm() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-white font-jakarta pt-14">
+        <div className="min-h-screen flex flex-col bg-white font-jakarta pt-24 md:pt-32">
             <div className="flex-1 flex overflow-hidden">
                 {/* Left Side: Friendly Brand Panel */}
                 <motion.div
@@ -122,11 +122,15 @@ function SignUpForm() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="w-full lg:w-[52%] flex flex-col justify-center px-6 md:px-20 lg:px-24 bg-white relative"
+                    className="w-full lg:w-[52%] flex flex-col justify-center px-6 md:px-20 lg:px-24 bg-white relative py-12"
                 >
                     <div className="max-w-md w-full mx-auto space-y-8">
+                        <div className="text-center lg:text-left space-y-2">
+                            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">Welcome to TcLens</h1>
+                            <p className="text-sm font-medium text-slate-500">Join thousands of users simplifying legal review</p>
+                        </div>
                         <div className="space-y-2">
-                            <h2 className="text-xl font-bold text-slate-900 tracking-tight text-center lg:text-left">Create your account</h2>
+                            <h2 className="text-sm font-bold text-tclens-500 uppercase tracking-widest text-center lg:text-left">Create your account</h2>
                             <div className="flex items-center gap-3">
                                 <div className={cn("h-1.5 flex-1 rounded-full bg-slate-100 transition-colors", step >= 1 && "bg-tclens-500")} />
                                 <div className={cn("h-1.5 flex-1 rounded-full bg-slate-100 transition-colors", step >= 2 && "bg-tclens-500")} />

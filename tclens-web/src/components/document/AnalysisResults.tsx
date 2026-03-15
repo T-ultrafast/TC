@@ -2,6 +2,7 @@
 
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import {
@@ -28,7 +29,8 @@ import {
     RefreshCw,
     Download,
     Link as LinkIcon,
-    MessageCircle
+    MessageCircle,
+    Globe
 } from 'lucide-react';
 
 interface AnalysisResultsProps {
@@ -39,6 +41,7 @@ interface AnalysisResultsProps {
     chatLoading: boolean;
     handleChatSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
     handleDownloadAnalysisPdf: () => void;
+    analysisId?: string | null;
     loading?: boolean;
 }
 
@@ -50,8 +53,10 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
     chatLoading,
     handleChatSubmit,
     handleDownloadAnalysisPdf,
+    analysisId,
     loading = false
 }) => {
+    const router = useRouter();
     const [statusIndex, setStatusIndex] = React.useState(0);
     const forensicStatuses = [
         { message: "Initializing Forensic Scan...", icon: Search, color: "text-tclens-500", detail: "Synchronizing intelligence nodes..." },
@@ -78,21 +83,21 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
         const CurrentIcon = current.icon;
 
         return (
-            <div className="h-full min-h-[550px] flex flex-col items-center justify-center text-center p-12 bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.06)] relative overflow-hidden animate-in fade-in zoom-in-95 duration-1000">
+            <div className="h-full min-h-[500px] flex flex-col items-center justify-center text-center p-6 md:p-12 bg-white rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.06)] relative overflow-hidden animate-in fade-in zoom-in-95 duration-1000">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(5,150,105,0.03),transparent_50%)]" />
                 <div className="absolute inset-0 bg-grid-slate-100/50 [mask-image:linear-gradient(to_bottom,white,transparent)]" />
 
-                <div className="relative mb-16 h-32 w-32 flex items-center justify-center">
+                <div className="relative mb-10 md:mb-16 h-24 w-24 md:h-32 md:w-32 flex items-center justify-center">
                     <div className="absolute inset-0 rounded-full bg-tclens-500/10 animate-ping duration-[3s]" />
                     <div className="absolute inset-0 rounded-full border-2 border-tclens-500/20 animate-pulse duration-[2s]" />
-                    <div className="absolute -inset-6 rounded-full border border-dashed border-slate-200 animate-[spin_15s_linear_infinite]" />
-                    <div className="absolute -inset-12 rounded-full border border-dotted border-slate-100 animate-[spin_25s_linear_infinite_reverse]" />
+                    <div className="absolute -inset-4 md:-inset-6 rounded-full border border-dashed border-slate-200 animate-[spin_15s_linear_infinite]" />
+                    <div className="absolute -inset-8 md:-inset-12 rounded-full border border-dotted border-slate-100 animate-[spin_25s_linear_infinite_reverse]" />
 
                     <div className={cn(
-                        "w-28 h-28 rounded-3xl flex items-center justify-center relative z-10 transition-all duration-700 transform rotate-3 shadow-2xl shadow-slate-200/50",
+                        "w-20 h-20 md:w-28 md:h-28 rounded-2xl md:rounded-3xl flex items-center justify-center relative z-10 transition-all duration-700 transform rotate-3 shadow-2xl shadow-slate-200/50",
                         current.color.replace('text-', 'bg-').replace('500', '50')
                     )}>
-                        <CurrentIcon className={cn("w-14 h-14 animate-[bounce_2s_infinite] transition-all", current.color)} />
+                        <CurrentIcon className={cn("w-10 h-10 md:w-14 md:h-14 animate-[bounce_2s_infinite] transition-all", current.color)} />
                     </div>
                 </div>
 
@@ -101,7 +106,7 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-tclens-50 rounded-full text-[10px] font-black text-tclens-600 uppercase tracking-widest ring-1 ring-tclens-200/50">
                             Neural Pipeline Active
                         </div>
-                        <h3 className="text-3xl font-black text-slate-900 tracking-tight">
+                        <h3 className="text-3xl font-bold text-slate-900 tracking-tight">
                             Forensic Extraction
                         </h3>
                     </div>
@@ -145,7 +150,7 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
 
     if (!result || (EXTENSION_ONLY && !isVerifiedHandshake)) {
         return (
-            <div className="h-full min-h-[500px] flex flex-col items-center justify-center text-center p-8 bg-white rounded-xl border border-dashed border-slate-200">
+            <div className="h-full min-h-[500px] flex flex-col items-center justify-center text-center p-8 bg-white rounded-xl border border-dashed border-slate-100">
                 <div className="w-24 h-24 bg-slate-50 rounded-2xl flex items-center justify-center mb-8">
                     <Search className="w-12 h-12 text-slate-200" />
                 </div>
@@ -171,32 +176,42 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
     return (
         <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-700 pb-20">
             {/* Score & Summary Card */}
-            <div className="bg-white rounded-xl border border-slate-200 p-6 md:p-10 relative overflow-hidden group transition-all duration-500">
-                <div className="absolute top-0 right-0 w-80 h-80 bg-tclens-500/5 rounded-full -mr-40 -mt-40 blur-3xl opacity-50 group-hover:scale-110 transition-transform duration-700 pointer-events-none" />
+            <div className="bg-white rounded-xl border border-slate-100 p-6 md:p-10 relative overflow-hidden group transition-all duration-500">
+                <div className="absolute top-0 right-0 w-40 h-40 md:w-80 md:h-80 bg-tclens-500/5 rounded-full -mr-20 -mt-20 md:-mr-40 md:-mt-40 blur-2xl md:blur-3xl opacity-50 group-hover:scale-110 transition-transform duration-700 pointer-events-none" />
 
-                <div className="flex flex-col md:flex-row gap-12 items-start md:items-center">
+                <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-center md:items-center">
                     <div className="relative shrink-0 flex flex-col items-center">
                         <div className="relative">
-                            <svg className="w-36 h-36 transform -rotate-90">
-                                <circle cx="72" cy="72" r="64" stroke="currentColor" strokeWidth="10" fill="transparent" className="text-slate-100" />
+                            <svg className="w-28 h-28 md:w-36 md:h-36 transform -rotate-90">
+                                <circle cx="56" cy="56" r="48" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-100 hidden md:block" />
+                                <circle cx="72" cy="72" r="64" stroke="currentColor" strokeWidth="10" fill="transparent" className="text-slate-100 hidden md:block" />
+                                <circle
+                                    cx="56" cy="56" r="48" stroke="currentColor" strokeWidth="8" fill="transparent"
+                                    strokeDasharray={301}
+                                    strokeDashoffset={301 - (301 * (result.risk_score || 0)) / 100}
+                                    className={cn(
+                                        "md:hidden transition-all duration-1000 ease-out",
+                                        result.risk_score > 75 ? "text-red-500" : result.risk_score > 40 ? "text-amber-500" : "text-tclens-500"
+                                    )}
+                                />
                                 <circle
                                     cx="72" cy="72" r="64" stroke="currentColor" strokeWidth="10" fill="transparent"
                                     strokeDasharray={402}
                                     strokeDashoffset={402 - (402 * (result.risk_score || 0)) / 100}
                                     className={cn(
-                                        "transition-all duration-1000 ease-out",
+                                        "hidden md:block transition-all duration-1000 ease-out",
                                         result.risk_score > 75 ? "text-red-500" : result.risk_score > 40 ? "text-amber-500" : "text-tclens-500"
                                     )}
                                 />
                             </svg>
                             <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                <span className="text-4xl font-black text-slate-900">{result.risk_score || 0}</span>
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Risk Score</span>
+                                <span className="text-3xl md:text-4xl font-bold text-slate-900">{result.risk_score || 0}</span>
+                                <span className="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Risk Score</span>
                             </div>
                         </div>
 
                         <div className={cn(
-                            "mt-8 px-5 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest border transition-colors flex flex-col items-center gap-1",
+                            "mt-4 md:mt-8 px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-[8px] md:text-[10px] font-bold uppercase tracking-widest border transition-colors flex flex-col items-center gap-1",
                             result.risk_score > 75 ? "bg-red-50 text-red-600 border-red-100" :
                                 result.risk_score > 40 ? "bg-amber-50 text-amber-600 border-amber-100" :
                                     "bg-tclens-50 text-tclens-600 border-tclens-100"
@@ -205,63 +220,64 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                                 result.risk_score > 40 ? "Standard Review" :
                                     "Safety Assured"}</span>
                             {result.litigation_risk_index && (
-                                <span className="opacity-60 text-[8px] border-t border-current pt-1 mt-1 font-black italic">Litigation Prob: {result.litigation_risk_index}%</span>
-                            )}
-                            {result.financial_exposure && (
-                                <span className="text-[7px] font-black bg-white/20 px-1 rounded flex items-center gap-0.5">
-                                    <DollarSign className="w-2 h-2" />
-                                    {result.financial_exposure}
-                                </span>
+                                <span className="opacity-60 text-[7px] md:text-[8px] border-t border-current pt-1 mt-1 font-black italic">Litigation Exposure: {result.litigation_risk_index}%</span>
                             )}
                         </div>
                     </div>
 
-                    <div className="flex-1 space-y-4 md:space-y-6">
+                    <div className="flex-1 space-y-4 md:space-y-6 w-full text-left">
                         <div className="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-slate-100 gap-4">
                             <div className="space-y-1">
                                 <h3 className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">Intelligence Briefing</h3>
-                                <div className="flex items-center gap-2">
-                                    <span className="px-2.5 py-1 bg-slate-100 rounded-lg text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                                <div className="flex items-center justify-start gap-2">
+                                    <span className="px-2 py-0.5 bg-slate-100 rounded-lg text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                                         {result.languageDetection?.primary || 'Legal English'}
                                     </span>
-                                    <span className="text-[10px] font-bold text-slate-400 capitalize">Confidence: {result.analysis_confidence || 0}%</span>
+                                    <span className="text-[9px] md:text-[10px] font-bold text-slate-400 capitalize">Confidence: {result.analysis_confidence || 0}%</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="prose prose-slate prose-sm max-w-none text-slate-600 leading-relaxed font-medium">
-                            <ReactMarkdown>{result.summary}</ReactMarkdown>
+                        <div className="prose prose-slate prose-xs md:prose-sm max-w-none text-slate-600 leading-snug md:leading-normal font-medium text-[11px] md:text-sm text-left break-words min-w-0">
+                            <ReactMarkdown
+                                components={{
+                                    strong: ({ children }) => {
+                                        const text = String(children);
+                                        const isHeader = ["Executive Summary", "Risk Analysis", "Strategic Posture", "Executive Audit", "Predatory Clauses", "Critical Gaps", "Surgical Posture", "Ambiguity Mapping"].some(h => text.includes(h));
+                                        
+                                        if (isHeader) {
+                                            return (
+                                                <span className="block mt-6 first:mt-0 font-bold text-slate-900 border-l-2 border-tclens-500 pl-3 py-0.5 mb-2 uppercase text-[10px] tracking-widest">
+                                                    {children}
+                                                </span>
+                                            );
+                                        }
+                                        return <strong className="font-bold text-slate-900">{children}</strong>;
+                                    }
+                                }}
+                            >
+                                {result.summary}
+                            </ReactMarkdown>
                         </div>
 
-                        <div className="pt-4 md:pt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                        <div className="pt-4 md:pt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4">
                             <Button
                                 onClick={handleDownloadAnalysisPdf}
-                                className="h-11 px-6 rounded-lg text-xs font-bold gap-2 bg-slate-900 text-white hover:bg-slate-800 transition-all active:scale-95 w-full sm:w-auto"
+                                className="h-10 md:h-11 px-6 rounded-lg text-[11px] md:text-xs font-bold gap-2 bg-slate-900 text-white hover:bg-slate-800 transition-all active:scale-95 w-full sm:w-auto"
                             >
                                 <Download className="w-4 h-4" />
                                 Download Intelligence Report
                             </Button>
-                            {(result as any).sourceUrl && (
-                                <a
-                                    href={(result as any).sourceUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="h-11 px-6 rounded-lg border border-slate-200 text-xs font-bold flex items-center justify-center gap-2 hover:bg-slate-50 transition-colors text-slate-600"
-                                >
-                                    <LinkIcon className="w-4 h-4" />
-                                    Explore Source
-                                </a>
-                            )}
                         </div>
                     </div>
                 </div>
 
                 {/* Risk Metrics Grid */}
-                <div className="mt-12 pt-8 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="mt-8 md:mt-12 pt-6 md:pt-8 border-t border-slate-100 grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
                     <div className="space-y-4 group/metric">
                         <div className="flex items-center gap-2">
                             <Lock className="w-3.5 h-3.5 text-slate-400 group-hover/metric:text-tclens-500 transition-colors" />
-                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">Privacy Rating</p>
+                            <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.1em] md:tracking-[0.15em] text-slate-400 break-words">Privacy Rating</p>
                         </div>
                         <div className="flex items-baseline gap-2">
                             <div className="text-3xl font-extrabold text-slate-900">{result.fairness_metrics?.privacy || 0}</div>
@@ -274,7 +290,7 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                     <div className="space-y-4 md:border-l lg:border-l border-slate-100 px-0 md:px-8 group/metric">
                         <div className="flex items-center gap-2">
                             <Scale className="w-3.5 h-3.5 text-slate-400 group-hover/metric:text-amber-500 transition-colors" />
-                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">Liability Shield</p>
+                            <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.1em] md:tracking-[0.15em] text-slate-400 break-words">Liability Shield</p>
                         </div>
                         <div className="flex items-baseline gap-2">
                             <div className="text-3xl font-extrabold text-slate-900">{result.fairness_metrics?.liability || 0}</div>
@@ -287,7 +303,7 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                     <div className="space-y-4 lg:border-l border-slate-100 lg:px-8 group/metric">
                         <div className="flex items-center gap-2">
                             <Eye className="w-3.5 h-3.5 text-slate-400 group-hover/metric:text-blue-500 transition-colors" />
-                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">Transparency</p>
+                            <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.1em] md:tracking-[0.15em] text-slate-400 break-words">Transparency</p>
                         </div>
                         <div className="flex items-baseline gap-2">
                             <div className="text-3xl font-extrabold text-slate-900">{result.fairness_metrics?.transparency || 0}</div>
@@ -300,7 +316,7 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                     <div className="space-y-4 lg:border-l border-slate-100 lg:px-8 group/metric">
                         <div className="flex items-center gap-2">
                             <RefreshCw className="w-3.5 h-3.5 text-slate-400 group-hover/metric:text-purple-500 transition-colors" />
-                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">Continuity</p>
+                            <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.1em] md:tracking-[0.15em] text-slate-400 break-words">Continuity</p>
                         </div>
                         <div className="flex items-baseline gap-2">
                             <div className="text-3xl font-extrabold text-slate-900">{result.fairness_metrics?.continuity || 0}</div>
@@ -322,14 +338,14 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                     </div>
                     <div className="grid gap-4">
                         {result.breakdown.map((item: any, i: number) => (
-                            <div key={i} className="bg-white rounded-xl border border-slate-200 p-6 hover:border-tclens-500/50 transition-all duration-300 group shadow-sm">
+                            <div key={i} className="bg-white rounded-xl border border-slate-100 p-6 hover:border-tclens-500/50 transition-all duration-300 group shadow-sm">
                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                                    <div className="space-y-1">
-                                        <div className="font-bold text-base text-slate-900 group-hover:text-tclens-600 transition-colors">{item.category}</div>
-                                        <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{item.label}</div>
+                                    <div className="space-y-1 min-w-0 w-full">
+                                        <div className="font-bold text-base text-slate-900 group-hover:text-tclens-600 transition-colors break-words line-clamp-2">{item.category}</div>
+                                        <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest break-words">{item.label}</div>
                                     </div>
 
-                                    <div className="flex-1 md:max-w-[200px] space-y-3">
+                                    <div className="flex-1 md:max-w-[200px] space-y-3 min-w-0 w-full">
                                         <div className="flex items-center justify-between">
                                             <span className={cn(
                                                 "text-[9px] font-bold uppercase tracking-wider",
@@ -350,10 +366,10 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                                         </div>
                                     </div>
 
-                                    <div className="flex-1 md:max-w-[300px]">
-                                        <div className="space-y-2 border-l-2 border-slate-100 pl-4 group-hover:border-tclens-200 transition-colors">
+                                    <div className="flex-1 md:max-w-[300px] min-w-0 w-full">
+                                        <div className="space-y-2 border-l-2 border-slate-100 pl-4 group-hover:border-tclens-200 transition-colors overflow-hidden">
                                             {item.evidence?.slice(0, 2).map((snippet: string, j: number) => (
-                                                <p key={j} className="text-[11px] text-slate-500 italic leading-relaxed line-clamp-2">"{snippet}"</p>
+                                                <p key={j} className="text-[11px] text-slate-500 italic leading-relaxed line-clamp-2 break-words">"{snippet}"</p>
                                             ))}
                                         </div>
                                     </div>
@@ -373,7 +389,7 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                     </div>
                     <div className="grid gap-6">
                         {result.missingProtections.map((gap: any, i: number) => (
-                            <div key={i} className="bg-slate-50 border border-slate-200 rounded-xl p-6 md:p-8 hover:bg-slate-100 transition-all group">
+                            <div key={i} className="bg-slate-50 border border-slate-100 rounded-xl p-6 md:p-8 hover:bg-slate-100 transition-all group">
                                 <div className="flex flex-col md:flex-row gap-6">
                                     <div className="flex-1 space-y-3">
                                         <div className="flex items-center gap-2">
@@ -382,9 +398,9 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                                         </div>
                                         <p className="text-slate-600 text-sm leading-relaxed font-medium">{gap.description}</p>
                                     </div>
-                                    <div className="flex-1 bg-white border border-slate-100 rounded-xl p-5 shadow-sm">
+                                    <div className="flex-1 bg-white border border-slate-100 rounded-xl p-5 shadow-sm min-w-0 overflow-hidden">
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Surgical Rebuttal Text</p>
-                                        <p className="text-xs text-tclens-700 font-mono italic p-3 bg-tclens-50/50 rounded-lg border border-tclens-100 leading-relaxed">"{gap.fix}"</p>
+                                        <p className="text-xs text-tclens-700 font-mono italic p-3 bg-tclens-50/50 rounded-lg border border-tclens-100 leading-relaxed break-words">"{gap.fix}"</p>
                                     </div>
                                 </div>
                             </div>
@@ -402,7 +418,7 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                             <FileSearch className="w-6 h-6 text-amber-500" />
                             <h3 className="text-xl font-bold text-slate-900 tracking-tight">Ambiguity Audit</h3>
                         </div>
-                        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden divide-y divide-slate-100">
+                        <div className="bg-white rounded-xl border border-slate-100 overflow-hidden divide-y divide-slate-100">
                             {result.ambiguity_audit.map((item: any, i: number) => (
                                 <div key={i} className="p-6 hover:bg-slate-50/50 transition-colors group">
                                     <div className="flex items-center justify-between mb-2">
@@ -448,21 +464,21 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                     </div>
                     <div className="grid gap-6">
                         {(result.redFlags ?? []).map((flag: any, i: number) => (
-                            <div key={i} className="bg-red-50/20 border border-red-100 rounded-xl p-6 md:p-8 hover:bg-red-50/40 transition-all group">
-                                <div className="flex items-start gap-6">
-                                    <div className="w-12 h-12 rounded-2xl bg-white border border-red-100 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                                        <ShieldAlert className="w-6 h-6 text-red-500" />
+                            <div key={i} className="bg-red-50/20 border border-red-100 rounded-xl p-5 md:p-8 hover:bg-red-50/40 transition-all group">
+                                <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6 text-center md:text-left">
+                                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-white border border-red-100 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                        <ShieldAlert className="w-6 h-6 md:w-7 md:h-7 text-red-500" />
                                     </div>
-                                    <div className="space-y-3">
-                                        <h4 className="font-bold text-red-900 text-lg">{flag.title}</h4>
-                                        <p className="text-slate-600 text-sm leading-relaxed">{flag.description}</p>
+                                    <div className="flex-1 space-y-3 min-w-0">
+                                        <h4 className="font-bold text-red-900 text-base md:text-lg">{flag.title}</h4>
+                                        <p className="text-slate-600 text-xs md:text-sm leading-relaxed">{flag.description}</p>
                                         {flag.implication && (
-                                            <div className="mt-6 pt-5 border-t border-red-100/50">
-                                                <div className="flex items-center gap-2 mb-2">
+                                            <div className="mt-5 pt-4 border-t border-red-100/50">
+                                                <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
                                                     <div className="w-1 h-3 bg-red-400 rounded-full" />
-                                                    <span className="font-bold text-red-900/40 uppercase text-[9px] tracking-[0.2em]">Forensic Impact</span>
+                                                    <span className="font-bold text-red-900/40 uppercase text-[8px] md:text-[9px] tracking-[0.2em]">Forensic Impact</span>
                                                 </div>
-                                                <p className="text-sm text-red-900/80 font-medium leading-relaxed italic">"{flag.implication}"</p>
+                                                <p className="text-[13px] md:text-sm text-red-900/80 font-medium leading-relaxed italic break-words">"{flag.implication}"</p>
                                             </div>
                                         )}
                                     </div>
@@ -485,15 +501,15 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                             <div key={i} className="bg-white rounded-xl border border-slate-200 p-6 md:p-8 group hover:border-tclens-200 transition-all">
                                 <div className="flex flex-col gap-6">
                                     <div className="flex items-start justify-between gap-4">
-                                        <div className="space-y-1">
-                                            <div className="flex items-center gap-3 mb-2">
+                                        <div className="space-y-1 min-w-0 flex-1">
+                                            <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-2">
                                                 <div className={cn(
                                                     "w-2 h-2 rounded-full",
                                                     clause.riskLevel === "Critical" ? "bg-red-500 animate-pulse" :
                                                         clause.riskLevel === "High" ? "bg-orange-500" :
                                                             clause.riskLevel === "Medium" ? "bg-amber-500" : "bg-tclens-500"
                                                 )} />
-                                                <h4 className="text-lg font-bold text-slate-900">{clause.type}</h4>
+                                                <h4 className="text-base md:text-lg font-bold text-slate-900 break-words min-w-0">{clause.type}</h4>
                                                 <span className={cn(
                                                     "px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase border",
                                                     clause.riskLevel === "Critical" ? "bg-red-50 text-red-600 border-red-100" :
@@ -503,14 +519,14 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                                                     {clause.riskLevel} Risk
                                                 </span>
                                             </div>
-                                            <p className="text-base text-slate-700 font-semibold leading-relaxed group-hover:text-slate-900 transition-colors uppercase tracking-tight">{clause.summary}</p>
+                                            <p className="text-[13px] md:text-base text-slate-700 font-semibold leading-snug group-hover:text-slate-900 transition-colors break-words">{clause.summary}</p>
                                         </div>
                                     </div>
 
                                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4 border-t border-slate-50">
                                         <div className="space-y-3">
                                             <h5 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Legal Analysis</h5>
-                                            <p className="text-sm text-slate-600 leading-relaxed font-medium italic">"{clause.explanation}"</p>
+                                            <p className="text-sm text-slate-600 leading-snug font-medium italic break-words">"{clause.explanation}"</p>
                                         </div>
                                         {clause.rebuttal && (
                                             <div className="space-y-3 lg:col-span-1">
@@ -519,7 +535,7 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                                                     <Zap className="w-3 h-3 fill-tclens-500" />
                                                 </h5>
                                                 <div className="p-4 bg-tclens-50/30 border border-tclens-100 rounded-xl">
-                                                    <p className="text-xs text-tclens-900 font-mono leading-relaxed">"{clause.rebuttal}"</p>
+                                                    <p className="text-xs text-tclens-900 font-mono leading-snug break-all md:break-words">"{clause.rebuttal}"</p>
                                                 </div>
                                             </div>
                                         )}
@@ -527,7 +543,7 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                                             <div className="space-y-3 lg:col-span-1">
                                                 <h5 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Original Provision</h5>
                                                 <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl">
-                                                    <p className="text-xs text-slate-500 italic line-clamp-3 leading-loose font-medium">"{clause.originalExcerpt}"</p>
+                                                    <p className="text-xs text-slate-500 italic line-clamp-3 leading-snug font-medium break-words">"{clause.originalExcerpt}"</p>
                                                 </div>
                                             </div>
                                         )}
@@ -555,37 +571,40 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                     <div className="bg-slate-900 rounded-xl overflow-hidden">
                         <div className="divide-y divide-white/5">
                             {(result.nextSteps ?? []).map((step: any, i: number) => (
-                                <div key={i} className="flex gap-6 items-center p-8 group hover:bg-white/[0.02] transition-colors cursor-pointer"
+                                <div key={i} className="flex flex-col md:flex-row gap-4 md:gap-6 items-center md:items-center p-6 md:p-8 group hover:bg-white/[0.02] transition-colors cursor-pointer text-center md:text-left"
                                     onClick={() => {
-                                        const input = document.querySelector('input[name="question"]') as HTMLInputElement;
-                                        if (input) {
+                                        const form = document.querySelector('#chat-form') as HTMLFormElement;
+                                        const input = form?.querySelector('input[name="question"]') as HTMLInputElement;
+                                        if (input && form) {
                                             input.value = `Can you guide me through: ${step}?`;
-                                            input.focus();
+                                            form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
                                         }
                                     }}>
-                                    <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-all group-hover:bg-tclens-500/10 group-hover:border-tclens-500/20">
-                                        <ArrowRight className="w-5 h-5 text-tclens-400 group-hover:text-tclens-500" />
+                                    <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl md:rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-all group-hover:bg-tclens-500/10 group-hover:border-tclens-500/20">
+                                        <ArrowRight className="w-5 h-5 md:w-6 md:h-6 text-tclens-400 group-hover:text-tclens-500" />
                                     </div>
-                                    <p className="text-sm font-medium text-slate-300 flex-1 leading-relaxed group-hover:text-white transition-colors">{step}</p>
-                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 text-[10px] font-bold text-tclens-500 uppercase tracking-widest">
-                                        Start Assist
+                                    <div className="flex-1 space-y-1">
+                                        <p className="text-[13px] md:text-sm font-medium text-slate-300 leading-relaxed group-hover:text-white transition-colors capitalize">{step}</p>
+                                    </div>
+                                    <div className="md:opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 text-[9px] md:text-[10px] font-bold text-tclens-500 uppercase tracking-widest mt-2 md:mt-0">
+                                        Activate Guidance
                                         <Plus className="w-3 h-3" />
                                     </div>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="bg-gradient-to-r from-tclens-600 to-tclens-500 p-10 flex items-center justify-between">
-                            <div className="space-y-1">
-                                <h4 className="text-xl font-bold text-white tracking-tight">Interactive Legal Support</h4>
-                                <p className="text-white/70 text-sm font-medium">Activate full AI reasoning for deeper document clarification.</p>
+                        <div className="bg-gradient-to-br md:bg-gradient-to-r from-tclens-600 to-tclens-500 p-6 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+                            <div className="space-y-1.5">
+                                <h4 className="text-lg md:text-xl font-bold text-white tracking-tight">Interactive Legal Support</h4>
+                                <p className="text-white/80 text-[13px] md:text-sm font-medium max-w-[280px] md:max-w-none">Activate full AI reasoning for deeper document clarification.</p>
                             </div>
                             <Button
                                 onClick={() => {
                                     const chatSection = document.getElementById('ai-follow-up');
                                     chatSection?.scrollIntoView({ behavior: 'smooth' });
                                 }}
-                                className="bg-white text-tclens-600 hover:bg-slate-50 h-10 md:h-12 px-6 md:px-8 rounded-lg font-bold transition-all active:scale-95 text-xs md:text-sm"
+                                className="bg-white text-tclens-600 hover:bg-slate-50 h-11 md:h-12 px-8 rounded-xl font-bold transition-all active:scale-95 text-xs md:text-sm w-full md:w-auto shadow-lg shadow-tclens-900/10"
                             >
                                 Initialize Chat
                                 <MessageCircle className="w-4 h-4 ml-2" />
@@ -603,13 +622,38 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                             <Zap className="w-6 h-6 text-amber-500" />
                             Active Intelligence Assistant
                         </h3>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-9">
-                            Real-time contextual synthesis • No Legal Advice Provided
+                        {chatMessages.length > 0 && !chatLoading && (
+                            <div className="mt-2 ml-9 p-3 bg-amber-50 rounded-lg border border-amber-100/50 flex flex-col md:flex-row md:items-center justify-between gap-3 animate-in slide-in-from-top-2 duration-500">
+                                <p className="text-[10px] font-semibold text-amber-800 leading-tight">
+                                    Want a focused deep-dive? Relocate this session to our full-screen Professional Assistant.
+                                </p>
+                                <Button 
+                                    size="sm" 
+                                    onClick={() => router.push(`/app/ai-lawyer?analysisId=${analysisId || ''}`)}
+                                    className="bg-amber-600 hover:bg-amber-700 text-white text-[9px] font-bold uppercase tracking-widest px-4 h-7 whitespace-nowrap"
+                                >
+                                    Proceed to Central Hub
+                                </Button>
+                            </div>
+                        )}
+                        <p className="text-[11px] font-semibold text-slate-400 ml-9">
+                            Real-time contextual synthesis • No legal advice provided
                         </p>
                     </div>
                 </div>
 
-                <div className="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col h-[500px] md:h-[600px]">
+                <div className="bg-white rounded-xl border border-slate-100 overflow-hidden flex flex-col h-[500px] md:h-[600px] relative">
+                    <div className="absolute top-4 right-4 z-10">
+                        <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="bg-white/90 backdrop-blur-sm border-slate-200 text-slate-700 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all shadow-sm"
+                            onClick={() => router.push(`/app/ai-lawyer?analysisId=${analysisId || ''}`)}
+                        >
+                            <Globe className="w-3 h-3 mr-2" />
+                            Relocate to Main Hub
+                        </Button>
+                    </div>
                     <div id="chat-messages-container" className="flex-1 p-8 overflow-y-auto space-y-8 custom-scrollbar scroll-smooth bg-slate-50/30">
                         {chatMessages.length === 0 ? (
                             <div className="h-full flex flex-col items-center justify-center text-center space-y-6 opacity-60">
@@ -624,48 +668,44 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                         ) : (
                             chatMessages.map((msg, i) => (
                                 <div key={i} className={cn(
-                                    "flex gap-4",
-                                    msg.role === 'user' ? "flex-row-reverse" : "flex-row"
+                                    "flex",
+                                    msg.role === 'user' ? "justify-end" : "justify-start"
                                 )}>
                                     <div className={cn(
-                                        "w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border",
-                                        msg.role === 'user' ? "bg-slate-900 border-slate-800" : "bg-white border-slate-100"
-                                    )}>
-                                        {msg.role === 'user' ? <User className="w-5 h-5 text-white" /> : <BrainCircuit className="w-5 h-5 text-tclens-500" />}
-                                    </div>
-                                    <div className={cn(
-                                        "max-w-[90%] md:max-w-[80%] p-4 md:p-6 rounded-xl text-xs md:sm leading-relaxed relative",
+                                        "max-w-[85%] md:max-w-[75%] p-3 md:p-5 text-[13px] md:text-sm leading-snug relative break-words",
                                         msg.role === 'user'
-                                            ? "bg-slate-900 text-white rounded-tr-none"
-                                            : "bg-white text-slate-600 border border-slate-100 rounded-tl-none font-medium"
+                                            ? "bg-slate-900 text-white rounded-xl md:rounded-2xl rounded-tr-none shadow-sm"
+                                            : "bg-transparent text-slate-700 font-medium text-left px-0"
                                     )}>
-                                        {msg.content}
-                                        <span className="absolute -bottom-6 left-2 text-[8px] font-black uppercase text-slate-300 tracking-widest">
-                                            {msg.role === 'user' ? 'Client Envoy' : 'AI Analysis Hub'}
-                                        </span>
+                                        {msg.role === 'user' ? (
+                                            msg.content
+                                        ) : (
+                                            <div className="prose prose-slate prose-xs md:prose-sm max-w-none text-current leading-snug text-left">
+                                                <ReactMarkdown>
+                                                    {msg.content}
+                                                </ReactMarkdown>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             ))
                         )}
                         {chatLoading && (
                             <div className="flex gap-4 items-center animate-in fade-in duration-500">
-                                <div className="w-10 h-10 rounded-2xl bg-white border border-slate-100 flex items-center justify-center shrink-0">
-                                    <Loader2 className="w-5 h-5 text-tclens-500 animate-spin" />
-                                </div>
-                                <div className="px-6 py-4 bg-white border border-slate-100 rounded-2xl rounded-tl-none text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-3">
+                                <div className="px-5 py-3 bg-white border border-slate-100 rounded-2xl rounded-tl-none text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-3 shadow-sm">
                                     <span className="flex gap-1">
-                                        <span className="w-1.5 h-1.5 bg-tclens-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                                        <span className="w-1.5 h-1.5 bg-tclens-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                                        <span className="w-1.5 h-1.5 bg-tclens-500 rounded-full animate-bounce" />
+                                        <span className="w-1.2 h-1.2 bg-tclens-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                                        <span className="w-1.2 h-1.2 bg-tclens-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                                        <span className="w-1.2 h-1.2 bg-tclens-500 rounded-full animate-bounce" />
                                     </span>
-                                    Synthesizing response...
+                                    Thinking...
                                 </div>
                             </div>
                         )}
                     </div>
 
                     <div className="p-8 bg-slate-50/50 border-t border-slate-100">
-                        <form onSubmit={handleChatSubmit} className="flex gap-3">
+                        <form id="chat-form" onSubmit={handleChatSubmit} className="flex gap-3">
                             <div className="flex-1 relative group">
                                 <input
                                     name="question"

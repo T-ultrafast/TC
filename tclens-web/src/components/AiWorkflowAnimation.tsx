@@ -47,7 +47,7 @@ export function AiWorkflowAnimation() {
         <motion.div
             id="ai-animation-container"
             style={{ rotateX, rotateY, perspective: 1000 }}
-            className="relative w-full aspect-square flex flex-col items-center justify-center overflow-visible"
+            className="relative w-full h-[450px] md:h-[500px] flex flex-col items-center justify-center overflow-visible"
         >
             {/* Stage Label Indicator */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-md border border-slate-100 shadow-sm transition-all duration-500">
@@ -78,7 +78,7 @@ export function AiWorkflowAnimation() {
                         animate={{ opacity: 1, scale: 1, y: 0, rotate: 0 }}
                         exit={{ opacity: 0, scale: 1.1, filter: "blur(20px)" }}
                         transition={{ type: "spring", damping: 15, stiffness: 100 }}
-                        className="relative z-10 w-48 h-64 bg-white rounded-xl border-2 border-slate-200 p-6 flex flex-col gap-4 shadow-sm"
+                        className="relative z-10 w-48 h-64 bg-white rounded-xl border-2 border-slate-200 p-6 flex flex-col gap-4 shadow-sm mx-auto"
                     >
                         <div className="flex justify-between items-center opacity-30">
                             <div className="w-12 h-2 bg-slate-300 rounded" />
@@ -139,7 +139,7 @@ export function AiWorkflowAnimation() {
                             initial={{ opacity: 0, scale: 0.8, x: -30 }}
                             animate={{ opacity: 1, scale: 1, x: 0 }}
                             transition={{ delay: 0.3, type: "spring", stiffness: 200, damping: 20 }}
-                            className="bg-white p-4 rounded-xl border border-slate-100 w-full max-w-[240px] flex items-center gap-3 self-start ml-4 shadow-sm"
+                            className="bg-white p-4 rounded-xl border border-slate-100 w-full max-w-[240px] flex items-center gap-3 md:self-start md:ml-4 mx-auto shadow-sm"
                         >
                             <div className="w-8 h-8 bg-tclens-50 rounded-lg flex items-center justify-center text-tclens-500 border border-tclens-100">
                                 <Search className="w-4 h-4" />
@@ -155,7 +155,7 @@ export function AiWorkflowAnimation() {
                             initial={{ opacity: 0, scale: 0.8, x: 30 }}
                             animate={{ opacity: 1, scale: 1, x: 0 }}
                             transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 20 }}
-                            className="bg-slate-950 p-4 rounded-xl border border-white/10 w-full max-w-[240px] flex items-center gap-3 self-end mr-4 shadow-sm"
+                            className="bg-slate-900 p-4 rounded-xl border border-white/10 w-full max-w-[240px] flex items-center gap-3 md:self-end md:mr-4 mx-auto shadow-sm"
                         >
                             <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white border border-white/5">
                                 <Cpu className="w-4 h-4" />

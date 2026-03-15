@@ -20,12 +20,14 @@
   --color-tclens-900: #0c4a6e;
 
   /* Font mapping */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui;
+  --font-inter: var(--font-inter), ui-sans-serif, system-ui;
   --font-jakarta: var(--font-jakarta), ui-sans-serif, system-ui;
   --font-playfair: var(--font-playfair), serif;
 
   /* Semantic Tokens */
-  --header-color: #020617;
+  /* New Refined Heading Color (Ink Navy) */
+  --header-color: #0f172a;
   --label-color: #94a3b8;
   /* slate-400 equivalent */
 
@@ -38,10 +40,11 @@
 
 @layer base {
   :root {
+    color-scheme: light !important;
     --background: #ffffff;
-    --foreground: #020617;
+    --foreground: #0f172a;
     --card: #ffffff;
-    --card-foreground: #020617;
+    --card-foreground: #0f172a;
     --border: #e2e8f0;
     --muted: #f8fafc;
     --muted-foreground: #64748b;
@@ -49,15 +52,6 @@
     --primary-foreground: 210 40% 98%;
   }
 
-  .dark {
-    --background: #020617;
-    --foreground: #f8fafc;
-    --card: #0f172a;
-    --card-foreground: #f8fafc;
-    --border: #1e293b;
-    --muted: #0f172a;
-    --muted-foreground: #94a3b8;
-  }
 
   * {
     border-color: var(--border);
@@ -66,8 +60,7 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
-    @apply font-jakarta;
-    /* Default to cleaner font */
+    /* font-sans on the body tag in layout.tsx will now use Jakarta */
   }
 }
 
@@ -108,4 +101,21 @@
 .animate-float-delayed {
   animation: float 5s ease-in-out infinite;
   animation-delay: 1s;
+}
+
+@keyframes wave {
+  0% { transform: rotate(0deg); }
+  10% { transform: rotate(14deg); }
+  20% { transform: rotate(-8deg); }
+  30% { transform: rotate(14deg); }
+  40% { transform: rotate(-4deg); }
+  50% { transform: rotate(10deg); }
+  60% { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.animate-waving-hand {
+  animation: wave 2.5s infinite;
+  transform-origin: 70% 70%;
+  display: inline-block;
 }

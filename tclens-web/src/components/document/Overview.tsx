@@ -39,62 +39,62 @@ export const Overview: React.FC<OverviewProps> = ({
     ];
 
     return (
-        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* Action buttons and stats below */}
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-3 gap-3 md:gap-6">
                 {stats.map((stat, i) => (
-                    <div key={i} className="bg-white rounded-[1.25rem] border border-slate-200 p-4 flex items-center gap-4 group hover:border-tclens-500/30 transition-all duration-500">
-                        <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110", stat.bg)}>
-                            <stat.icon className={cn("w-6 h-6", stat.color)} />
+                    <div key={i} className="bg-white rounded-xl border border-slate-200 p-3 md:p-4 flex flex-col md:flex-row items-center md:items-center gap-2 md:gap-4 group hover:border-tclens-500/30 transition-all duration-500">
+                        <div className={cn("w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110", stat.bg)}>
+                            <stat.icon className={cn("w-5 h-5 md:w-6 md:h-6", stat.color)} />
                         </div>
-                        <div className="space-y-0.5">
-                            <p className="text-[10px] font-bold text-[var(--label-color)] capitalize tracking-widest">{stat.label}</p>
-                            <p className="text-xl font-black text-slate-900">{stat.value}</p>
+                        <div className="space-y-0.5 text-center md:text-left">
+                            <p className="text-[8px] md:text-[10px] font-bold text-[var(--label-color)] capitalize tracking-wider md:tracking-widest">{stat.label}</p>
+                            <p className="text-sm md:text-xl font-black text-slate-900">{stat.value}</p>
                         </div>
                     </div>
                 ))}
             </div>
 
             {/* Main Action Cards */}
-            <div className="grid lg:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-6 md:gap-8">
                 {/* Analyze Card */}
-                <div className="bg-slate-900 rounded-[1.25rem] p-8 relative overflow-hidden group cursor-pointer" onClick={onAnalyze}>
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-tclens-500/10 rounded-full -mr-32 -mt-32 blur-3xl group-hover:scale-125 transition-transform duration-700" />
+                <div className="bg-slate-900 rounded-xl p-6 md:p-8 relative overflow-hidden group cursor-pointer" onClick={onAnalyze}>
+                    <div className="absolute top-0 right-0 w-32 h-32 md:w-64 md:h-64 bg-tclens-500/10 rounded-full -mr-16 -mt-16 md:-mr-32 md:-mt-32 blur-2xl md:blur-3xl group-hover:scale-125 transition-transform duration-700" />
 
-                    <div className="relative z-10 space-y-6">
-                        <div className="w-14 h-14 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-xl border border-white/10">
-                            <Search className="w-7 h-7 text-tclens-400" />
+                    <div className="relative z-10 space-y-4 md:space-y-6">
+                        <div className="w-10 h-10 md:w-14 md:h-14 bg-white/10 rounded-lg md:rounded-xl flex items-center justify-center backdrop-blur-xl border border-white/10">
+                            <Search className="w-5 h-5 md:w-7 md:h-7 text-tclens-400" />
                         </div>
-                        <div className="space-y-2">
-                            <h3 className="text-xl font-bold text-white tracking-tight">Intelligence Analysis</h3>
-                            <p className="text-slate-400 text-xs leading-relaxed max-w-xs">
+                        <div className="space-y-1 md:space-y-2">
+                            <h3 className="text-lg md:text-xl font-bold text-white tracking-tight">Intelligence Analysis</h3>
+                            <p className="text-slate-400 text-[11px] md:text-xs leading-snug md:leading-relaxed max-w-xs">
                                 Upload contracts or paste clauses to identify risks and compliance gaps instantly.
                             </p>
                         </div>
-                        <Button className="h-10 px-6 rounded-lg bg-tclens-500 hover:bg-tclens-600 text-white font-bold text-xs gap-2 group-hover:pl-8 transition-all">
+                        <Button className="h-9 md:h-10 px-5 md:px-6 rounded-lg bg-tclens-500 hover:bg-tclens-600 text-white font-bold text-[10px] md:text-xs gap-2 group-hover:pl-8 transition-all">
                             Start Analysis
-                            <ArrowRight className="w-4 h-4" />
+                            <ArrowRight className="w-3.5 h-3.5" />
                         </Button>
                     </div>
                 </div>
 
                 {/* Generate Card */}
-                <div className="bg-white rounded-[1.25rem] border border-slate-200 p-8 relative overflow-hidden group cursor-pointer" onClick={onGenerate}>
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-tclens-500/5 rounded-full -mr-32 -mt-32 blur-3xl group-hover:scale-125 transition-transform duration-700" />
+                <div className="bg-white rounded-xl border border-slate-200 p-6 md:p-8 relative overflow-hidden group cursor-pointer" onClick={onGenerate}>
+                    <div className="absolute top-0 right-0 w-32 h-32 md:w-64 md:h-64 bg-tclens-500/5 rounded-full -mr-16 -mt-16 md:-mr-32 md:-mt-32 blur-2xl md:blur-3xl group-hover:scale-125 transition-transform duration-700" />
 
-                    <div className="relative z-10 space-y-6">
-                        <div className="w-14 h-14 bg-tclens-50 rounded-xl flex items-center justify-center border border-tclens-100">
-                            <FileText className="w-7 h-7 text-tclens-500" />
+                    <div className="relative z-10 space-y-4 md:space-y-6">
+                        <div className="w-10 h-10 md:w-14 md:h-14 bg-tclens-50 rounded-lg md:rounded-xl flex items-center justify-center border border-tclens-100">
+                            <FileText className="w-5 h-5 md:w-7 md:h-7 text-tclens-500" />
                         </div>
-                        <div className="space-y-2">
-                            <h3 className="text-xl font-bold text-slate-900 tracking-tight">Precision Generation</h3>
-                            <p className="text-slate-500 text-xs leading-relaxed max-w-xs">
+                        <div className="space-y-1 md:space-y-2">
+                            <h3 className="text-lg md:text-xl font-bold text-slate-900 tracking-tight">Precision Generation</h3>
+                            <p className="text-slate-500 text-[11px] md:text-xs leading-snug md:leading-relaxed max-w-xs">
                                 Orchestrate legally binding agreements and localized documents with AI precision.
                             </p>
                         </div>
-                        <Button className="h-10 px-6 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs gap-2 group-hover:pl-8 transition-all">
+                        <Button className="h-9 md:h-10 px-5 md:px-6 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-bold text-[10px] md:text-xs gap-2 group-hover:pl-8 transition-all">
                             New Document
                             <Plus className="w-4 h-4" />
                         </Button>
@@ -119,7 +119,7 @@ export const Overview: React.FC<OverviewProps> = ({
                         <div
                             key={record.id}
                             onClick={() => loadHistoryRecord(record)}
-                            className="bg-white rounded-[1.25rem] border border-slate-100 p-5 hover:border-tclens-500/50 hover:shadow-xl hover:shadow-slate-100/50 transition-all cursor-pointer group"
+                            className="bg-white rounded-xl border border-slate-100 p-5 hover:border-tclens-500/50 hover:shadow-xl hover:shadow-slate-100/50 transition-all cursor-pointer group"
                         >
                             <div className="flex items-start justify-between mb-4">
                                 <div className="p-2.5 bg-slate-50 rounded-xl group-hover:bg-tclens-50 transition-colors">

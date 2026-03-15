@@ -24,6 +24,10 @@ export async function POST(
 ) {
     const { id } = await params;
     const apiKey = process.env.GEMINI_API_KEY;
+    const geminiModel = process.env.GEMINI_MODEL || "gemini-1.5-flash";
+    const apiVersion = process.env.GEMINI_API_VERSION || 'v1beta';
+    
+    console.log(`[API_CHAT] Using Model: ${geminiModel} (${apiVersion})`);
     const userId = req.headers.get('x-user-id') || 'anonymous';
     const isLoggedIn = req.headers.get('x-is-logged-in') === 'true';
 
@@ -51,7 +55,7 @@ export async function POST(
         // Get chat history for context
         const history = await storage.getChatHistory(id, userId);
 
-        const client = new GoogleGenAI({ apiKey });
+        const client = new GoogleGenAI({ apiKey, apiVersion });
 
         const systemPrompt = `You are an expert legal analysis AI. Answer the user's question with extreme brevity.
 MISSION: Maximum 150 words total.
@@ -79,7 +83,7 @@ INSTRUCTIONS: Answer the question clearly and directly based on the provided con
         while (retryCount < maxRetries) {
             try {
                 const result = await client.models.generateContent({
-                    model: "gemini-1.5-flash",
+                    model: geminiModel,
                     contents: [
                         ...history.slice(0, -1).map(m => ({
                             role: m.role === 'user' ? 'user' : 'model',

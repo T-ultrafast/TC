@@ -6,38 +6,29 @@ import { Logo } from "@/components/Logo";
 export function Footer() {
     return (
         <footer className="bg-slate-50 py-16 px-6 border-t border-slate-100">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 pb-12">
-                <div className="space-y-4">
+            <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-12 pb-12">
+                <div className="col-span-2 md:col-span-1 space-y-4">
                     <Logo />
-                    <p className="text-xs font-medium text-slate-500 leading-relaxed max-w-[240px]">
+                    <p className="text-xs font-medium text-slate-500 leading-snug max-w-[240px]">
                         Helping professionals navigate legal documents with clarity and confidence.
                     </p>
                 </div>
 
-                <div>
+                <div className="col-span-1">
                     <h4 className="text-sm font-bold text-slate-900 mb-4">Product</h4>
-                    <ul className="space-y-3 text-xs font-medium text-slate-500">
+                    <ul className="space-y-2 text-xs font-medium text-slate-500">
                         <li><Link href="#" className="hover:text-tclens-500 transition-colors">Features</Link></li>
                         <li><Link href="#" className="hover:text-tclens-500 transition-colors">How it works</Link></li>
                         <li><Link href="/pricing" className="hover:text-tclens-500 transition-colors">Pricing</Link></li>
                     </ul>
                 </div>
 
-                <div>
+                <div className="col-span-1">
                     <h4 className="text-sm font-bold text-slate-900 mb-4">Company</h4>
-                    <ul className="space-y-3 text-xs font-medium text-slate-500">
+                    <ul className="space-y-2 text-xs font-medium text-slate-500">
                         <li><Link href="#" className="hover:text-tclens-500 transition-colors">About us</Link></li>
                         <li><Link href="#" className="hover:text-tclens-500 transition-colors">Careers</Link></li>
                         <li><Link href="#" className="hover:text-tclens-500 transition-colors">Contact</Link></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 className="text-sm font-bold text-slate-900 mb-4">Support</h4>
-                    <ul className="space-y-3 text-xs font-medium text-slate-500">
-                        <li><Link href="#" className="hover:text-tclens-500 transition-colors">Documentation</Link></li>
-                        <li><Link href="#" className="hover:text-tclens-500 transition-colors">Security</Link></li>
-                        <li><Link href="#" className="hover:text-tclens-500 transition-colors">Legal</Link></li>
                     </ul>
                 </div>
             </div>
